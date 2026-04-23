@@ -28,3 +28,4 @@ Coding rules:
 - Avoid hardcoded values, hacks, and tightly coupled logic.
 - Keep code modular, testable, and scalable.
 - Keep commit messages under 140 characters.
+- When explicitly requested, commit and push the completed repo changes.

@@ -64,6 +64,7 @@ The repository is still bootstrap-stage and contains no app, contract, backend, 
 - The narrow scope is intentional and part of the moat.
 - The initial contract design should be boring, strict, auditable, and avoid unnecessary upgradeability.
 - Repo coding rules require no code comments, strong naming, modular design, strong typing, validation, error handling, and explicit assumptions when requirements are missing.
+- Repo workflow rules require commit messages under 140 characters and committing/pushing changes when explicitly requested.
 - Product docs live in `docs/product/goal-vault/`:
   - `goal.md` for the concise product goal
   - `plan.md` for the detailed execution-oriented plan
