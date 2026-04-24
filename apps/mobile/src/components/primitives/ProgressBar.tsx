@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef } from "react";
 
 import { useReducedMotionPreference } from "../../lib/motion/reduced-motion";
 import { createTiming } from "../../lib/motion/transitions";
-import { colors, radii } from "../../theme";
+import { colors, createShadowStyle, radii } from "../../theme";
 
 export interface ProgressBarProps {
   progress: number;
@@ -63,16 +63,19 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
           height: "100%",
           borderRadius: radii.pill,
           backgroundColor: fillColor,
-          shadowColor: tone === "positive" ? colors.positiveGlow : colors.accentGlow,
-          shadowOpacity: 0.28,
-          shadowRadius: 14,
-          shadowOffset: { width: 0, height: 6 },
+          ...createShadowStyle({
+            color: tone === "positive" ? colors.positiveGlow : colors.accentGlow,
+            opacity: 0.28,
+            radius: 14,
+            offsetY: 6,
+            elevation: 1,
+          }),
           elevation: 1,
         }}
       >
         <View
-          pointerEvents="none"
           style={{
+            pointerEvents: "none",
             position: "absolute",
             top: 0,
             bottom: 0,

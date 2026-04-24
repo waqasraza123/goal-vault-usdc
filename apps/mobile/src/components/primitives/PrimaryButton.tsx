@@ -3,7 +3,7 @@ import { Animated, Pressable, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useInteractiveMotion } from "../../lib/motion/feedback-motion";
-import { colors, radii, spacing } from "../../theme";
+import { colors, createShadowStyle, radii, spacing } from "../../theme";
 import { useI18n } from "../../lib/i18n";
 import { AppText } from "./AppText";
 
@@ -37,10 +37,13 @@ export const PrimaryButton = ({ label, onPress, disabled, icon }: PrimaryButtonP
           paddingVertical: spacing[4],
           borderWidth: 1,
           borderColor: disabled ? colors.borderStrong : colors.accentStrong,
-          shadowColor: colors.accentStrong,
-          shadowOpacity: disabled ? 0 : 0.18,
-          shadowRadius: 18,
-          shadowOffset: { width: 0, height: 10 },
+          ...createShadowStyle({
+            color: colors.accentStrong,
+            opacity: disabled ? 0 : 0.18,
+            radius: 18,
+            offsetY: 10,
+            elevation: disabled ? 0 : 6,
+          }),
           elevation: disabled ? 0 : 6,
         })}
       >

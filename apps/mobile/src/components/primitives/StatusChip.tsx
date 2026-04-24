@@ -1,6 +1,6 @@
 import { View } from "react-native";
 
-import { colors, radii, spacing } from "../../theme";
+import { colors, createShadowStyle, radii, spacing } from "../../theme";
 import { AppText } from "./AppText";
 
 const toneMap = {
@@ -27,10 +27,13 @@ export const StatusChip = ({ label, tone = "active" }: StatusChipProps) => {
         paddingHorizontal: spacing[3],
         paddingVertical: spacing[2],
         backgroundColor: toneMap[tone].backgroundColor,
-        shadowColor: toneMap[tone].glowColor,
-        shadowOpacity: 0.2,
-        shadowRadius: 12,
-        shadowOffset: { width: 0, height: 6 },
+        ...createShadowStyle({
+          color: toneMap[tone].glowColor,
+          opacity: 0.2,
+          radius: 12,
+          offsetY: 6,
+          elevation: 1,
+        }),
         elevation: 1,
       }}
     >

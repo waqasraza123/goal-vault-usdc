@@ -55,8 +55,8 @@ export const SurfaceCard = ({
       ]}
     >
       <View
-        pointerEvents="none"
         style={{
+          pointerEvents: "none",
           position: "absolute",
           top: -40,
           right: -24,
@@ -68,8 +68,8 @@ export const SurfaceCard = ({
         }}
       />
       <View
-        pointerEvents="none"
         style={{
+          pointerEvents: "none",
           position: "absolute",
           top: 0,
           left: 0,

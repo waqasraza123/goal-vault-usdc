@@ -2,7 +2,7 @@ import type { PropsWithChildren } from "react";
 import { View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { colors, spacing } from "../../theme";
+import { colors, createShadowStyle, spacing } from "../../theme";
 import { AppHeading } from "./AppHeading";
 import { AppText } from "./AppText";
 import { MotionView } from "./MotionView";
@@ -38,10 +38,13 @@ export const EmptyState = ({
               backgroundColor: colors.accentSoft,
               borderWidth: 1,
               borderColor: colors.borderStrong,
-              shadowColor: colors.accentGlow,
-              shadowOpacity: 0.28,
-              shadowRadius: 24,
-              shadowOffset: { width: 0, height: 12 },
+              ...createShadowStyle({
+                color: colors.accentGlow,
+                opacity: 0.28,
+                radius: 24,
+                offsetY: 12,
+                elevation: 4,
+              }),
               elevation: 4,
             }}
           >

@@ -2,7 +2,7 @@ import type { PropsWithChildren } from "react";
 import { View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { colors, radii, spacing } from "../../theme";
+import { colors, createShadowStyle, radii, spacing } from "../../theme";
 import { AppHeading, AppText, MotionView, SurfaceCard } from "../primitives";
 
 export interface GuidedStepsCardProps {
@@ -36,10 +36,13 @@ export const GuidedStepsCard = ({
                 backgroundColor: colors.accentSoft,
                 borderWidth: 1,
                 borderColor: colors.borderStrong,
-                shadowColor: colors.accentGlow,
-                shadowOpacity: 0.24,
-                shadowRadius: 18,
-                shadowOffset: { width: 0, height: 10 },
+                ...createShadowStyle({
+                  color: colors.accentGlow,
+                  opacity: 0.24,
+                  radius: 18,
+                  offsetY: 10,
+                  elevation: 3,
+                }),
                 elevation: 3,
               }}
             >

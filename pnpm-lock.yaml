@@ -70,8 +70,8 @@ importers:
         specifier: 2.2.0
         version: 2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
       '@react-native-community/netinfo':
-        specifier: 11.4.1
-        version: 11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
+        specifier: 11.5.2
+        version: 11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       '@reown/appkit':
         specifier: ^1.8.19
         version: 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(zod@4.3.6)
@@ -80,13 +80,13 @@ importers:
         version: 1.8.19(@ethersproject/sha2@5.8.0)(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(ethers@6.16.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(zod@4.3.6)
       '@reown/appkit-ethers-react-native':
         specifier: ^2.0.3
-        version: 2.0.3(e8cc0fb5f72c96b020fe7f6f228be4d8)
+        version: 2.0.3(1ddc49afe947c392521e88dc27aba96f)
       '@reown/appkit-react-native':
         specifier: ^2.0.3
-        version: 2.0.3(55f2b82e92a13b93ea124ec369cbfc9b)
+        version: 2.0.3(864b73051586dbd1e39384b5411db9d3)
       '@walletconnect/react-native-compat':
         specifier: ^2.23.9
-        version: 2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(expo-application@7.0.8(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
+        version: 2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(expo-application@55.0.14(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
       ethers:
         specifier: ^6.15.0
         version: 6.16.0
@@ -94,8 +94,8 @@ importers:
         specifier: ~55.0.0
         version: 55.0.17(@babel/core@7.29.0)(@expo/dom-webview@55.0.5)(@expo/metro-runtime@55.0.10)(expo-router@55.0.13)(react-dom@19.2.0(react@19.2.0))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       expo-application:
-        specifier: ~7.0.8
-        version: 7.0.8(expo@55.0.17)
+        specifier: ~55.0.14
+        version: 55.0.14(expo@55.0.17)
       expo-constants:
         specifier: ~55.0.15
         version: 55.0.15(expo@55.0.17)(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
@@ -127,8 +127,8 @@ importers:
         specifier: ~4.23.0
         version: 4.23.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       react-native-svg:
-        specifier: 15.12.1
-        version: 15.12.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
+        specifier: 15.15.3
+        version: 15.15.3(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       react-native-web:
         specifier: ~0.21.0
         version: 0.21.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1394,9 +1394,10 @@ packages:
     peerDependencies:
       react-native: ^0.0.0-0 || >=0.65 <1.0
 
-  '@react-native-community/netinfo@11.4.1':
-    resolution: {integrity: sha512-B0BYAkghz3Q2V09BF88RA601XursIEA111tnc2JOaN7axJWmNefmfjZqw/KdSxKZp7CZUuPpjBmz/WCR9uaHYg==}
+  '@react-native-community/netinfo@11.5.2':
+    resolution: {integrity: sha512-/g0m65BtX9HU+bPiCH2517bOHpEIUsGrWFXDzi1a5nNKn5KujQgm04WhL7/OSXWKHyrT8VVtUoJA0XKRxueBpQ==}
     peerDependencies:
+      react: '*'
       react-native: '>=0.59'
 
   '@react-native/assets-registry@0.83.6':
@@ -2848,8 +2849,8 @@ packages:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
 
-  expo-application@7.0.8:
-    resolution: {integrity: sha512-qFGyxk7VJbrNOQWBbE09XUuGuvkOgFS9QfToaK2FdagM2aQ+x3CvGV2DuVgl/l4ZxPgIf3b/MNh9xHpwSwn74Q==}
+  expo-application@55.0.14:
+    resolution: {integrity: sha512-NgqDIt3eCf4aVLp1L6AcEanCYoyJeuBsGrgGSzOIvxAsOvp5X3SYKW3ROgpKUnLQEKMWlzwETpjsUGszcqkk8g==}
     peerDependencies:
       expo: '*'
 
@@ -3994,8 +3995,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-svg@15.12.1:
-    resolution: {integrity: sha512-vCuZJDf8a5aNC2dlMovEv4Z0jjEUET53lm/iILFnFewa15b4atjVxU6Wirm6O9y6dEsdjDZVD7Q3QM4T1wlI8g==}
+  react-native-svg@15.15.3:
+    resolution: {integrity: sha512-/k4KYwPBLGcx2f5d4FjE+vCScK7QOX14cl2lIASJ28u4slHHtIhL0SZKU7u9qmRBHxTCKPoPBtN6haT1NENJNA==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -6252,8 +6253,9 @@ snapshots:
       merge-options: 3.0.4
       react-native: 0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)
 
-  '@react-native-community/netinfo@11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))':
+  '@react-native-community/netinfo@11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)':
     dependencies:
+      react: 19.2.0
       react-native: 0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)
 
   '@react-native/assets-registry@0.83.6': {}
@@ -6555,10 +6557,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-core-react-native@2.0.3(@types/react@19.2.14)(@walletconnect/react-native-compat@2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(expo-application@7.0.8(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)':
+  '@reown/appkit-core-react-native@2.0.3(@types/react@19.2.14)(@walletconnect/react-native-compat@2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(expo-application@55.0.14(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)':
     dependencies:
       '@reown/appkit-common-react-native': 2.0.3(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
-      '@walletconnect/react-native-compat': 2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(expo-application@7.0.8(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
+      '@walletconnect/react-native-compat': 2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(expo-application@55.0.14(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
       countries-and-timezones: 3.7.2
       derive-valtio: 0.2.0(valtio@2.1.8(@types/react@19.2.14)(react@19.2.0))
       react: 19.2.0
@@ -6567,12 +6569,12 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@reown/appkit-ethers-react-native@2.0.3(e8cc0fb5f72c96b020fe7f6f228be4d8)':
+  '@reown/appkit-ethers-react-native@2.0.3(1ddc49afe947c392521e88dc27aba96f)':
     dependencies:
-      '@react-native-community/netinfo': 11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
+      '@react-native-community/netinfo': 11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       '@reown/appkit-common-react-native': 2.0.3(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
-      '@reown/appkit-react-native': 2.0.3(55f2b82e92a13b93ea124ec369cbfc9b)
-      '@walletconnect/react-native-compat': 2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(expo-application@7.0.8(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
+      '@reown/appkit-react-native': 2.0.3(864b73051586dbd1e39384b5411db9d3)
+      '@walletconnect/react-native-compat': 2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(expo-application@55.0.14(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
       react: 19.2.0
       react-native: 0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)
       react-native-get-random-values: 1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
@@ -6650,18 +6652,18 @@ snapshots:
     dependencies:
       buffer: 6.0.3
 
-  '@reown/appkit-react-native@2.0.3(55f2b82e92a13b93ea124ec369cbfc9b)':
+  '@reown/appkit-react-native@2.0.3(864b73051586dbd1e39384b5411db9d3)':
     dependencies:
       '@reown/appkit-common-react-native': 2.0.3(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
-      '@reown/appkit-core-react-native': 2.0.3(@types/react@19.2.14)(@walletconnect/react-native-compat@2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(expo-application@7.0.8(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
-      '@reown/appkit-ui-react-native': 2.0.3(react-native-svg@15.12.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
-      '@walletconnect/react-native-compat': 2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(expo-application@7.0.8(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
+      '@reown/appkit-core-react-native': 2.0.3(@types/react@19.2.14)(@walletconnect/react-native-compat@2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(expo-application@55.0.14(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
+      '@reown/appkit-ui-react-native': 2.0.3(react-native-svg@15.15.3(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
+      '@walletconnect/react-native-compat': 2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(expo-application@55.0.14(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
       '@walletconnect/universal-provider': 2.21.10(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(typescript@5.9.3)(zod@4.3.6)
       '@walletconnect/utils': 2.23.7(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(typescript@5.9.3)(zod@4.3.6)
       react: 19.2.0
       react-native: 0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)
       react-native-safe-area-context: 5.6.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
-      react-native-svg: 15.12.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
+      react-native-svg: 15.15.3(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       valtio: 2.1.8(@types/react@19.2.14)(react@19.2.0)
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -6732,14 +6734,14 @@ snapshots:
       - valtio
       - zod
 
-  '@reown/appkit-ui-react-native@2.0.3(react-native-svg@15.12.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)':
+  '@reown/appkit-ui-react-native@2.0.3(react-native-svg@15.15.3(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)':
     dependencies:
       '@reown/appkit-common-react-native': 2.0.3(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       polished: 4.3.1
       qrcode: 1.5.3
       react: 19.2.0
       react-native: 0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)
-      react-native-svg: 15.12.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
+      react-native-svg: 15.15.3(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
 
   '@reown/appkit-ui@1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(zod@4.3.6)':
     dependencies:
@@ -7664,17 +7666,17 @@ snapshots:
       '@walletconnect/safe-json': 1.0.2
       pino: 10.0.0
 
-  '@walletconnect/react-native-compat@2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(expo-application@7.0.8(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))':
+  '@walletconnect/react-native-compat@2.23.9(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@react-native-community/netinfo@11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(expo-application@55.0.14(expo@55.0.17))(react-native-get-random-values@1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))':
     dependencies:
       '@react-native-async-storage/async-storage': 2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
-      '@react-native-community/netinfo': 11.4.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
+      '@react-native-community/netinfo': 11.5.2(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       events: 3.3.0
       fast-text-encoding: 1.0.6
       react-native: 0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)
       react-native-get-random-values: 1.11.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
       react-native-url-polyfill: 2.0.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))
     optionalDependencies:
-      expo-application: 7.0.8(expo@55.0.17)
+      expo-application: 55.0.14(expo@55.0.17)
 
   '@walletconnect/relay-api@1.0.11':
     dependencies:
@@ -8741,7 +8743,7 @@ snapshots:
 
   events@3.3.0: {}
 
-  expo-application@7.0.8(expo@55.0.17):
+  expo-application@55.0.14(expo@55.0.17):
     dependencies:
       expo: 55.0.17(@babel/core@7.29.0)(@expo/dom-webview@55.0.5)(@expo/metro-runtime@55.0.10)(expo-router@55.0.13)(react-dom@19.2.0(react@19.2.0))(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
 
@@ -10107,7 +10109,7 @@ snapshots:
       react-native: 0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)
       warn-once: 0.1.1
 
-  react-native-svg@15.12.1(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0):
+  react-native-svg@15.15.3(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0):
     dependencies:
       css-select: 5.2.2
       css-tree: 1.1.3

@@ -3,7 +3,7 @@ import { useCallback } from "react";
 
 import type { AnalyticsContext, AnalyticsEventName, AnalyticsEventPayload } from "@goal-vault/shared";
 
-import { useAnalyticsContext } from "../lib/analytics";
+import { useAnalyticsContext } from "../lib/analytics/provider";
 
 export const useAnalytics = () => {
   const pathname = usePathname();

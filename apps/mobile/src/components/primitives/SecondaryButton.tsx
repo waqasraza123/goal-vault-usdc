@@ -3,7 +3,7 @@ import { Animated, Pressable, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useInteractiveMotion } from "../../lib/motion/feedback-motion";
-import { colors, radii, spacing } from "../../theme";
+import { colors, createShadowStyle, radii, spacing } from "../../theme";
 import { useI18n } from "../../lib/i18n";
 import { AppText } from "./AppText";
 
@@ -37,10 +37,13 @@ export const SecondaryButton = ({ label, onPress, icon, disabled }: SecondaryBut
           borderColor: disabled ? colors.borderStrong : pressed ? colors.borderStrong : colors.border,
           paddingHorizontal: spacing[5],
           paddingVertical: spacing[4],
-          shadowColor: colors.overlayStrong,
-          shadowOpacity: disabled ? 0 : 0.08,
-          shadowRadius: 16,
-          shadowOffset: { width: 0, height: 10 },
+          ...createShadowStyle({
+            color: colors.overlayStrong,
+            opacity: disabled ? 0 : 0.08,
+            radius: 16,
+            offsetY: 10,
+            elevation: disabled ? 0 : 2,
+          }),
           elevation: disabled ? 0 : 2,
         })}
       >

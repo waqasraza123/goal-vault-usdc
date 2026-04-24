@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { useAdaptiveLayout } from "../../hooks/useAdaptiveLayout";
 import { useI18n } from "../../lib/i18n";
 import { routes } from "../../lib/routing";
-import { colors, radii, spacing } from "../../theme";
+import { colors, createShadowStyle, radii, spacing } from "../../theme";
 import { AppHeading, AppText, MotionView, PrimaryButton, SecondaryButton, SectionContainer } from "../primitives";
 import { HeroVaultPreviewCard } from "./HeroVaultPreviewCard";
 
@@ -72,10 +72,13 @@ export const HeroSection = () => {
             borderColor: colors.border,
             backgroundColor: colors.surfaceGlass,
             padding: spacing[4],
-            shadowColor: colors.overlayStrong,
-            shadowOpacity: 0.08,
-            shadowRadius: 18,
-            shadowOffset: { width: 0, height: 12 },
+            ...createShadowStyle({
+              color: colors.overlayStrong,
+              opacity: 0.08,
+              radius: 18,
+              offsetY: 12,
+              elevation: 2,
+            }),
             elevation: 2,
           }}
         >

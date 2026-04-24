@@ -44,7 +44,7 @@ export const Screen = ({
   return (
     <SafeAreaView edges={edges} style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ flex: 1 }}>
-        <View pointerEvents="none" style={StyleSheet.absoluteFillObject}>
+        <View style={[StyleSheet.absoluteFillObject, { pointerEvents: "none" }]}>
           <View
             style={{
               position: "absolute",

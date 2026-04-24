@@ -3,7 +3,7 @@ import { Animated, Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useInteractiveMotion } from "../../lib/motion/feedback-motion";
-import { colors, radii, spacing } from "../../theme";
+import { colors, createShadowStyle, radii, spacing } from "../../theme";
 
 export interface IconButtonProps {
   icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
@@ -35,10 +35,13 @@ export const IconButton = ({ icon, onPress, accessibilityLabel }: IconButtonProp
           backgroundColor: pressed ? colors.surfaceStrong : colors.surfaceGlass,
           borderWidth: 1,
           borderColor: pressed ? colors.borderStrong : colors.border,
-          shadowColor: colors.overlayStrong,
-          shadowOpacity: 0.08,
-          shadowRadius: 14,
-          shadowOffset: { width: 0, height: 8 },
+          ...createShadowStyle({
+            color: colors.overlayStrong,
+            opacity: 0.08,
+            radius: 14,
+            offsetY: 8,
+            elevation: 2,
+          }),
           elevation: 2,
         })}
       >
