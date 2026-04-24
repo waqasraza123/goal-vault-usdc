@@ -3,12 +3,14 @@ import { View } from "react-native";
 import { formatWalletAddress } from "../../lib/blockchain/wallet/helpers";
 import { interpolate, useI18n } from "../../lib/i18n";
 import { spacing } from "../../theme";
+import { useAppReadiness } from "../../hooks/useAppReadiness";
 import { useWalletConnection } from "../../hooks/useWalletConnection";
 import { AppHeading, AppText, PrimaryButton, SecondaryButton, SurfaceCard } from "../primitives";
 import { NetworkBadge } from "./NetworkBadge";
 
 export const WalletStatusCard = () => {
   const { connect, connectionState, disconnect, switchNetwork } = useWalletConnection();
+  const { primaryIssue } = useAppReadiness();
   const { inlineDirection, messages } = useI18n();
 
   const chainLabel = connectionState.session?.chain?.shortName ?? messages.common.networkBase;
@@ -18,7 +20,8 @@ export const WalletStatusCard = () => {
       <View style={{ gap: spacing[2] }}>
         <AppHeading size="md">{messages.common.labels.connectionStatus}</AppHeading>
         <AppText tone="secondary">
-          {connectionState.status === "walletUnavailable"
+          {primaryIssue?.description ??
+            (connectionState.status === "walletUnavailable"
             ? messages.wallet.runtimeWaiting
             : connectionState.status === "disconnected"
               ? messages.wallet.disconnected
@@ -26,7 +29,7 @@ export const WalletStatusCard = () => {
                 ? messages.wallet.unsupported
                 : connectionState.status === "connecting"
                   ? messages.wallet.connecting
-                  : messages.wallet.ready}
+                  : messages.wallet.ready)}
         </AppText>
       </View>
 

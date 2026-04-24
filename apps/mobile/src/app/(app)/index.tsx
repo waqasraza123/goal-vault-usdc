@@ -6,17 +6,25 @@ import { formatUsdc } from "../../lib/format";
 import { useI18n } from "../../lib/i18n";
 import { routes } from "../../lib/routing";
 import { colors, radii, spacing } from "../../theme";
+import { useAppReadiness } from "../../hooks/useAppReadiness";
 import { useWalletConnection } from "../../hooks/useWalletConnection";
 import { useVaults } from "../../hooks/useVaults";
-import { ChainDataLoadingState, DisconnectedState, StateBanner, UnsupportedNetworkNotice } from "../../components/feedback";
-import { ScreenHeader } from "../../components/layout";
+import {
+  AppErrorState,
+  AppLoadingState,
+  ConfigurationNotice,
+  DisconnectedState,
+  StateBanner,
+} from "../../components/feedback";
+import { NetworkStatusBanner, ScreenHeader } from "../../components/layout";
 import { AppHeading, AppText, EmptyState, PageContainer, PrimaryButton, Screen, SurfaceCard } from "../../components/primitives";
 import { VaultGrid } from "../../components/vaults";
 
 export default function MyVaultsScreen() {
   const router = useRouter();
   const { connect, connectionState, switchNetwork } = useWalletConnection();
-  const { dataSource, isLoading, notice, queryStatus, vaults } = useVaults();
+  const { readiness } = useAppReadiness();
+  const { dataSource, degradedState, isLoading, notice, queryStatus, vaults } = useVaults();
   const { messages } = useI18n();
   const totalSaved = getTotalSaved(vaults);
   const unlockedCount = getUnlockedVaultCount(vaults);
@@ -44,13 +52,20 @@ export default function MyVaultsScreen() {
         ) : null}
 
         {connectionState.status === "unsupportedNetwork" ? (
-          <UnsupportedNetworkNotice
+          <NetworkStatusBanner
             label={connectionState.session?.chainId ? `Chain ${connectionState.session.chainId}` : null}
             onSwitch={() => void switchNetwork()}
           />
         ) : null}
 
-        {connectionState.status === "ready" && isLoading ? <ChainDataLoadingState /> : null}
+        {connectionState.status === "ready" && readiness.configurationStatus === "invalid" ? <ConfigurationNotice /> : null}
+
+        {connectionState.status === "ready" && isLoading ? (
+          <AppLoadingState
+            title={messages.feedback.syncingTitle}
+            description={messages.pages.myVaults.description}
+          />
+        ) : null}
 
         {notice && connectionState.status === "ready" ? (
           <StateBanner
@@ -95,6 +110,26 @@ export default function MyVaultsScreen() {
           >
             <PrimaryButton icon="plus" label={messages.common.buttons.createVault} onPress={() => router.push(routes.createVault)} />
           </EmptyState>
+        ) : null}
+
+        {connectionState.status === "ready" && !isLoading && (queryStatus === "error" || queryStatus === "unavailable") ? (
+          <AppErrorState
+            description={
+              degradedState === "partial"
+                ? messages.feedback.partialStateDescription
+                : messages.feedback.dataUnavailableDescription
+            }
+            primaryAction={{
+              label: messages.common.buttons.tryAgain,
+              onPress: () => router.replace(routes.appHome),
+              icon: "refresh",
+            }}
+            title={
+              degradedState === "partial"
+                ? messages.feedback.partialStateTitle
+                : messages.feedback.dataUnavailableTitle
+            }
+          />
         ) : null}
 
         {showVaultGrid ? <VaultGrid vaults={vaults} /> : null}

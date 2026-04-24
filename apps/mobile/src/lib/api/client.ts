@@ -65,7 +65,10 @@ export const fetchBackendJson = async <T>({
     return {
       status: "error",
       data: null,
-      message: error instanceof Error ? error.message : fallbackMessage,
+      message:
+        error instanceof Error && error.message.toLowerCase().includes("network")
+          ? "Goal Vault could not reach the latest app data right now."
+          : fallbackMessage,
       responseStatus: null,
     };
   }

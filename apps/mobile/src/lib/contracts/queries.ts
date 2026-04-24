@@ -2,7 +2,6 @@ import { mapVaultDetail, mapVaultSummary } from "@goal-vault/contracts-sdk";
 import type { VaultDetail, VaultSummary, SupportedChainId } from "@goal-vault/shared";
 
 import { getMockVaultDetail } from "../../features/vault-detail/mockVaultDetail";
-import { mockVaults } from "../../features/vault-list/mockVaults";
 import { getReadClient } from "../blockchain/read-client";
 import { getFactoryAddressForChain } from "./registry";
 import { readFactoryVaultAddresses, readGoalVaultSummary } from "./reads";
@@ -13,9 +12,6 @@ export interface VaultQueryResult<T> {
   source: "backend" | "onchain" | "fallback" | null;
   message: string | null;
 }
-
-const fallbackVaultsByChain = (chainId: SupportedChainId): VaultSummary[] =>
-  mockVaults.filter((vault) => vault.chainId === chainId);
 
 const fallbackVaultByAddress = (vaultAddress: VaultSummary["address"]): VaultDetail | null => {
   try {
@@ -52,19 +48,10 @@ export const readVaultSummariesByOwner = async ({
           return null;
         }
 
-        const fallback = mockVaults.find((vault) => vault.address === vaultAddress);
-
         return mapVaultSummary({
           address: vaultAddress,
           chainId,
           summary: summaryResult.data,
-          metadataFallback: fallback
-            ? {
-                goalName: fallback.goalName,
-                note: fallback.note,
-                accentTone: fallback.accentTone,
-              }
-            : undefined,
         });
       }),
     );
@@ -94,17 +81,6 @@ export const readVaultSummariesByOwner = async ({
       data: null,
       source: null,
       message: "No vaults were found for this wallet on the selected chain.",
-    };
-  }
-
-  const fallbackVaults = fallbackVaultsByChain(chainId);
-
-  if (fallbackVaults.length > 0) {
-    return {
-      status: "success",
-      data: fallbackVaults,
-      source: "fallback",
-      message: addressesResult.error.message,
     };
   }
 
@@ -152,17 +128,6 @@ export const readVaultDetailByAddress = async ({
       },
       source: "onchain",
       message: null,
-    };
-  }
-
-  const fallback = fallbackVaultByAddress(vaultAddress);
-
-  if (fallback) {
-    return {
-      status: "success",
-      data: fallback,
-      source: "fallback",
-      message: summaryResult.error?.message ?? null,
     };
   }
 

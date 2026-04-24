@@ -6,7 +6,7 @@ import { serializeActivityFeedResponse, serializeVaultActivityItem, serializeVau
 import { getOwnerActivity, getVaultActivity } from "./vault-events.service";
 
 const activityQuerySchema = z.object({
-  chainId: z.coerce.number().int().optional(),
+  chainId: z.union([z.literal(8453), z.literal(84532)]).optional(),
   ownerWallet: z.string().trim().optional(),
 });
 
@@ -26,26 +26,32 @@ export const registerVaultEventRoutes = (app: FastifyInstance) => {
       });
     }
 
-    const context = app.goalVaultContext;
-    const items = getOwnerActivity({
-      context,
-      chainId: parsed.data.chainId as 8453 | 84532 | undefined,
-      ownerWallet: parsed.data.ownerWallet as `0x${string}` | undefined,
-    }).items.map((event) =>
-      serializeVaultActivityItem({
-        event,
-        vault: context.store.getVault(event.chainId, event.vaultAddress),
-      }),
-    );
+    try {
+      const context = app.goalVaultContext;
+      const items = getOwnerActivity({
+        context,
+        chainId: parsed.data.chainId,
+        ownerWallet: parsed.data.ownerWallet as `0x${string}` | undefined,
+      }).items.map((event) =>
+        serializeVaultActivityItem({
+          event,
+          vault: context.store.getVault(event.chainId, event.vaultAddress),
+        }),
+      );
 
-    return serializeActivityFeedResponse({ items });
+      return serializeActivityFeedResponse({ items });
+    } catch {
+      return reply.status(503).send({
+        message: "Activity is temporarily unavailable.",
+      });
+    }
   });
 
   app.get("/vaults/:vaultAddress/activity", async (request, reply) => {
     const params = request.params as { vaultAddress?: string };
     const parsed = z
       .object({
-        chainId: z.coerce.number().int(),
+        chainId: z.union([z.literal(8453), z.literal(84532)]),
       })
       .safeParse(request.query);
 
@@ -55,23 +61,29 @@ export const registerVaultEventRoutes = (app: FastifyInstance) => {
       });
     }
 
-    const context = app.goalVaultContext;
-    const activity = getVaultActivity({
-      context,
-      chainId: parsed.data.chainId as 8453 | 84532,
-      vaultAddress: params.vaultAddress as `0x${string}`,
-    });
+    try {
+      const context = app.goalVaultContext;
+      const activity = getVaultActivity({
+        context,
+        chainId: parsed.data.chainId,
+        vaultAddress: params.vaultAddress as `0x${string}`,
+      });
 
-    return serializeVaultActivityResponse({
-      chainId: parsed.data.chainId as 8453 | 84532,
-      vaultAddress: params.vaultAddress as `0x${string}`,
-      freshness: activity.freshness,
-      items: activity.items.map((event) =>
-        serializeVaultActivityItem({
-          event,
-          vault: context.store.getVault(event.chainId, event.vaultAddress),
-        }),
-      ),
-    });
+      return serializeVaultActivityResponse({
+        chainId: parsed.data.chainId,
+        vaultAddress: params.vaultAddress as `0x${string}`,
+        freshness: activity.freshness,
+        items: activity.items.map((event) =>
+          serializeVaultActivityItem({
+            event,
+            vault: context.store.getVault(event.chainId, event.vaultAddress),
+          }),
+        ),
+      });
+    } catch {
+      return reply.status(503).send({
+        message: "Vault activity is temporarily unavailable.",
+      });
+    }
   });
 };

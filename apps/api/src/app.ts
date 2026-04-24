@@ -21,7 +21,15 @@ export const buildApp = ({ context, env }: { context: IndexerContext; env: ApiRu
     validationErrors: env.validationErrors,
   }));
 
-  registerHealthRoutes(app, context);
+  app.setErrorHandler((error, _request, reply) => {
+    app.log.error(error);
+
+    return reply.status(500).send({
+      message: "Goal Vault API could not complete this request.",
+    });
+  });
+
+  registerHealthRoutes(app, context, env);
   registerIndexerRoutes(app, context);
   registerVaultRoutes(app);
   registerVaultEventRoutes(app);

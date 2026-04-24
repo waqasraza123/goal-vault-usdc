@@ -5,6 +5,8 @@ import { triggerIndexerSync } from "../lib/api/sync-status";
 import { useWalletConnection } from "./useWalletConnection";
 import { useWalletWriteProvider } from "../lib/blockchain/wallet";
 import { getCurrentMessages, useI18n } from "../lib/i18n";
+import { buildTransactionRecoveryRecord, createRecoveryId } from "../lib/recovery/records";
+import { removeTransactionRecoveryRecord, updateTransactionRecoveryRecord, upsertTransactionRecoveryRecord } from "../lib/recovery/store";
 import { useWithdrawEligibility } from "./useWithdrawEligibility";
 import {
   buildWithdrawPreview,
@@ -147,6 +149,9 @@ export const useVaultWithdrawFlow = (vault: VaultDetail | null) => {
   }, []);
 
   const executeWithdraw = useCallback(async () => {
+    let submittedTxHash: `0x${string}` | null = null;
+    let recoveryId: string | null = null;
+
     if (!vault || !eligibility || !eligibility.canWithdraw) {
       applyState(
         createWithdrawFlowState({
@@ -215,6 +220,24 @@ export const useVaultWithdrawFlow = (vault: VaultDetail | null) => {
         amount: amountAtomic,
         to: connectionState.session.address,
         onSubmitted: (txHash) => {
+          submittedTxHash = txHash;
+          recoveryId = createRecoveryId({
+            kind: "withdraw",
+            txHash,
+          });
+          void upsertTransactionRecoveryRecord(
+            buildTransactionRecoveryRecord({
+              kind: "withdraw",
+              status: "submitted",
+              action: "wait",
+              chainId: connectionState.session!.chain!.id,
+              ownerAddress: connectionState.session!.address,
+              vaultAddress: vault.address,
+              txHash,
+              amountAtomic: amountAtomic.toString(),
+              metadata: null,
+            }),
+          );
           applyState(
             createWithdrawFlowState({
               status: "submitting",
@@ -225,6 +248,12 @@ export const useVaultWithdrawFlow = (vault: VaultDetail | null) => {
           );
         },
         onConfirming: (txHash) => {
+          void updateTransactionRecoveryRecord(createRecoveryId({ kind: "withdraw", txHash }), (current) => ({
+            ...current,
+            status: "confirming",
+            syncStatus: "pending",
+            updatedAt: new Date().toISOString(),
+          }));
           applyState(
             createWithdrawFlowState({
               status: "confirming",
@@ -284,8 +313,17 @@ export const useVaultWithdrawFlow = (vault: VaultDetail | null) => {
         }),
       );
 
+      void removeTransactionRecoveryRecord(createRecoveryId({ kind: "withdraw", txHash: withdrawal.txHash }));
       return result;
     } catch (error) {
+      if (recoveryId && submittedTxHash) {
+        void updateTransactionRecoveryRecord(recoveryId, (current) => ({
+          ...current,
+          status: "confirming",
+          syncStatus: "pending",
+          updatedAt: new Date().toISOString(),
+        }));
+      }
       applyState(
         createWithdrawFlowState({
           status: "failed",

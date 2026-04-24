@@ -7,11 +7,18 @@ const start = async () => {
   const env = readApiRuntimeEnv();
   const context = await createIndexerContext(env);
   const app = buildApp({ context, env });
+  const runSync = async () => {
+    try {
+      await runFullIndexerSync(context);
+    } catch (error) {
+      app.log.error(error, "Goal Vault indexer sync failed.");
+    }
+  };
 
   if (env.syncIntervalMs > 0) {
-    void runFullIndexerSync(context);
+    void runSync();
     setInterval(() => {
-      void runFullIndexerSync(context);
+      void runSync();
     }, env.syncIntervalMs).unref();
   }
 

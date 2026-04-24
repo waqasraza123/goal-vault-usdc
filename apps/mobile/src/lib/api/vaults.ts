@@ -39,7 +39,17 @@ export const saveVaultMetadata = async (payload: VaultMetadataPayload): Promise<
       "content-type": "application/json",
     },
     body: JSON.stringify(normalizePayload(payload)),
-  });
+  }).catch(() => null);
+
+  if (!response) {
+    return {
+      status: "failed",
+      persistence: "backend",
+      message: "Vault details are still syncing into the app.",
+      retryable: true,
+      responseStatus: null,
+    };
+  }
 
   if (response.ok || response.status === 409) {
     return {

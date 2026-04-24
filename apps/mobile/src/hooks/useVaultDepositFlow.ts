@@ -5,6 +5,8 @@ import { triggerIndexerSync } from "../lib/api/sync-status";
 import { useWalletConnection } from "./useWalletConnection";
 import { useWalletWriteProvider } from "../lib/blockchain/wallet";
 import { getCurrentMessages, useI18n } from "../lib/i18n";
+import { buildTransactionRecoveryRecord, createRecoveryId } from "../lib/recovery/records";
+import { removeTransactionRecoveryRecord, updateTransactionRecoveryRecord, upsertTransactionRecoveryRecord } from "../lib/recovery/store";
 import { useUsdcAllowance } from "./useUsdcAllowance";
 import { useUsdcBalance } from "./useUsdcBalance";
 import {
@@ -293,6 +295,9 @@ export const useVaultDepositFlow = (vault: VaultDetail | null) => {
   }, [amountAtomic, applyState, chainId, connectionState.status, messages.deposit.errors.connectBeforeApprove, ownerAddress, provider, refetchBalances, vault]);
 
   const submitDeposit = useCallback(async () => {
+    let submittedTxHash: `0x${string}` | null = null;
+    let recoveryId: string | null = null;
+
     if (!vault || !provider || connectionState.status !== "ready" || !chainId || !ownerAddress || amountAtomic === null) {
       applyState(
         createDepositFlowState({
@@ -325,6 +330,24 @@ export const useVaultDepositFlow = (vault: VaultDetail | null) => {
         vaultAddress: vault.address,
         amount: amountAtomic,
         onSubmitted: (txHash) => {
+          submittedTxHash = txHash;
+          recoveryId = createRecoveryId({
+            kind: "deposit",
+            txHash,
+          });
+          void upsertTransactionRecoveryRecord(
+              buildTransactionRecoveryRecord({
+                kind: "deposit",
+                status: "submitted",
+                action: "wait",
+                chainId,
+                ownerAddress,
+                vaultAddress: vault.address,
+                txHash,
+                amountAtomic: amountAtomic.toString(),
+                metadata: null,
+              }),
+            );
           applyState(
             createDepositFlowState({
               status: "deposit_confirming",
@@ -390,8 +413,18 @@ export const useVaultDepositFlow = (vault: VaultDetail | null) => {
         }),
       );
 
+      void removeTransactionRecoveryRecord(createRecoveryId({ kind: "deposit", txHash: deposit.txHash }));
       return result;
     } catch (error) {
+      if (recoveryId && submittedTxHash) {
+        void updateTransactionRecoveryRecord(recoveryId, (current) => ({
+          ...current,
+          status: "confirming",
+          syncStatus: "pending",
+          didConfirmOnchain: false,
+          updatedAt: new Date().toISOString(),
+        }));
+      }
       applyState(
         createDepositFlowState({
           status: "failed",

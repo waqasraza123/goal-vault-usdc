@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { View } from "react-native";
 
 import { useWalletConnection } from "../../hooks/useWalletConnection";
@@ -5,13 +6,14 @@ import { useVaultActivity } from "../../hooks/useVaultActivity";
 import { formatLongDate } from "../../lib/format";
 import { useI18n } from "../../lib/i18n";
 import { colors, radii, spacing } from "../../theme";
-import { DisconnectedState, StateBanner, UnsupportedNetworkNotice } from "../../components/feedback";
-import { ScreenHeader } from "../../components/layout";
-import { AppText, PageContainer, Screen, SurfaceCard } from "../../components/primitives";
+import { AppErrorState, AppLoadingState, DisconnectedState, StateBanner } from "../../components/feedback";
+import { NetworkStatusBanner, ScreenHeader } from "../../components/layout";
+import { AppText, EmptyState, PageContainer, Screen, SurfaceCard } from "../../components/primitives";
 
 export default function ActivityScreen() {
+  const router = useRouter();
   const { connect, connectionState, switchNetwork } = useWalletConnection();
-  const { dataSource, events, notice } = useVaultActivity();
+  const { dataSource, events, isLoading, notice } = useVaultActivity();
   const { inlineDirection, messages } = useI18n();
 
   return (
@@ -26,13 +28,34 @@ export default function ActivityScreen() {
           <DisconnectedState onConnect={() => void connect()} />
         ) : null}
         {connectionState.status === "unsupportedNetwork" ? (
-          <UnsupportedNetworkNotice onSwitch={() => void switchNetwork()} />
+          <NetworkStatusBanner onSwitch={() => void switchNetwork()} />
+        ) : null}
+        {connectionState.status === "ready" && isLoading ? (
+          <AppLoadingState title={messages.feedback.syncingTitle} description={messages.pages.activity.description} />
         ) : null}
         {notice ? (
           <StateBanner
             icon={dataSource === "fallback" ? "database-clock-outline" : "information-outline"}
             label={notice}
             tone={dataSource === "fallback" ? "warning" : "neutral"}
+          />
+        ) : null}
+        {connectionState.status === "ready" && !isLoading && events.length === 0 ? (
+          <EmptyState
+            description={messages.pages.activity.emptyDescription}
+            icon="timeline-clock-outline"
+            title={messages.pages.activity.title}
+          />
+        ) : null}
+        {connectionState.status === "ready" && !isLoading && dataSource === "fallback" && events.length > 0 ? (
+          <AppErrorState
+            description={messages.feedback.partialStateDescription}
+            primaryAction={{
+              label: messages.common.buttons.tryAgain,
+              onPress: () => router.replace("/activity"),
+              icon: "refresh",
+            }}
+            title={messages.feedback.partialStateTitle}
           />
         ) : null}
         <View style={{ gap: spacing[4] }}>

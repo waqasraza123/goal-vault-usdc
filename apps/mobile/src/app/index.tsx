@@ -4,7 +4,7 @@ import { useWalletConnection } from "../hooks/useWalletConnection";
 import { useI18n } from "../lib/i18n";
 import { MarketingShell } from "../components/layout";
 import { WalletStatusCard } from "../components/layout/WalletStatusCard";
-import { FinalCtaSection, HeroSection, HowItWorksSection } from "../components/marketing";
+import { FinalCtaSection, HeroSection, HowItWorksSection, SecurityTrustSection } from "../components/marketing";
 import { PageContainer, Screen } from "../components/primitives";
 import { spacing } from "../theme";
 
@@ -19,6 +19,7 @@ export default function LandingScreen() {
           <HeroSection />
           {connectionState.status !== "ready" ? <WalletStatusCard /> : null}
           <HowItWorksSection />
+          <SecurityTrustSection />
           <FinalCtaSection />
           <View />
         </PageContainer>

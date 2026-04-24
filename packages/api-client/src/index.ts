@@ -1,8 +1,10 @@
 import type {
   ActivityFeedResult,
+  ApiHealthSummary,
   ChainSyncStatus,
   HealthStatus,
   SupportedChainId,
+  StagingReadinessSummary,
   SyncFreshnessSnapshot,
   VaultActivityItem,
   VaultDetailEnriched,
@@ -178,8 +180,18 @@ export const parseActivityFeedResponse = (response: ActivityFeedResponse): Activ
   hasMore: response.hasMore,
 });
 
-export const parseHealthResponse = (response: HealthResponse): { ok: boolean; checkedAt: string; chainSync: ChainSyncStatus[] } => ({
+export const parseHealthResponse = (response: HealthResponse): {
+  ok: boolean;
+  checkedAt: string;
+  chainSync: ChainSyncStatus[];
+  api: ApiHealthSummary;
+  staging: StagingReadinessSummary;
+  validationErrors: string[];
+} => ({
   ok: response.ok,
   checkedAt: response.checkedAt,
   chainSync: response.chainSync,
+  api: response.api,
+  staging: response.staging,
+  validationErrors: response.validationErrors,
 });

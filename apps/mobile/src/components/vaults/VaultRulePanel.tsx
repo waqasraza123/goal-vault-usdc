@@ -18,6 +18,7 @@ export const VaultRulePanel = ({ vault, eligibility }: VaultRulePanelProps) => {
       <AppText tone="secondary">{messages.common.labels.timeLock}</AppText>
       <AppText>{interpolate(messages.vaults.protectionRuleUnlocksOn, { date: formatLongDate(vault.unlockDate) })}</AppText>
       <AppText tone="secondary">{ruleMessage}</AppText>
+      <AppText tone="secondary">{messages.vaults.ruleTruthDescription}</AppText>
     </SurfaceCard>
   );
 };

@@ -4,8 +4,11 @@ import type { CreateVaultInput, CreateVaultResult, CreateVaultTransactionState, 
 import { useWalletConnection } from "./useWalletConnection";
 import { useWalletWriteProvider } from "../lib/blockchain/wallet";
 import { buildCreateVaultMetadataPayload, createVaultTransaction } from "../lib/contracts/create-vault";
+import { buildCreateVaultReviewModel } from "../lib/contracts/mappers";
 import { triggerIndexerSync } from "../lib/api/sync-status";
 import { saveVaultMetadata } from "../lib/api/vaults";
+import { buildTransactionRecoveryRecord, createRecoveryId } from "../lib/recovery/records";
+import { removeTransactionRecoveryRecord, updateTransactionRecoveryRecord, upsertTransactionRecoveryRecord } from "../lib/recovery/store";
 import {
   getTransactionStatusCopy,
   createVaultTransactionState,
@@ -124,6 +127,9 @@ export const useCreateVaultMutation = () => {
 
   const submit = useCallback(
     async (values: CreateVaultInput) => {
+      let submittedTxHash: Hash | null = null;
+      let recoveryId: string | null = null;
+
       if (
         state.status === "awaiting_wallet_confirmation" ||
         state.status === "submitting" ||
@@ -173,12 +179,42 @@ export const useCreateVaultMutation = () => {
       );
 
       try {
+        const recoveryReview = buildCreateVaultReviewModel({
+          chainId: connectionState.session.chain.id,
+          values,
+        });
         const txResult = await createVaultTransaction({
           provider,
           ownerAddress: connectionState.session.address,
           chainId: connectionState.session.chain.id,
           values,
           onSubmitted: (txHash) => {
+            submittedTxHash = txHash;
+            recoveryId = createRecoveryId({
+              kind: "create_vault",
+              txHash,
+            });
+            void upsertTransactionRecoveryRecord(
+              buildTransactionRecoveryRecord({
+                kind: "create_vault",
+                status: "submitted",
+                action: "wait",
+                chainId: connectionState.session!.chain!.id,
+                ownerAddress: connectionState.session!.address,
+                txHash,
+                amountAtomic: null,
+                vaultAddress: null,
+                metadata: {
+                  displayName: recoveryReview.goalName,
+                  category: recoveryReview.category ?? null,
+                  note: recoveryReview.note || null,
+                  accentTheme: recoveryReview.accentTheme ?? null,
+                  accentTone: recoveryReview.accentTone,
+                  targetAmount: recoveryReview.targetAmount.toString(),
+                  unlockDate: recoveryReview.unlockDate,
+                },
+              }),
+            );
             applyState(
               createVaultTransactionState({
                 status: "submitting",
@@ -187,6 +223,17 @@ export const useCreateVaultMutation = () => {
             );
           },
           onConfirming: (txHash) => {
+            const nextRecoveryId = createRecoveryId({
+              kind: "create_vault",
+              txHash,
+            });
+            recoveryId = nextRecoveryId;
+            void updateTransactionRecoveryRecord(nextRecoveryId, (current) => ({
+              ...current,
+              status: "confirming",
+              syncStatus: "pending",
+              updatedAt: new Date().toISOString(),
+            }));
             applyState(
               createVaultTransactionState({
                 status: "confirming",
@@ -225,6 +272,13 @@ export const useCreateVaultMutation = () => {
             }),
           );
 
+          void updateTransactionRecoveryRecord(createRecoveryId({ kind: "create_vault", txHash: txResult.txHash }), (current) => ({
+            ...current,
+            status: "confirmed",
+            syncStatus: "pending",
+            didConfirmOnchain: true,
+            updatedAt: new Date().toISOString(),
+          }));
           return null;
         }
 
@@ -273,10 +327,19 @@ export const useCreateVaultMutation = () => {
             }),
           );
 
+          void updateTransactionRecoveryRecord(createRecoveryId({ kind: "create_vault", txHash: nextResult.txHash }), (current) => ({
+            ...current,
+            vaultAddress: nextResult.vaultAddress,
+            status: "syncing",
+            syncStatus: "failed",
+            didConfirmOnchain: true,
+            updatedAt: new Date().toISOString(),
+          }));
           return nextResult;
         }
 
         retryStateRef.current = null;
+        void removeTransactionRecoveryRecord(createRecoveryId({ kind: "create_vault", txHash: nextResult.txHash }));
         applyState(
           createVaultTransactionState({
             status: "success",
@@ -289,6 +352,14 @@ export const useCreateVaultMutation = () => {
 
         return nextResult;
       } catch (error) {
+        if (recoveryId && submittedTxHash) {
+          void updateTransactionRecoveryRecord(recoveryId, (current) => ({
+            ...current,
+            status: "confirming",
+            syncStatus: "pending",
+            updatedAt: new Date().toISOString(),
+          }));
+        }
         applyState(
           createVaultTransactionState({
             status: "failed",
@@ -446,6 +517,7 @@ export const useCreateVaultMutation = () => {
     }
 
     retryStateRef.current = null;
+    void removeTransactionRecoveryRecord(createRecoveryId({ kind: "create_vault", txHash: nextResult.txHash }));
     applyState(
       createVaultTransactionState({
         status: "success",

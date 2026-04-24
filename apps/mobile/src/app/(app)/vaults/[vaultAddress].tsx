@@ -1,6 +1,7 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { View } from "react-native";
 
+import { useTransactionRecovery } from "../../../hooks/useTransactionRecovery";
 import { useVaultDepositFlow } from "../../../hooks/useVaultDepositFlow";
 import { useVaultDetail } from "../../../hooks/useVaultDetail";
 import { useVaultWithdrawFlow } from "../../../hooks/useVaultWithdrawFlow";
@@ -8,34 +9,42 @@ import { useWalletConnection } from "../../../hooks/useWalletConnection";
 import { useI18n } from "../../../lib/i18n";
 import { parseVaultRouteParams } from "../../../lib/validation";
 import { useAdaptiveLayout } from "../../../hooks/useAdaptiveLayout";
+import { routes } from "../../../lib/routing";
 import { spacing } from "../../../theme";
 import {
-  ChainDataLoadingState,
+  AppLoadingState,
   DisconnectedState,
   MetadataRecoveryNotice,
   StateBanner,
-  UnsupportedNetworkNotice,
 } from "../../../components/feedback";
-import { ScreenHeader } from "../../../components/layout";
+import { NetworkStatusBanner, ScreenHeader } from "../../../components/layout";
 import { EmptyState, PageContainer, Screen } from "../../../components/primitives";
 import {
   DepositActionPanel,
   VaultActivityPreview,
   VaultDetailHeader,
   VaultProgressPanel,
+  VaultRecoveryCard,
   VaultRulePanel,
+  VaultStateNotice,
   WithdrawActionPanel,
 } from "../../../components/vaults";
 
 export default function VaultDetailScreen() {
+  const router = useRouter();
   const params = useLocalSearchParams();
   const { vaultAddress } = parseVaultRouteParams(params);
   const { connect, connectionState, switchNetwork } = useWalletConnection();
-  const { dataSource, isLoading, notice, queryStatus, vault } = useVaultDetail(vaultAddress);
+  const { dataSource, degradedState, isLoading, notice, queryStatus, vault } = useVaultDetail(vaultAddress);
+  const { items, dismiss } = useTransactionRecovery({
+    ownerAddress: connectionState.session?.address ?? null,
+    vaultAddress,
+  });
   const adaptiveLayout = useAdaptiveLayout();
   const { messages } = useI18n();
   const depositFlow = useVaultDepositFlow(vault);
   const withdrawFlow = useVaultWithdrawFlow(vault);
+  const activeRecovery = items[0] ?? null;
 
   return (
     <Screen contentContainerStyle={{ paddingBottom: spacing[12] }}>
@@ -51,10 +60,12 @@ export default function VaultDetailScreen() {
         ) : null}
 
         {connectionState.status === "unsupportedNetwork" ? (
-          <UnsupportedNetworkNotice onSwitch={() => void switchNetwork()} />
+          <NetworkStatusBanner onSwitch={() => void switchNetwork()} />
         ) : null}
 
-        {connectionState.status === "ready" && isLoading ? <ChainDataLoadingState /> : null}
+        {connectionState.status === "ready" && isLoading ? (
+          <AppLoadingState title={messages.feedback.syncingTitle} description={messages.pages.vaultDetail.description} />
+        ) : null}
 
         {notice && connectionState.status === "ready" ? (
           <StateBanner
@@ -63,6 +74,8 @@ export default function VaultDetailScreen() {
             tone={dataSource === "fallback" ? "warning" : "neutral"}
           />
         ) : null}
+
+        {activeRecovery ? <VaultRecoveryCard item={activeRecovery} onDismiss={() => void dismiss(activeRecovery.id)} /> : null}
 
         {vault?.metadataStatus === "failed" ? (
           <MetadataRecoveryNotice
@@ -78,7 +91,20 @@ export default function VaultDetailScreen() {
           />
         ) : null}
 
-        {connectionState.status === "ready" && !isLoading && queryStatus !== "success" ? (
+        {connectionState.status === "ready" &&
+        !isLoading &&
+        degradedState !== "healthy" &&
+        degradedState !== "syncing" &&
+        degradedState !== "not_found" ? (
+          <VaultStateNotice
+            description={notice ?? messages.pages.vaultDetail.notAvailableDescription}
+            onRetry={() => router.replace(routes.vaultDetail(vaultAddress))}
+            state={degradedState}
+            title={messages.feedback.dataUnavailableTitle}
+          />
+        ) : null}
+
+        {connectionState.status === "ready" && !isLoading && queryStatus !== "success" && degradedState === "not_found" ? (
           <EmptyState
             description={messages.pages.vaultDetail.notAvailableDescription}
             icon="shield-star-outline"

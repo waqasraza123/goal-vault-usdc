@@ -8,6 +8,7 @@ import { readVaultDetailByAddress, type VaultQueryResult } from "../lib/contract
 import { createSessionVaultDetail, mergeVaultSummaryWithMetadata } from "../lib/contracts/mappers";
 import { useI18n } from "../lib/i18n";
 import { getSessionVaultActivities, getSessionVaultMetadata, useVaultStoreVersion } from "../state/vault-store";
+import { useSyncFreshness } from "./useSyncFreshness";
 import { useWalletConnection } from "./useWalletConnection";
 
 export const useVaultDetail = (vaultAddress: VaultSummary["address"]) => {
@@ -153,16 +154,18 @@ export const useVaultDetail = (vaultAddress: VaultSummary["address"]) => {
       .slice(0, 6);
   }, [backendDetail?.normalizedActivity, connectionState, vault, vaultAddress, vaultStoreVersion]);
 
-  const freshnessNotice =
-    backendDetail?.freshness && backendDetail.freshness.freshness !== "current"
-      ? messages.feedback.activityUpdatingDescription
-      : null;
+  const syncState = useSyncFreshness({
+    freshness: backendDetail?.freshness ?? null,
+    metadataStatus: sessionMetadata?.metadataStatus,
+    hasPartialData: result.source === "fallback",
+    notFound: !vault && !isLoading && result.status === "empty",
+  });
   const notice =
     sessionMetadata?.metadataStatus === "failed"
       ? messages.feedback.metadataFailedDescription
       : sessionMetadata?.metadataStatus === "pending"
         ? messages.feedback.metadataPendingDescription
-        : freshnessNotice ?? result.message;
+        : syncState.description ?? result.message;
 
   return {
     connectionState,
@@ -175,6 +178,7 @@ export const useVaultDetail = (vaultAddress: VaultSummary["address"]) => {
       : null,
     queryStatus: vault ? "success" : result.status,
     dataSource: result.source ?? (vault ? "session" : null),
+    degradedState: syncState.state,
     notice,
   };
 };

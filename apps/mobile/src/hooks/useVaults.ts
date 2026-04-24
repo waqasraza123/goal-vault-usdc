@@ -7,6 +7,7 @@ import { readVaultSummariesByOwner, type VaultQueryResult } from "../lib/contrac
 import { createSessionVaultSummary, mergeVaultSummaryWithMetadata } from "../lib/contracts/mappers";
 import { useI18n } from "../lib/i18n";
 import { getSessionVaultsByOwner, useVaultStoreVersion } from "../state/vault-store";
+import { useSyncFreshness } from "./useSyncFreshness";
 import { useWalletConnection } from "./useWalletConnection";
 
 export const useVaults = () => {
@@ -109,21 +110,20 @@ export const useVaults = () => {
       : sessionVaults.find((record) => record.metadataStatus === "pending")
         ? messages.feedback.metadataPendingDescription
         : null;
-  const freshnessNotice =
-    result.source === "backend" &&
-    (result.data ?? []).some(
-      (vault) =>
-        "freshness" in vault &&
-        ((vault.freshness as SyncFreshnessSnapshot).freshness === "syncing" ||
-          (vault.freshness as SyncFreshnessSnapshot).freshness === "lagging"),
-    )
-      ? messages.feedback.vaultSyncingDescription
+  const backendFreshness =
+    result.source === "backend"
+      ? ((result.data ?? []).find((vault) => "freshness" in vault)?.freshness as SyncFreshnessSnapshot | undefined) ?? null
       : null;
+  const syncState = useSyncFreshness({
+    freshness: backendFreshness,
+    metadataStatus: sessionVaults.find((record) => record.metadataStatus === "failed")?.metadataStatus ?? sessionVaults.find((record) => record.metadataStatus === "pending")?.metadataStatus,
+    hasPartialData: result.source === "fallback",
+  });
 
   const queryStatus =
     mergedVaults.length > 0 ? "success" : result.status === "success" ? "empty" : result.status;
   const dataSource = result.source ?? (mergedVaults.length > 0 ? "session" : null);
-  const notice = sessionNotice ?? freshnessNotice ?? result.message;
+  const notice = sessionNotice ?? syncState.description ?? result.message;
 
   return {
     connectionState,
@@ -131,6 +131,7 @@ export const useVaults = () => {
     vaults: mergedVaults,
     queryStatus,
     dataSource,
+    degradedState: syncState.state,
     notice,
   };
 };

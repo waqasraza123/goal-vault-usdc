@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { VaultActivityEvent } from "../types";
-import { mockActivity } from "../features/activity/mockActivity";
 import { createActivityDedupeKey, fetchOwnerActivityFeed, mapActivityItemToViewEvent } from "../lib/api/activity";
 import { useI18n } from "../lib/i18n";
 import { getSessionVaultActivities, useVaultStoreVersion } from "../state/vault-store";
@@ -56,12 +55,6 @@ export const useVaultActivity = () => {
   }, [connectionState, vaultStoreVersion]);
 
   const events = useMemo(() => {
-    const fallbackEvents =
-      backendEvents ??
-      (connectionState.status === "ready" && connectionState.session?.chain
-        ? mockActivity.filter((event) => event.chainId === connectionState.session?.chain?.id)
-        : mockActivity);
-
     const sessionEvents =
       connectionState.status === "ready" && connectionState.session?.chain
         ? getSessionVaultActivities({
@@ -71,7 +64,7 @@ export const useVaultActivity = () => {
         : [];
     const eventMap = new Map<string, VaultActivityEvent>();
 
-    for (const event of fallbackEvents) {
+    for (const event of backendEvents ?? []) {
       eventMap.set(
         createActivityDedupeKey({
           txHash: event.txHash,

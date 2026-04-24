@@ -3,8 +3,10 @@ import { Pressable, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import { useCreateVaultForm } from "../../../features/create-vault/useCreateVaultForm";
+import { useAppReadiness } from "../../../hooks/useAppReadiness";
 import { useWalletConnection } from "../../../hooks/useWalletConnection";
 import { useCreateVaultMutation } from "../../../hooks/useCreateVaultMutation";
+import { useTransactionRecovery } from "../../../hooks/useTransactionRecovery";
 import { useContractConfig } from "../../../hooks/useContractConfig";
 import { defaultGoalVaultChainId } from "../../../lib/blockchain/chains";
 import { buildCreateVaultReviewModel, getVaultAccentThemeOptions } from "../../../lib/contracts/mappers";
@@ -14,13 +16,15 @@ import { colors, radii, spacing } from "../../../theme";
 import { FormSection, StepPills } from "../../../components/forms";
 import { ScreenHeader } from "../../../components/layout";
 import {
+  ConfigurationNotice,
   CreateVaultErrorState,
   DisconnectedState,
   MetadataRecoveryNotice,
   StateBanner,
+  TransactionRecoveryNotice,
   TransactionStatusCard,
-  UnsupportedNetworkNotice,
 } from "../../../components/feedback";
+import { NetworkStatusBanner } from "../../../components/layout/NetworkStatusBanner";
 import {
   AmountField,
   AppText,
@@ -37,11 +41,16 @@ export default function CreateVaultScreen() {
   const { inlineDirection, messages } = useI18n();
   const { values, errors, step, setFieldValue, nextStep, previousStep, validateAll, reset } = useCreateVaultForm();
   const { chainId, config } = useContractConfig();
+  const { readiness } = useAppReadiness();
   const { connect, connectionState, switchNetwork } = useWalletConnection();
+  const { items, dismiss } = useTransactionRecovery({
+    ownerAddress: connectionState.session?.address ?? null,
+  });
   const { state, statusCopy, result, submit, retry, reset: resetMutation, isBusy } = useCreateVaultMutation();
   const targetAmount = Number.parseFloat(values.targetAmount || "0");
   const stepLabels = messages.pages.createVault.steps;
   const accentThemeOptions = useMemo(() => getVaultAccentThemeOptions(), [messages.pages.createVault.accentThemes]);
+  const createRecovery = items.find((item) => item.kind === "create_vault") ?? null;
 
   const activeChainId = connectionState.session?.chain?.id ?? chainId ?? defaultGoalVaultChainId;
   const review = useMemo(() => {
@@ -118,19 +127,17 @@ export default function CreateVaultScreen() {
         ) : null}
 
         {connectionState.status === "unsupportedNetwork" ? (
-          <UnsupportedNetworkNotice
+          <NetworkStatusBanner
             label={connectionState.session?.chainId ? `Chain ${connectionState.session.chainId}` : null}
             onSwitch={() => void switchNetwork()}
           />
         ) : null}
 
-        {connectionState.status === "ready" && !factoryConfigured ? (
-          <StateBanner
-            icon="alert-circle-outline"
-            label={messages.pages.createVault.missingFactory}
-            tone="warning"
-          />
+        {connectionState.status === "ready" && (!factoryConfigured || readiness.configurationStatus === "invalid") ? (
+          <ConfigurationNotice description={!factoryConfigured ? messages.pages.createVault.missingFactory : undefined} />
         ) : null}
+
+        {createRecovery ? <TransactionRecoveryNotice item={createRecovery} onDismiss={() => void dismiss(createRecovery.id)} /> : null}
 
         {state.status !== "idle" && state.status !== "success" ? (
           <TransactionStatusCard
@@ -299,7 +306,7 @@ export default function CreateVaultScreen() {
                     />
                   ) : (
                     <PrimaryButton
-                      disabled={!canSubmit}
+                      disabled={!canSubmit || readiness.status === "blocked"}
                       icon="shield-check-outline"
                       label={messages.common.buttons.createVault}
                       onPress={() => void handleCreate()}
