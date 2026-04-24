@@ -79,6 +79,41 @@ export const CreateVaultSuccessCard = ({
           </AppText>
           <AppText tone="secondary">{messages.pages.createVault.success.nextDescription}</AppText>
         </View>
+        <View style={{ gap: spacing[3] }}>
+          {messages.pages.createVault.success.nextSteps.map((step, index) => (
+            <View
+              key={step}
+              style={{
+                flexDirection: "row",
+                alignItems: "flex-start",
+                gap: spacing[3],
+                borderRadius: radii.md,
+                borderWidth: 1,
+                borderColor: colors.border,
+                backgroundColor: colors.surface,
+                padding: spacing[4],
+              }}
+            >
+              <View
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 14,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: colors.accentSoft,
+                }}
+              >
+                <AppText size="sm" tone="accent" weight="semibold">
+                  {index + 1}
+                </AppText>
+              </View>
+              <AppText style={{ flex: 1 }} tone="secondary">
+                {step}
+              </AppText>
+            </View>
+          ))}
+        </View>
         <PrimaryButton icon="shield-check-outline" label={messages.common.buttons.viewVault} onPress={onViewVault} />
         <SecondaryButton icon="view-grid-outline" label={messages.common.buttons.backToVaults} onPress={onBackToVaults} />
       </View>

@@ -5,10 +5,14 @@
   "packageManager": "pnpm@10.11.1",
   "scripts": {
     "dev": "pnpm --filter @goal-vault/mobile start",
+    "dev:api": "pnpm --filter @goal-vault/api dev",
     "dev:web": "pnpm --filter @goal-vault/mobile web",
     "dev:ios": "pnpm --filter @goal-vault/mobile ios",
     "dev:android": "pnpm --filter @goal-vault/mobile android",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "verify:mobile:web": "pnpm --filter @goal-vault/mobile exec expo export --platform web --output-dir ../../dist-web",
+    "verify:mobile:ios": "pnpm --filter @goal-vault/mobile exec expo export --platform ios --output-dir ../../dist-ios",
+    "verify:release": "pnpm typecheck && pnpm verify:mobile:web && pnpm verify:mobile:ios"
   },
   "devDependencies": {
     "turbo": "^2.5.8",

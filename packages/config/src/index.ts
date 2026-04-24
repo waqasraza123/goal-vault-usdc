@@ -12,7 +12,9 @@ export const appCopy = {
     "Create one goal, fund it in USDC, and keep withdrawals locked until the rule allows it.",
 } as const;
 
+export * from "./app-metadata";
 export * from "./chains";
 export * from "./contracts";
+export * from "./deployment";
 export * from "./env";
 export * from "./tokens";

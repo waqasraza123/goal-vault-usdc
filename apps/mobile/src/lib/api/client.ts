@@ -1,4 +1,4 @@
-import { clientEnv } from "../env/client";
+import { clientEnv, getBackendBaseUrl } from "../env/client";
 
 export interface BackendReadResult<T> {
   status: "success" | "unavailable" | "error" | "not_found";
@@ -25,17 +25,25 @@ export const fetchBackendJson = async <T>({
   fallbackMessage: string;
   init?: RequestInit;
 }): Promise<BackendReadResult<T>> => {
-  if (!clientEnv.apiBaseUrl) {
+  const backendBaseUrl = getBackendBaseUrl();
+
+  if (!backendBaseUrl) {
     return {
       status: "unavailable",
       data: null,
-      message: "Goal Vault backend is not configured.",
+      message: "Some Goal Vault services are still being prepared.",
       responseStatus: null,
     };
   }
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), clientEnv.apiTimeoutMs);
+
   try {
-    const response = await fetch(`${clientEnv.apiBaseUrl}${path}`, init);
+    const response = await fetch(`${backendBaseUrl}${path}`, {
+      ...init,
+      signal: init?.signal ?? controller.signal,
+    });
 
     if (response.status === 404) {
       return {
@@ -66,10 +74,14 @@ export const fetchBackendJson = async <T>({
       status: "error",
       data: null,
       message:
-        error instanceof Error && error.message.toLowerCase().includes("network")
-          ? "Goal Vault could not reach the latest app data right now."
+        error instanceof Error && error.name === "AbortError"
+          ? "Goal Vault took too long to reach the latest app data."
+          : error instanceof Error && error.message.toLowerCase().includes("network")
+            ? "Goal Vault could not reach the latest app data right now."
           : fallbackMessage,
       responseStatus: null,
     };
+  } finally {
+    clearTimeout(timeout);
   }
 };

@@ -6,7 +6,7 @@ import { useVaultActivity } from "../../hooks/useVaultActivity";
 import { formatLongDate } from "../../lib/format";
 import { useI18n } from "../../lib/i18n";
 import { colors, radii, spacing } from "../../theme";
-import { AppErrorState, AppLoadingState, DisconnectedState, StateBanner } from "../../components/feedback";
+import { AppErrorState, AppLoadingState, DisconnectedState, GuidedStepsCard, StateBanner } from "../../components/feedback";
 import { NetworkStatusBanner, ScreenHeader } from "../../components/layout";
 import { AppText, EmptyState, PageContainer, PrimaryButton, Screen, SurfaceCard } from "../../components/primitives";
 import { routes } from "../../lib/routing";
@@ -25,6 +25,7 @@ export default function ActivityScreen() {
           eyebrow={messages.pages.activity.eyebrow}
           title={messages.pages.activity.title}
           description={messages.pages.activity.description}
+          action={<PrimaryButton icon="plus" label={messages.common.buttons.createVault} onPress={() => router.push(routes.createVault)} />}
         />
         {connectionState.status === "walletUnavailable" || connectionState.status === "disconnected" ? (
           <DisconnectedState onConnect={() => void connect()} />
@@ -43,15 +44,26 @@ export default function ActivityScreen() {
           />
         ) : null}
         {connectionState.status === "ready" && !isLoading && events.length === 0 ? (
-          <EmptyState
-            eyebrow={messages.pages.activity.emptyEyebrow}
-            description={messages.pages.activity.emptyDescription}
-            highlights={messages.pages.activity.emptyHighlights}
-            icon="timeline-clock-outline"
-            title={messages.pages.activity.emptyTitle}
-          >
-            <PrimaryButton icon="plus" label={messages.common.buttons.createVault} onPress={() => router.push(routes.createVault)} />
-          </EmptyState>
+          <View style={{ gap: spacing[4] }}>
+            <GuidedStepsCard
+              description={messages.pages.activity.startHereDescription}
+              eyebrow={messages.pages.activity.emptyEyebrow}
+              icon="timeline-clock-outline"
+              steps={messages.pages.activity.startHereSteps}
+              title={messages.pages.activity.startHereTitle}
+            >
+              <PrimaryButton icon="plus" label={messages.common.buttons.createVault} onPress={() => router.push(routes.createVault)} />
+            </GuidedStepsCard>
+            <EmptyState
+              eyebrow={messages.pages.activity.emptyEyebrow}
+              description={messages.pages.activity.emptyDescription}
+              highlights={messages.pages.activity.emptyHighlights}
+              icon="timeline-clock-outline"
+              title={messages.pages.activity.emptyTitle}
+            >
+              <PrimaryButton icon="plus" label={messages.common.buttons.createVault} onPress={() => router.push(routes.createVault)} />
+            </EmptyState>
+          </View>
         ) : null}
         {connectionState.status === "ready" && !isLoading && dataSource === "fallback" && events.length > 0 ? (
           <AppErrorState

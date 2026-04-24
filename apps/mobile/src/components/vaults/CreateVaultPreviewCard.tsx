@@ -90,6 +90,21 @@ export const CreateVaultPreviewCard = ({ values, targetAmount }: CreateVaultPrev
           <AppText tone="secondary">{messages.pages.createVault.preview.networkSummary}</AppText>
           {values.accentTheme ? <AppText tone="secondary">{getVaultAccentThemeLabel(values.accentTheme)}</AppText> : null}
         </View>
+        <View
+          style={{
+            borderRadius: radii.md,
+            borderWidth: 1,
+            borderColor: colors.border,
+            backgroundColor: colors.surface,
+            padding: spacing[4],
+            gap: spacing[2],
+          }}
+        >
+          <AppText size="sm" tone="accent" weight="semibold">
+            {messages.pages.createVault.reviewWalkthroughTitle}
+          </AppText>
+          <AppText tone="secondary">{messages.pages.createVault.reviewWalkthroughDescription}</AppText>
+        </View>
       </View>
     </SurfaceCard>
   );

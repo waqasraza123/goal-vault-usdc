@@ -71,10 +71,10 @@ export const HeroSection = () => {
           }}
         >
           <AppText size="sm" tone="accent" weight="semibold">
-            {messages.landing.finalCtaEyebrow}
+            {messages.landing.demoPathEyebrow}
           </AppText>
           <AppText tone="secondary">
-            {messages.landing.securityDescription}
+            {messages.landing.demoPathDescription}
           </AppText>
         </View>
         <View style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[3] }}>

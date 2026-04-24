@@ -14,6 +14,7 @@ import { spacing } from "../../../theme";
 import {
   AppLoadingState,
   DisconnectedState,
+  GuidedStepsCard,
   MetadataRecoveryNotice,
   StateBanner,
 } from "../../../components/feedback";
@@ -54,6 +55,7 @@ export default function VaultDetailScreen() {
           eyebrow={messages.pages.vaultDetail.eyebrow}
           title={messages.pages.vaultDetail.title}
           description={messages.pages.vaultDetail.description}
+          action={<SecondaryButton icon="arrow-left" label={messages.common.buttons.backToVaults} onPress={() => router.replace(routes.appHome)} />}
         />
 
         {connectionState.status === "walletUnavailable" || connectionState.status === "disconnected" ? (
@@ -119,12 +121,22 @@ export default function VaultDetailScreen() {
 
         {vault ? <VaultDetailHeader vault={vault} /> : null}
 
+        {vault && (vault.savedAmount <= 0 || vault.activityPreview.length === 0) ? (
+          <GuidedStepsCard
+            description={messages.pages.vaultDetail.startHereDescription}
+            eyebrow={messages.pages.vaultDetail.startHereEyebrow}
+            icon="play-circle-outline"
+            steps={messages.pages.vaultDetail.startHereSteps}
+            title={messages.pages.vaultDetail.startHereTitle}
+          />
+        ) : null}
+
         {vault ? (
           <View style={{ flexDirection: adaptiveLayout.useSplitLayout ? "row" : "column", gap: spacing[4] }}>
             <View style={{ flex: 1, gap: spacing[4] }}>
               <VaultProgressPanel vault={vault} />
               <VaultRulePanel eligibility={withdrawFlow.eligibility} vault={vault} />
-              <VaultActivityPreview events={vault.activityPreview} />
+              <VaultActivityPreview events={vault.activityPreview} onOpenTimeline={() => router.push(routes.activity)} />
             </View>
             <View style={{ flex: 1, gap: spacing[4] }}>
               <DepositActionPanel flow={depositFlow} vault={vault} />

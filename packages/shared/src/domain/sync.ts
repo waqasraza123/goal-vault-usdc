@@ -1,5 +1,6 @@
 import type { SupportedChainId } from "./chain";
 import type { ApiHealthSummary, StagingReadinessSummary } from "./app-readiness";
+import type { AppEnvironment, ReleaseReadinessState } from "./deployment";
 
 export type SyncFreshnessState = "current" | "syncing" | "lagging" | "unavailable";
 export type ChainSyncStreamType = "factory" | "vault";
@@ -32,8 +33,10 @@ export interface SyncFreshnessSnapshot {
 export interface HealthStatus {
   ok: boolean;
   checkedAt: string;
+  environment: AppEnvironment;
   chainSync: ChainSyncStatus[];
   api: ApiHealthSummary;
   staging: StagingReadinessSummary;
+  release: ReleaseReadinessState;
   validationErrors: string[];
 }

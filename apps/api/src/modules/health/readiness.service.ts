@@ -3,6 +3,7 @@ import type {
   ApiHealthSummary,
   EnvironmentCheckStatus,
   ReadinessCheck,
+  ReleaseReadinessState,
   StagingReadinessSummary,
   SupportedChainId,
 } from "@goal-vault/shared";
@@ -84,16 +85,50 @@ export const buildApiHealthSummary = (env: ApiRuntimeEnv): ApiHealthSummary => {
   const hasValidationErrors = env.validationErrors.length > 0;
   const checks = [
     createCheck({
+      key: "app-environment",
+      label: "Application environment",
+      status: "ready",
+      message: `API is running in ${env.environment}.`,
+    }),
+    createCheck({
       key: "env-validation",
       label: "Environment validation",
-      status: hasValidationErrors ? "warning" : "ready",
+      status: hasValidationErrors ? "blocked" : "ready",
       message: hasValidationErrors ? env.validationErrors.join(" ") : "Environment values passed validation.",
+    }),
+    createCheck({
+      key: "public-base-url",
+      label: "Public API URL",
+      status:
+        env.environment === "development"
+          ? env.publicBaseUrl
+            ? "ready"
+            : "warning"
+          : env.publicBaseUrl
+            ? "ready"
+            : "blocked",
+      message:
+        env.publicBaseUrl
+          ? `Public API URL is set to ${env.publicBaseUrl}.`
+          : env.environment === "development"
+            ? "Public API URL is optional during local development."
+            : "Set API_PUBLIC_BASE_URL before staging or production deployment.",
     }),
     createCheck({
       key: "data-dir",
       label: "Data directory",
       status: "ready",
       message: `Indexer data will persist under ${env.dataDir}.`,
+    }),
+    createCheck({
+      key: "indexer-mode",
+      label: "Indexer mode",
+      status: env.indexerEnabled ? "ready" : "warning",
+      message: env.indexerEnabled
+        ? env.syncIntervalMs > 0
+          ? `Indexer sync loop is enabled every ${env.syncIntervalMs}ms.`
+          : "Indexer sync loop is disabled by interval and requires manual runs."
+        : "Indexer background sync is disabled. Enriched reads require manual sync runs.",
     }),
     ...chains.flatMap((chain) => chain.checks),
   ];
@@ -134,11 +169,11 @@ export const buildStagingReadinessSummary = (env: ApiRuntimeEnv): StagingReadine
     createCheck({
       key: "sync-interval",
       label: "Indexer sync loop",
-      status: env.syncIntervalMs > 0 ? "ready" : "warning",
+      status: env.indexerEnabled && env.syncIntervalMs > 0 ? "ready" : "warning",
       message:
-        env.syncIntervalMs > 0
+        env.indexerEnabled && env.syncIntervalMs > 0
           ? `Indexer sync loop is enabled every ${env.syncIntervalMs}ms.`
-          : "Indexer sync loop is disabled. Manual syncs are required during staging.",
+          : "Indexer sync loop is not running automatically. Manual syncs are required during staging.",
     }),
   ];
   const status = getStagingStatus(checks);
@@ -151,6 +186,66 @@ export const buildStagingReadinessSummary = (env: ApiRuntimeEnv): StagingReadine
         : status === "degraded"
           ? "Base Sepolia smoke testing is usable with manual steps."
           : "Base Sepolia smoke testing is blocked by missing configuration.",
+    checks,
+  };
+};
+
+export const buildReleaseReadinessSummary = (env: ApiRuntimeEnv): ReleaseReadinessState => {
+  const expectedChain = env.environment === "production" ? getApiChainReadiness(env, 8453) : getApiChainReadiness(env, 84532);
+  const checks = [
+    {
+      key: "deployment-url",
+      label: "Public API URL",
+      status:
+        env.environment === "development"
+          ? env.publicBaseUrl
+            ? "ready"
+            : "warning"
+          : env.publicBaseUrl
+            ? "ready"
+            : "blocked",
+      message:
+        env.publicBaseUrl
+          ? `API will publish at ${env.publicBaseUrl}.`
+          : env.environment === "development"
+            ? "Public API URL is optional during local development."
+            : "Set API_PUBLIC_BASE_URL before launch.",
+    },
+    {
+      key: "indexer-enabled",
+      label: "Indexer readiness",
+      status: env.indexerEnabled ? "ready" : "warning",
+      message: env.indexerEnabled
+        ? "Indexer background sync is enabled."
+        : "Indexer background sync is disabled. Manual sync runs are required.",
+    },
+    {
+      key: `launch-chain-${expectedChain.chainId}`,
+      label: `${expectedChain.chainId} launch chain`,
+      status: expectedChain.writesReady ? "ready" : expectedChain.readsReady ? "warning" : "blocked",
+      message: expectedChain.writesReady
+        ? "Launch chain has both RPC and factory configuration."
+        : expectedChain.readsReady
+          ? "Launch chain can read, but write flows still need the factory address."
+          : "Launch chain is missing required RPC and contract configuration.",
+    },
+  ] satisfies ReleaseReadinessState["checks"];
+  const status =
+    checks.some((check) => check.status === "blocked")
+      ? "blocked"
+      : checks.some((check) => check.status === "warning")
+        ? "degraded"
+        : "ready";
+
+  return {
+    environment: env.environment,
+    status,
+    message:
+      status === "ready"
+        ? "Backend release configuration is ready."
+        : status === "degraded"
+          ? "Backend release configuration is usable with warnings."
+          : "Backend release configuration is blocked by missing values.",
     checks,
   };
 };

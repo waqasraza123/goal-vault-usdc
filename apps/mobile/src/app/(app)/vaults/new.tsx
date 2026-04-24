@@ -116,6 +116,7 @@ export default function CreateVaultScreen() {
           eyebrow={messages.pages.createVault.eyebrow}
           title={messages.pages.createVault.title}
           description={messages.pages.createVault.description}
+          action={<SecondaryButton icon="arrow-left" label={messages.common.buttons.backToVaults} onPress={handleBackToVaults} />}
         />
 
         <StateBanner

@@ -1,7 +1,9 @@
 import type {
   ActivityFeedResult,
   ApiHealthSummary,
+  AppEnvironment,
   ChainSyncStatus,
+  DeploymentTarget,
   HealthStatus,
   SupportedChainId,
   StagingReadinessSummary,
@@ -89,6 +91,17 @@ export interface ActivityFeedResponse {
 }
 
 export interface HealthResponse extends HealthStatus {}
+
+export interface ServiceHealthResponse {
+  ok: boolean;
+  checkedAt: string;
+  service: string;
+  environment: AppEnvironment;
+  deploymentTarget: DeploymentTarget;
+  indexerEnabled: boolean;
+  version: string;
+  readyPath: string;
+}
 
 const parseBigInt = (value: string | null | undefined) => BigInt(value || "0");
 
@@ -183,15 +196,19 @@ export const parseActivityFeedResponse = (response: ActivityFeedResponse): Activ
 export const parseHealthResponse = (response: HealthResponse): {
   ok: boolean;
   checkedAt: string;
+  environment: AppEnvironment;
   chainSync: ChainSyncStatus[];
   api: ApiHealthSummary;
   staging: StagingReadinessSummary;
+  release: HealthStatus["release"];
   validationErrors: string[];
 } => ({
   ok: response.ok,
   checkedAt: response.checkedAt,
+  environment: response.environment,
   chainSync: response.chainSync,
   api: response.api,
   staging: response.staging,
+  release: response.release,
   validationErrors: response.validationErrors,
 });

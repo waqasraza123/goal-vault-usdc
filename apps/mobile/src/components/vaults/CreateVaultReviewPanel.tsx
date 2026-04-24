@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { useI18n } from "../../lib/i18n";
 import type { CreateVaultReviewModel } from "../../types";
 import { colors, radii, spacing } from "../../theme";
-import { AppText, SurfaceCard } from "../primitives";
+import { AppHeading, AppText, SurfaceCard } from "../primitives";
 
 export const CreateVaultReviewPanel = ({ review }: { review: CreateVaultReviewModel }) => {
   const { messages } = useI18n();
@@ -74,6 +74,42 @@ export const CreateVaultReviewPanel = ({ review }: { review: CreateVaultReviewMo
               {line}
             </AppText>
           ))}
+        </View>
+        <View
+          style={{
+            gap: spacing[3],
+            borderRadius: radii.md,
+            borderWidth: 1,
+            borderColor: colors.border,
+            backgroundColor: colors.surface,
+            padding: spacing[4],
+          }}
+        >
+          <AppHeading size="sm">{messages.pages.createVault.reviewWalkthroughTitle}</AppHeading>
+          <AppText tone="secondary">{messages.pages.createVault.reviewWalkthroughDescription}</AppText>
+          <View style={{ gap: spacing[2] }}>
+            {messages.pages.createVault.reviewWalkthroughSteps.map((step, index) => (
+              <View key={step} style={{ flexDirection: "row", alignItems: "flex-start", gap: spacing[3] }}>
+                <View
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 12,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: colors.accentSoft,
+                  }}
+                >
+                  <AppText size="sm" tone="accent" weight="semibold">
+                    {index + 1}
+                  </AppText>
+                </View>
+                <AppText style={{ flex: 1 }} tone="secondary">
+                  {step}
+                </AppText>
+              </View>
+            ))}
+          </View>
         </View>
       </View>
     </SurfaceCard>

@@ -3,6 +3,7 @@ import { View } from "react-native";
 
 import { useWalletConnection } from "../hooks/useWalletConnection";
 import { useI18n } from "../lib/i18n";
+import { GuidedStepsCard } from "../components/feedback";
 import { MarketingShell } from "../components/layout";
 import { WalletStatusCard } from "../components/layout/WalletStatusCard";
 import { FinalCtaSection, HeroSection, HowItWorksSection, SecurityTrustSection } from "../components/marketing";
@@ -11,7 +12,7 @@ import { spacing } from "../theme";
 
 export default function LandingScreen() {
   const { connectionState } = useWalletConnection();
-  useI18n();
+  const { messages } = useI18n();
 
   return (
     <MarketingShell>
@@ -19,6 +20,13 @@ export default function LandingScreen() {
       <Screen contentContainerStyle={{ paddingBottom: spacing[12] }}>
         <PageContainer width="dashboard" style={{ gap: spacing[12], paddingTop: spacing[6] }}>
           <HeroSection />
+          <GuidedStepsCard
+            description={messages.landing.demoPathDescription}
+            eyebrow={messages.landing.demoPathEyebrow}
+            icon="play-circle-outline"
+            steps={messages.landing.demoPathSteps}
+            title={messages.landing.demoPathTitle}
+          />
           {connectionState.status !== "ready" ? <WalletStatusCard /> : null}
           <HowItWorksSection />
           <SecurityTrustSection />

@@ -39,6 +39,7 @@ const enMessages = {
       seeHowItWorks: "See how it works",
       enterMyVaults: "Enter My Vaults",
       createVault: "Create vault",
+      openActivity: "Open activity",
       connectWallet: "Connect wallet",
       switchNetwork: "Switch network",
       disconnect: "Disconnect",
@@ -109,6 +110,18 @@ const enMessages = {
     heroPreviewDescription:
       "Protect six months of living costs until late summer, with deposits open whenever you are ready.",
     heroPreviewFooter: "Base • USDC • Withdrawals wait for the chosen date",
+    heroPreviewActivityLabel: "Example activity",
+    heroPreviewActivityCreated: "Vault created and indexed cleanly",
+    heroPreviewActivityFunded: "Latest USDC deposit confirmed and reflected in progress",
+    demoPathEyebrow: "Best first walkthrough",
+    demoPathTitle: "Show the full product in four calm steps.",
+    demoPathDescription: "Open the app, create one vault, fund it with USDC, then return to the detail view and activity timeline.",
+    demoPathSteps: [
+      "Create one goal-focused vault",
+      "Review the unlock date before you confirm",
+      "Fund it with USDC",
+      "Return to the vault and activity timeline",
+    ],
     howItWorksEyebrow: "Three calm steps",
     howItWorksTitle: "Make saving feel deliberate again.",
     howItWorksSupport: ["Start with intention", "Make the rule clear", "Fund it gradually"],
@@ -180,6 +193,13 @@ const enMessages = {
         "Protect it with a clear unlock date",
         "Fund it over time with USDC on Base",
       ],
+      startHereTitle: "Your first walkthrough is simple.",
+      startHereDescription: "Create one vault, fund it once, then return here to show the product story clearly.",
+      startHereSteps: [
+        "Create a vault for one goal",
+        "Fund it with USDC on Base",
+        "Return here to show progress and the unlock rule",
+      ],
     },
     activity: {
       eyebrow: "Activity",
@@ -194,6 +214,13 @@ const enMessages = {
         "Fund it with USDC",
         "Return here for confirmed history",
       ],
+      startHereTitle: "This timeline fills in naturally.",
+      startHereDescription: "A new vault, a confirmed deposit, and an eventual withdrawal create the cleanest live walkthrough.",
+      startHereSteps: [
+        "Create a vault first",
+        "Fund it with USDC",
+        "Return here after confirmation for the indexed timeline",
+      ],
     },
     vaultDetail: {
       eyebrow: "Vault Detail",
@@ -203,6 +230,14 @@ const enMessages = {
       notAvailableTitle: "Vault not available",
       notAvailableDescription:
         "The requested vault could not be resolved from the supported chain reads or the fallback dataset.",
+      startHereEyebrow: "Best next move",
+      startHereTitle: "This screen gets stronger once the first funds land.",
+      startHereDescription: "Use this route to explain the goal, the unlock rule, and the live balance after the first confirmed deposit.",
+      startHereSteps: [
+        "Fund this vault with USDC",
+        "Return here to show progress and the unlock date",
+        "Open activity to show the confirmed timeline",
+      ],
     },
     createVault: {
       eyebrow: "Create Vault",
@@ -219,6 +254,13 @@ const enMessages = {
       ruleSectionDescription: "This first rule keeps things simple: the vault stays locked until the selected date.",
       reviewSectionTitle: "Review the vault",
       reviewSectionDescription: "You are creating the vault now. The wallet will ask for confirmation next.",
+      reviewWalkthroughTitle: "What happens after you confirm",
+      reviewWalkthroughDescription: "The wallet opens first, the vault confirms onchain next, and the app then refreshes its display details.",
+      reviewWalkthroughSteps: [
+        "Confirm the create action in your wallet",
+        "Wait for the onchain vault address to resolve",
+        "View the vault and fund it later with USDC",
+      ],
       timeLockOnly: "Time lock only",
       timeLockDescription: "Deposits can happen later. Withdrawals only become eligible after the unlock date.",
       fields: {
@@ -254,6 +296,11 @@ const enMessages = {
         eyebrow: "Vault created successfully",
         description: "Your vault is now active and protected by its unlock date.",
         nextDescription: "You can fund this vault any time. Withdrawals stay locked until the selected date.",
+        nextSteps: [
+          "Open the vault to show the saved goal, target amount, and unlock date",
+          "Fund it with USDC to make progress visible",
+          "Return to activity after confirmation to show the indexed trail",
+        ],
       },
       error: {
         activeTitle: "Your vault is active onchain",
@@ -562,6 +609,7 @@ const arMessages: AppMessages = {
       seeHowItWorks: "اطلع على طريقة العمل",
       enterMyVaults: "ادخل إلى خزائني",
       createVault: "أنشئ خزنة",
+      openActivity: "افتح النشاط",
       connectWallet: "اربط المحفظة",
       switchNetwork: "بدّل الشبكة",
       disconnect: "افصل الاتصال",
@@ -630,6 +678,18 @@ const arMessages: AppMessages = {
     heroPreviewGoal: "صندوق الطوارئ",
     heroPreviewDescription: "احمِ ستة أشهر من تكاليف المعيشة حتى أواخر الصيف، مع بقاء الإيداعات متاحة متى ما أصبحت جاهزاً.",
     heroPreviewFooter: "Base • USDC • السحب ينتظر التاريخ الذي اخترته",
+    heroPreviewActivityLabel: "نشاط توضيحي",
+    heroPreviewActivityCreated: "تم إنشاء الخزنة وفهرستها بشكل نظيف",
+    heroPreviewActivityFunded: "تم تأكيد آخر إيداع USDC وظهر في التقدم",
+    demoPathEyebrow: "أفضل مسار أولي",
+    demoPathTitle: "اعرض المنتج كاملاً في أربع خطوات هادئة.",
+    demoPathDescription: "افتح التطبيق وأنشئ خزنة واحدة وموّلها بعملة USDC ثم عُد إلى صفحة التفاصيل وخط النشاط.",
+    demoPathSteps: [
+      "أنشئ خزنة لهدف واحد واضح",
+      "راجع تاريخ الفتح قبل التأكيد",
+      "موّلها بعملة USDC",
+      "ارجع إلى الخزنة وخط النشاط",
+    ],
     howItWorksEyebrow: "ثلاث خطوات هادئة",
     howItWorksTitle: "اجعل الادخار عملاً مقصوداً من جديد.",
     howItWorksSupport: ["ابدأ بنية واضحة", "اجعل القاعدة واضحة", "موّله تدريجياً"],
@@ -698,6 +758,13 @@ const arMessages: AppMessages = {
         "احمه بتاريخ فتح واضح",
         "موّله تدريجياً بعملة USDC على Base",
       ],
+      startHereTitle: "مسارك الأول بسيط.",
+      startHereDescription: "أنشئ خزنة واحدة وموّلها مرة واحدة ثم ارجع إلى هنا لتعرض قصة المنتج بوضوح.",
+      startHereSteps: [
+        "أنشئ خزنة لهدف واحد",
+        "موّلها بعملة USDC على Base",
+        "ارجع إلى هنا لعرض التقدم وقاعدة الفتح",
+      ],
     },
     activity: {
       eyebrow: "النشاط",
@@ -711,6 +778,13 @@ const arMessages: AppMessages = {
         "موّلها بعملة USDC",
         "ارجع إلى هنا لمراجعة السجل المؤكد",
       ],
+      startHereTitle: "يمتلئ هذا الخط الزمني بشكل طبيعي.",
+      startHereDescription: "خزنة جديدة ثم إيداع مؤكد ثم سحب لاحق يصنعون أفضل عرض حي لهذا المنتج.",
+      startHereSteps: [
+        "أنشئ خزنة أولاً",
+        "موّلها بعملة USDC",
+        "ارجع إلى هنا بعد التأكيد لعرض السجل المفهرس",
+      ],
     },
     vaultDetail: {
       eyebrow: "تفاصيل الخزنة",
@@ -719,6 +793,14 @@ const arMessages: AppMessages = {
       notAvailableEyebrow: "فحص الخزنة",
       notAvailableTitle: "الخزنة غير متاحة",
       notAvailableDescription: "تعذّر الوصول إلى الخزنة المطلوبة من قراءات السلسلة المدعومة أو من مجموعة البيانات الاحتياطية.",
+      startHereEyebrow: "أفضل خطوة تالية",
+      startHereTitle: "تصبح هذه الصفحة أقوى بعد وصول أول تمويل.",
+      startHereDescription: "استخدم هذه الصفحة لشرح الهدف وقاعدة الفتح والرصيد الحي بعد أول إيداع مؤكد.",
+      startHereSteps: [
+        "موّل هذه الخزنة بعملة USDC",
+        "ارجع إلى هنا لعرض التقدم وتاريخ الفتح",
+        "افتح النشاط لعرض الخط الزمني المؤكد",
+      ],
     },
     createVault: {
       eyebrow: "إنشاء خزنة",
@@ -733,6 +815,13 @@ const arMessages: AppMessages = {
       ruleSectionDescription: "هذه القاعدة الأولى بسيطة: تبقى الخزنة مقفلة حتى التاريخ الذي تختاره.",
       reviewSectionTitle: "راجع الخزنة",
       reviewSectionDescription: "أنت تنشئ الخزنة الآن. ستطلب المحفظة التأكيد في الخطوة التالية.",
+      reviewWalkthroughTitle: "ماذا يحدث بعد التأكيد",
+      reviewWalkthroughDescription: "تُفتح المحفظة أولاً ثم يتم تأكيد الخزنة على السلسلة ثم تُحدّث الواجهة تفاصيل العرض.",
+      reviewWalkthroughSteps: [
+        "أكد عملية الإنشاء داخل محفظتك",
+        "انتظر حتى يظهر عنوان الخزنة المؤكد على السلسلة",
+        "افتح الخزنة وموّلها لاحقاً بعملة USDC",
+      ],
       timeLockOnly: "قفل زمني فقط",
       timeLockDescription: "يمكن الإيداع لاحقاً. ولا يصبح السحب ممكناً إلا بعد تاريخ الفتح.",
       fields: {
@@ -768,6 +857,11 @@ const arMessages: AppMessages = {
         eyebrow: "تم إنشاء الخزنة بنجاح",
         description: "خزنتك أصبحت الآن نشطة ومحمية بتاريخ الفتح.",
         nextDescription: "يمكنك تمويل هذه الخزنة في أي وقت. ويظل السحب مقفلاً حتى التاريخ المحدد.",
+        nextSteps: [
+          "افتح الخزنة لعرض الهدف المحفوظ والمبلغ المستهدف وتاريخ الفتح",
+          "موّلها بعملة USDC ليظهر التقدم بشكل واضح",
+          "ارجع إلى صفحة النشاط بعد التأكيد لعرض السجل المفهرس",
+        ],
       },
       error: {
         activeTitle: "خزنتك نشطة على السلسلة",

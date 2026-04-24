@@ -1,6 +1,6 @@
 # Goal Vault
 
-![Status](https://img.shields.io/badge/status-phase%201-b07d4f)
+![Status](https://img.shields.io/badge/status-phase%209-b07d4f)
 ![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android%20%7C%20Web-456b66)
 ![Expo](https://img.shields.io/badge/expo-sdk%2055-111827?logo=expo&logoColor=white)
 ![React%20Native](https://img.shields.io/badge/react%20native-0.83.6-61dafb?logo=react&logoColor=111827)
@@ -14,21 +14,22 @@ The product is intentionally narrow. It is not trying to be a DeFi dashboard, a 
 
 ## Current Status
 
-This repository currently contains the Phase 1 universal app foundation:
+This repository now contains a deployment-oriented universal Goal Vault v1:
 
 - `pnpm` workspace monorepo
 - one Expo-based React Native app in `apps/mobile`
 - Expo Router route groups for marketing and authenticated product surfaces
-- shared TypeScript package boundaries for config, domain models, API client placeholder, and contracts SDK placeholder
-- adaptive layout primitives and a static cross-platform product shell
+- shared TypeScript package boundaries for config, domain models, API client, contracts SDK, and deployment metadata
+- real wallet-first create, deposit, withdraw, vault detail, and activity flows
+- Fastify API with health/readiness endpoints, indexer sync, metadata reconciliation, and enriched vault/activity reads
+- deployment-aware Expo config, EAS profiles, env reference, and launch checklist docs
 
 Still deferred:
 
-- real wallet integration
-- smart contracts and transaction flows
-- backend metadata and indexed activity APIs
-- Arabic localization and real RTL runtime behavior
-- CI, release workflows, and production deployment plumbing
+- cooldown unlock
+- guardian approval
+- external database-backed backend persistence
+- CI and automated release workflows
 
 ## Product Scope
 
@@ -63,9 +64,10 @@ The repository direction is one codebase for iOS, Android, and web.
 - App runtime: Expo + React Native + Expo Router + TypeScript
 - Workspace: `pnpm` + Turbo
 - Shared logic: `packages/shared`
-- Future backend boundary: `packages/api-client`
-- Future contract boundary: `packages/contracts-sdk`
+- API client boundary: `packages/api-client`
+- Contract boundary: `packages/contracts-sdk`
 - Shared product and chain config: `packages/config`
+- Backend runtime: Fastify + typed file-backed indexer state in `apps/api`
 
 There is no separate Next.js app and no separate native app tree. Web is the Expo Router web target from the same app.
 
@@ -74,18 +76,13 @@ There is no separate Next.js app and no separate native app tree. Web is the Exp
 ```text
 .
 ├── apps/
+│   ├── api/
+│   │   ├── package.json
+│   │   └── src/
 │   └── mobile/
-│       ├── app.json
+│       ├── app.config.js
 │       ├── package.json
 │       └── src/
-│           ├── app/
-│           ├── components/
-│           ├── features/
-│           ├── hooks/
-│           ├── lib/
-│           ├── state/
-│           ├── theme/
-│           └── types/
 ├── packages/
 │   ├── api-client/
 │   ├── config/
@@ -122,27 +119,20 @@ Current routes:
 - `/vaults/[vaultAddress]`
   - vault detail screen using typed route parsing
 - `/activity`
-  - activity timeline shell
+  - indexed activity feed and fallback timeline
 
-## Phase 1 Implementation
+## Deployment Readiness
 
-Phase 1 focuses on product-quality foundation work, not fake integrations.
+Phase 9 focuses on launch packaging, environment safety, and repeatable verification for the current v1.
 
-Included in Phase 1:
+Included:
 
-- shared theme tokens for color, spacing, radii, typography, motion, and breakpoints
-- reusable primitives for text, containers, cards, buttons, fields, states, and progress
-- adaptive layout hooks for compact, medium, and expanded screens
-- layout shells for marketing and app areas
-- static but typed feature data for vault list, vault detail, activity, and create-vault flows
-- zod-backed validation scaffolding for create-vault input
-
-Not included in Phase 1:
-
-- real wallet SDK wiring
-- chain reads or writes
-- backend calls
-- complex fake repositories or placeholder orchestration layers
+- centralized public env parsing in `packages/config`
+- environment-aware Expo package config in `apps/mobile/app.config.ts`
+- EAS build profiles in `eas.json`
+- API startup validation plus separated `/health` and `/ready`
+- launch checklist and env reference docs in `docs/plans/`
+- repeatable release verification scripts at the repo root
 
 ## Getting Started
 
@@ -163,6 +153,12 @@ Start the Expo development server:
 
 ```bash
 pnpm dev
+```
+
+Run the API locally:
+
+```bash
+pnpm dev:api
 ```
 
 Start specific targets:
@@ -187,6 +183,12 @@ Root scripts:
   - runs the Android target
 - `pnpm typecheck`
   - runs workspace TypeScript checks through Turbo
+- `pnpm verify:mobile:web`
+  - exports the Expo web target
+- `pnpm verify:mobile:ios`
+  - exports the Expo iOS bundle
+- `pnpm verify:release`
+  - runs typecheck plus the web and iOS export checks
 
 App-level scripts in `apps/mobile`:
 
@@ -202,8 +204,11 @@ Recommended verification commands:
 ```bash
 pnpm install
 pnpm typecheck
-pnpm --filter @goal-vault/mobile exec expo export --platform web --output-dir ../../dist-web
-CI=1 pnpm --filter @goal-vault/mobile exec expo start --web --port 8081
+pnpm --filter @goal-vault/api start
+curl -s http://127.0.0.1:3001/health
+curl -s http://127.0.0.1:3001/ready
+pnpm verify:mobile:web
+pnpm verify:mobile:ios
 ```
 
 What these checks cover:
@@ -223,6 +228,12 @@ Key documentation files:
   - active architecture and delivery plan
 - `docs/plans/goal-vault-universal-react-native-phase-1.md`
   - Phase 1 implementation note
+- `docs/plans/goal-vault-env-reference.md`
+  - env variables and deployment assumptions
+- `docs/plans/goal-vault-launch-checklist.md`
+  - operator-facing launch checklist
+- `docs/plans/goal-vault-universal-react-native-phase-9.md`
+  - Phase 9 implementation note
 - `docs/product/goal-vault/goal.md`
   - concise product goal
 - `docs/product/goal-vault/plan.md`
@@ -234,13 +245,12 @@ Key documentation files:
 
 The next major implementation steps are:
 
-1. Add localization, Arabic resources, and real RTL behavior.
-2. Replace the wallet placeholder boundary with real Base and Base Sepolia connection state.
-3. Add contracts and contracts SDK read/write integration.
-4. Add backend metadata and indexed activity reads behind the existing package boundaries.
+1. Complete Base Sepolia and Base mainnet deployment configuration with real RPC and factory values.
+2. Run full create, deposit, and withdraw smoke checks against staging.
+3. Resume roadmap work with cooldown unlock after deployment review.
 
 ## Notes
 
-- This repository currently has no production deployment workflow.
-- The current app uses static mock data intentionally to preserve clean future integration boundaries.
-- The README reflects the scaffold that exists today, not the full product vision.
+- This repository now has deployment-aware configuration, but still does not include full CI/CD automation.
+- `.env.example` provides the expected variable names without secrets.
+- Use the launch checklist and env reference docs before staging or production deployment.

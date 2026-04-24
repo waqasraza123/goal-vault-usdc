@@ -9,7 +9,7 @@ export const fetchApiHealth = async (): Promise<{
   message: string | null;
 }> => {
   const response = await fetchBackendJson<HealthResponse>({
-    path: "/health",
+    path: "/ready",
     fallbackMessage: "Goal Vault services are not available right now.",
   });
 

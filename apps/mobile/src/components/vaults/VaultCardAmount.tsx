@@ -14,6 +14,9 @@ export const VaultCardAmount = ({ savedAmount, targetAmount }: VaultCardAmountPr
 
   return (
     <View style={{ gap: 4 }}>
+      <AppText size="sm" tone="secondary">
+        {messages.common.labels.totalSaved}
+      </AppText>
       <AppText size="xl" weight="semibold">
         {formatUsdc(savedAmount)}
       </AppText>

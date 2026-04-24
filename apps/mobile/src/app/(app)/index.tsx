@@ -14,6 +14,7 @@ import {
   AppLoadingState,
   ConfigurationNotice,
   DisconnectedState,
+  GuidedStepsCard,
   StateBanner,
 } from "../../components/feedback";
 import { NetworkStatusBanner, ScreenHeader } from "../../components/layout";
@@ -105,14 +106,25 @@ export default function MyVaultsScreen() {
         </View>
 
         {connectionState.status === "ready" && !isLoading && queryStatus === "empty" ? (
-          <EmptyState
-            eyebrow={messages.pages.myVaults.emptyEyebrow}
-            description={messages.pages.myVaults.emptyDescription}
-            highlights={messages.pages.myVaults.emptyHighlights}
-            title={messages.pages.myVaults.emptyTitle}
-          >
-            <PrimaryButton icon="plus" label={messages.common.buttons.createVault} onPress={() => router.push(routes.createVault)} />
-          </EmptyState>
+          <View style={{ gap: spacing[4] }}>
+            <GuidedStepsCard
+              description={messages.pages.myVaults.startHereDescription}
+              eyebrow={messages.pages.myVaults.emptyEyebrow}
+              icon="bullseye-arrow"
+              steps={messages.pages.myVaults.startHereSteps}
+              title={messages.pages.myVaults.startHereTitle}
+            >
+              <PrimaryButton icon="plus" label={messages.common.buttons.createVault} onPress={() => router.push(routes.createVault)} />
+            </GuidedStepsCard>
+            <EmptyState
+              eyebrow={messages.pages.myVaults.emptyEyebrow}
+              description={messages.pages.myVaults.emptyDescription}
+              highlights={messages.pages.myVaults.emptyHighlights}
+              title={messages.pages.myVaults.emptyTitle}
+            >
+              <PrimaryButton icon="plus" label={messages.common.buttons.createVault} onPress={() => router.push(routes.createVault)} />
+            </EmptyState>
+          </View>
         ) : null}
 
         {connectionState.status === "ready" && !isLoading && (queryStatus === "error" || queryStatus === "unavailable") ? (

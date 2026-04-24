@@ -41,7 +41,19 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
         </View>
         <View style={{ gap: spacing[1] }}>
           <AppHeading size="md">{vault.goalName}</AppHeading>
-          {vault.note ? <AppText tone="secondary">{vault.note}</AppText> : null}
+          {vault.note ? (
+            <View
+              style={{
+                borderRadius: radii.md,
+                borderWidth: 1,
+                borderColor: colors.border,
+                backgroundColor: colors.surface,
+                padding: spacing[4],
+              }}
+            >
+              <AppText tone="secondary">{vault.note}</AppText>
+            </View>
+          ) : null}
         </View>
       </View>
       <VaultCardAmount savedAmount={vault.savedAmount} targetAmount={vault.targetAmount} />

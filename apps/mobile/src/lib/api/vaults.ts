@@ -7,7 +7,7 @@ import {
 import type { MetadataSaveResult, SupportedChainId, VaultDetailEnriched, VaultMetadataPayload, VaultSummaryEnriched } from "@goal-vault/shared";
 import type { Address } from "viem";
 
-import { clientEnv } from "../env/client";
+import { getBackendBaseUrl } from "../env/client";
 import { fetchBackendJson } from "./client";
 
 const normalizePayload = (payload: VaultMetadataPayload) => ({
@@ -23,7 +23,9 @@ const normalizePayload = (payload: VaultMetadataPayload) => ({
 });
 
 export const saveVaultMetadata = async (payload: VaultMetadataPayload): Promise<MetadataSaveResult> => {
-  if (!clientEnv.apiBaseUrl) {
+  const backendBaseUrl = getBackendBaseUrl();
+
+  if (!backendBaseUrl) {
     return {
       status: "saved",
       persistence: "local_cache",
@@ -33,7 +35,7 @@ export const saveVaultMetadata = async (payload: VaultMetadataPayload): Promise<
     };
   }
 
-  const response = await fetch(`${clientEnv.apiBaseUrl}/vaults`, {
+  const response = await fetch(`${backendBaseUrl}/vaults`, {
     method: "POST",
     headers: {
       "content-type": "application/json",

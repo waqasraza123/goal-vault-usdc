@@ -92,6 +92,44 @@ export const HeroVaultPreviewCard = () => {
           <AppText tone="secondary">{messages.landing.heroPreviewFooter}</AppText>
         </View>
       </View>
+      <View
+        style={{
+          borderRadius: radii.md,
+          borderWidth: 1,
+          borderColor: colors.border,
+          backgroundColor: colors.surface,
+          padding: spacing[4],
+          gap: spacing[3],
+        }}
+      >
+        <AppText size="sm" tone="accent" weight="semibold">
+          {messages.landing.heroPreviewActivityLabel}
+        </AppText>
+        <View style={{ gap: spacing[3] }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: spacing[3] }}>
+            <View
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: 5,
+                backgroundColor: colors.accentStrong,
+              }}
+            />
+            <AppText tone="secondary">{messages.landing.heroPreviewActivityCreated}</AppText>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: spacing[3] }}>
+            <View
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: 5,
+                backgroundColor: colors.accentStrong,
+              }}
+            />
+            <AppText tone="secondary">{messages.landing.heroPreviewActivityFunded}</AppText>
+          </View>
+        </View>
+      </View>
     </SurfaceCard>
   );
 };

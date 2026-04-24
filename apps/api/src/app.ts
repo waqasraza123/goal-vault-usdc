@@ -9,7 +9,9 @@ import { registerVaultRoutes } from "./modules/vaults/vaults.routes";
 
 export const buildApp = ({ context, env }: { context: IndexerContext; env: ApiRuntimeEnv }) => {
   const app = Fastify({
-    logger: true,
+    logger: {
+      level: env.logLevel,
+    },
   });
 
   app.decorate("goalVaultContext", context);
@@ -18,6 +20,11 @@ export const buildApp = ({ context, env }: { context: IndexerContext; env: ApiRu
     service: "goal-vault-api",
     ok: true,
     checkedAt: new Date().toISOString(),
+    environment: env.environment,
+    deploymentTarget: env.deploymentTarget,
+    publicBaseUrl: env.publicBaseUrl,
+    indexerEnabled: env.indexerEnabled,
+    readyPath: "/ready",
     validationErrors: env.validationErrors,
   }));
 

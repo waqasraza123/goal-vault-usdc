@@ -1,6 +1,6 @@
 import type { SupportedChainId } from "@goal-vault/shared";
 
-import { clientEnv } from "../env/client";
+import { getBackendBaseUrl } from "../env/client";
 
 export const triggerIndexerSync = async ({
   chainId,
@@ -9,12 +9,14 @@ export const triggerIndexerSync = async ({
   chainId?: SupportedChainId;
   mode?: "all" | "factory" | "vaults" | "reconcile";
 }) => {
-  if (!clientEnv.apiBaseUrl) {
+  const backendBaseUrl = getBackendBaseUrl();
+
+  if (!backendBaseUrl) {
     return false;
   }
 
   try {
-    const response = await fetch(`${clientEnv.apiBaseUrl}/internal/indexer/sync`, {
+    const response = await fetch(`${backendBaseUrl}/internal/indexer/sync`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

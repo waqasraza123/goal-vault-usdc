@@ -37,6 +37,9 @@ export const VaultDetailHeader = ({ vault }: VaultDetailHeaderProps) => {
         <View style={{ gap: spacing[2] }}>
           <AppHeading size="xl">{vault.goalName}</AppHeading>
           {vault.note ? <AppText tone="secondary">{vault.note}</AppText> : null}
+          <AppText size="sm" tone="accent" weight="semibold">
+            {messages.vaults.status[vault.status]}
+          </AppText>
         </View>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing[3] }}>
           <View
@@ -69,16 +72,28 @@ export const VaultDetailHeader = ({ vault }: VaultDetailHeaderProps) => {
             }}
           >
             <AppText size="sm" tone="secondary">
-              {messages.common.labels.protectionRule}
+              {messages.common.labels.targetAmount}
             </AppText>
-            <AppText weight="semibold">
-              {interpolate(messages.vaults.protectionRuleUnlocksOn, { date: formatLongDate(vault.unlockDate) })}
-            </AppText>
+            <AppText weight="semibold">{formatUsdc(vault.targetAmount)}</AppText>
           </View>
         </View>
-        <AppText size="lg" weight="semibold">
-          {interpolate(messages.vaults.detailSaved, { amount: formatUsdc(vault.savedAmount) })}
-        </AppText>
+        <View
+          style={{
+            borderRadius: radii.md,
+            borderWidth: 1,
+            borderColor: colors.border,
+            backgroundColor: colors.surface,
+            padding: spacing[4],
+            gap: spacing[2],
+          }}
+        >
+          <AppText size="lg" weight="semibold">
+            {interpolate(messages.vaults.detailSaved, { amount: formatUsdc(vault.savedAmount) })}
+          </AppText>
+          <AppText tone="secondary">
+            {interpolate(messages.vaults.protectionRuleUnlocksOn, { date: formatLongDate(vault.unlockDate) })}
+          </AppText>
+        </View>
       </View>
     </SurfaceCard>
   );

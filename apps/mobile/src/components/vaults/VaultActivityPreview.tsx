@@ -3,18 +3,24 @@ import { View } from "react-native";
 import type { VaultActivityEvent } from "../../types";
 import { useI18n } from "../../lib/i18n";
 import { colors, radii, spacing } from "../../theme";
-import { AppHeading, AppText, SurfaceCard } from "../primitives";
+import { AppHeading, AppText, SecondaryButton, SurfaceCard } from "../primitives";
 
 export interface VaultActivityPreviewProps {
   events: VaultActivityEvent[];
+  onOpenTimeline?: () => void;
 }
 
-export const VaultActivityPreview = ({ events }: VaultActivityPreviewProps) => {
+export const VaultActivityPreview = ({ events, onOpenTimeline }: VaultActivityPreviewProps) => {
   const { messages } = useI18n();
 
   return (
     <SurfaceCard>
-      <AppHeading size="md">{messages.common.labels.recentActivity}</AppHeading>
+      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: spacing[3] }}>
+        <AppHeading size="md">{messages.common.labels.recentActivity}</AppHeading>
+        {onOpenTimeline ? (
+          <SecondaryButton icon="arrow-right" label={messages.common.buttons.openActivity} onPress={onOpenTimeline} />
+        ) : null}
+      </View>
       {events.length === 0 ? (
         <AppText tone="secondary">{messages.vaults.activityEmpty}</AppText>
       ) : (

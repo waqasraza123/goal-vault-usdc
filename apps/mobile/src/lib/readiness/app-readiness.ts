@@ -21,7 +21,7 @@ export const createBaseReadinessState = (): AppReadinessState => ({
   status: "ready",
   wallet: "disconnected",
   network: "unknown",
-  configurationStatus: envDiagnostics.validationErrors.length > 0 ? "invalid" : "valid",
+  configurationStatus: envDiagnostics.configState.status,
   api: {
     status: hasApiBaseUrl() ? "healthy" : "unavailable",
     checkedAt: null,
@@ -107,8 +107,8 @@ export const buildAppReadinessState = ({
       createIssue({
         code: "missing_rpc",
         severity: "blocking",
-        title: "Chain reads are not configured",
-        description: "Add the RPC URL for the active Base network before using Goal Vault.",
+        title: "This app is not fully configured right now",
+        description: "Chain services for the active network are still being prepared.",
         action: "review_status",
       }),
     );
@@ -119,8 +119,8 @@ export const buildAppReadinessState = ({
       createIssue({
         code: "missing_factory_address",
         severity: "warning",
-        title: "Vault creation is not configured",
-        description: "Vault reads can continue, but create, deposit, and withdraw flows need the factory address for this network.",
+        title: "Some vault actions are still being prepared",
+        description: "Vault reads can continue, but the full write path is not ready for this network yet.",
         action: "review_status",
       }),
     );
@@ -131,8 +131,8 @@ export const buildAppReadinessState = ({
       createIssue({
         code: "invalid_configuration",
         severity: "blocking",
-        title: "App configuration needs attention",
-        description: envDiagnostics.validationErrors.join(" "),
+        title: "This app is not fully configured right now",
+        description: envDiagnostics.releaseReadiness.message,
         action: "review_status",
       }),
     );
