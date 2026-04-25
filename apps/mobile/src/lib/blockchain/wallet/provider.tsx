@@ -1,11 +1,23 @@
 import type { PropsWithChildren } from "react";
 import { Platform } from "react-native";
+import Constants from "expo-constants";
 
-import { WalletProvider as NativeWalletProvider } from "./provider.native";
-import { WalletProvider as WebWalletProvider } from "./provider.web";
+import { walletRuntimeConfig } from "../config";
+import { isNativeWalletRuntimeSupported } from "./native-runtime";
+import { UnconfiguredWalletProvider } from "./unconfigured-provider";
 
 export const WalletProvider = ({ children }: PropsWithChildren) => {
-  const ProviderComponent = Platform.OS === "web" ? WebWalletProvider : NativeWalletProvider;
+  if (Platform.OS === "web") {
+    const { WalletProvider: WebWalletProvider } = require("./provider.web") as typeof import("./provider.web");
 
-  return <ProviderComponent>{children}</ProviderComponent>;
+    return <WebWalletProvider>{children}</WebWalletProvider>;
+  }
+
+  if (!walletRuntimeConfig.isEnabled || !walletRuntimeConfig.projectId || !isNativeWalletRuntimeSupported(Constants.appOwnership)) {
+    return <UnconfiguredWalletProvider>{children}</UnconfiguredWalletProvider>;
+  }
+
+  const { WalletProvider: NativeWalletProvider } = require("./provider.native") as typeof import("./provider.native");
+
+  return <NativeWalletProvider>{children}</NativeWalletProvider>;
 };
