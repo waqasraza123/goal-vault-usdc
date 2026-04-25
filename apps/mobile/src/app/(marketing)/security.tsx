@@ -17,6 +17,7 @@ export default function SecurityScreen() {
       <SecurityPageContent
         onCreateVault={() => router.push(routes.createVault)}
         onEnterVaults={() => router.push(routes.appHome)}
+        onSeeHowItWorks={() => router.push(routes.howItWorks)}
       />
     </>
   );

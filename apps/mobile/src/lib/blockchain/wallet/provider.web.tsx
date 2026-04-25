@@ -161,6 +161,7 @@ export const WalletProvider = ({ children }: PropsWithChildren) => {
       adapters={[adapter]}
       allowUnsupportedChain
       defaultNetwork={goalVaultSupportedViemChains[defaultGoalVaultChainId]}
+      enableCoinbase={false}
       metadata={walletMetadata}
       networks={walletNetworks}
       projectId={walletRuntimeConfig.projectId}

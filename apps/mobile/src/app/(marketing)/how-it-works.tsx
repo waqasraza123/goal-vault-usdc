@@ -17,6 +17,7 @@ export default function HowItWorksScreen() {
       <HowItWorksPageContent
         onCreateVault={() => router.push(routes.createVault)}
         onEnterVaults={() => router.push(routes.appHome)}
+        onReviewSecurity={() => router.push(routes.security)}
       />
     </>
   );

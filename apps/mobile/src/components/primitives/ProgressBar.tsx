@@ -51,7 +51,7 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
           borderRadius: radii.pill,
           borderWidth: 1,
           borderColor: colors.borderStrong,
-          backgroundColor: colors.surfaceMuted,
+          backgroundColor: colors.surfaceStrong,
           overflow: "hidden",
         },
         style,
@@ -65,12 +65,12 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
           backgroundColor: fillColor,
           ...createShadowStyle({
             color: tone === "positive" ? colors.positiveGlow : colors.accentGlow,
-            opacity: 0.28,
-            radius: 14,
-            offsetY: 6,
-            elevation: 1,
+            opacity: 0.36,
+            radius: 18,
+            offsetY: 7,
+            elevation: 2,
           }),
-          elevation: 1,
+          elevation: 2,
         }}
       >
         <View
@@ -83,7 +83,7 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
             width: "48%",
             borderRadius: radii.pill,
             backgroundColor: colors.white,
-            opacity: 0.18,
+            opacity: 0.24,
           }}
         />
       </Animated.View>

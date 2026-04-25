@@ -4,44 +4,43 @@
 2026-04-25
 
 ## Current Objective
-Shift the shared Goal Vault theme to a green, orange, and white palette while keeping the universal app architecture intact.
+Polish the homepage and public marketing routes so the Goal Vault web experience feels premium, coherent, and product-complete without changing scope.
 
 ## Last Completed Step
-Published the locale-toggle race fix, then updated the shared palette tokens, gradients, shadows, app theme color, and vault accent tones to a calmer green/orange/white system.
+Rebuilt the public route composition around a richer shared content model, stronger hero and vault artifact, deeper below-the-fold structure, and route-specific explanatory sections for How It Works and Security.
 
 ## Current Step
-The palette refresh is complete and verified. Remaining work is handoff only unless another visual regression appears.
+The public-surface polish pass is complete and verified. The branch is ready for review, commit, or follow-up refinement.
 
 ## Why This Step Exists
-The product shell had already been repaired functionally, but the user requested a warmer green/orange/white direction. The shared theme tokens still leaned on the earlier blue palette, so the app needed a centralized palette refresh rather than route-level styling edits.
+The public web routes were no longer technically broken, but they still felt thin and placeholder-like. The product needed a more convincing public story, stronger CTA hierarchy, better section rhythm, and route-specific content that matched the implemented Goal Vault experience.
 
 ## Files Touched
-- `apps/mobile/app.config.js`
-- `apps/mobile/src/theme/{colors.ts,gradients.ts,shadows.ts}`
-- `apps/mobile/src/lib/contracts/mappers.ts`
-- `apps/mobile/src/hooks/useTransactionRecovery.ts`
-- `apps/mobile/src/lib/data/rule-overrides.test.ts`
-- `docs/project-state.md`
+- `apps/mobile/src/app/{index.tsx,(marketing)/how-it-works.tsx,(marketing)/security.tsx}`
+- `apps/mobile/src/components/layout/AppFooter.tsx`
+- `apps/mobile/src/components/marketing/{HeroSection.tsx,HeroVaultPreviewCard.tsx,LandingPageContent.tsx,HowItWorksSection.tsx,SecurityTrustSection.tsx,FinalCtaSection.tsx,HowItWorksPageContent.tsx,SecurityPageContent.tsx,index.ts,PublicRouteHero.tsx,RuleProtectionSection.tsx,SecurityDisclosureSection.tsx,StoryPrinciplesSection.tsx}`
+- `apps/mobile/src/lib/public/{marketing-content.ts,marketing-content.test.ts}`
+- `apps/mobile/src/lib/i18n/index.tsx`
 - `docs/_local/current-session.md`
 
 ## Durable Decisions Captured
-- Goal Vault now uses a warm white base with green primary actions and orange secondary warmth across the shared app theme.
-- Palette changes should continue to flow through shared tokens first, with app config and branded accent constants updated only where they still leak old colors.
+- Public marketing routes should stay driven by shared content and route models instead of ad hoc copy embedded directly in page components.
+- The landing route keeps connection or wallet notices secondary to the product story rather than letting runtime state dominate the public experience.
 
 ## Scope Boundaries
-- No multichain, yield, swaps, lending, or social features.
-- No product redesign beyond the shared palette refresh.
-- The change stays within the existing universal Expo React Native theming model.
+- No new product scope, no separate web stack, and no fake features.
+- No wallet or chain behavior changes beyond preserving existing CTA routing and secondary notices.
+- No redesign of the authenticated product flows.
 
 ## Exact Next Steps
-1. If more visual tuning is needed, adjust shared tokens before editing individual screens.
-2. If screenshots or browser verification are needed later, validate contrast and hierarchy against the new palette rather than reintroducing the old blue accent.
-3. Keep new accent additions aligned with the green/orange/white direction instead of mixing in unrelated cool tones.
+1. Review the public routes in a browser and tighten any purely visual details that still feel off after the stronger content pass.
+2. Commit this public-surface polish together with the already pending branch changes when ready.
+3. If further marketing refinements are needed, keep them inside the shared Expo Router and shared component architecture.
 
 ## Verification Commands
-- `pnpm --filter @goal-vault/mobile test`
 - `pnpm --filter @goal-vault/mobile typecheck`
-- `git status --short`
+- `pnpm --filter @goal-vault/mobile test`
+- `pnpm --filter @goal-vault/mobile exec expo export --platform web --output-dir ../../dist-web-public-polish-check`
 
 ## Handoff Note
-The mobile and web app now read from a warmer shared palette: backgrounds moved to warm white, primary emphasis moved to green, supporting warmth moved to orange, shadows shifted darker green, and branded accent defaults now align with the same system instead of the earlier blue theme.
+The public-facing Goal Vault experience now has a stronger hero, a richer vault artifact, more intentional section flow, clearer CTA hierarchy, dedicated How It Works and Security route heroes, and regression coverage that protects the public route composition and copy contract from slipping back into placeholder shells.

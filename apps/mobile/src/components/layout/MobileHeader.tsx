@@ -22,14 +22,14 @@ export const MobileHeader = ({ links, ctaHref, ctaLabel }: MobileHeaderProps) =>
   const { getDirectionalIcon, inlineDirection, messages } = useI18n();
 
   return (
-    <View style={{ borderBottomWidth: 1, borderBottomColor: colors.border, backgroundColor: colors.backgroundElevated }}>
+    <View style={{ borderBottomWidth: 1, borderBottomColor: colors.borderStrong, backgroundColor: colors.backgroundElevated }}>
       <PageContainer>
         <View style={{ gap: spacing[3], paddingVertical: spacing[4] }}>
           <View style={{ flexDirection: inlineDirection(), alignItems: "center", justifyContent: "space-between" }}>
             <Link href={routes.landing} asChild>
               <Pressable>
                 <View style={{ gap: spacing[1] }}>
-                  <AppHeading size="sm">{productConfig.shortName}</AppHeading>
+                  <AppHeading size="sm" style={{ color: colors.accentStrong }}>{productConfig.shortName}</AppHeading>
                   <AppText size="sm" tone="muted">
                     {messages.navigation.mobileTagline}
                   </AppText>

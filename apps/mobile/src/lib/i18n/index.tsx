@@ -39,6 +39,7 @@ const enMessages = {
     buttons: {
       openAppShell: "Enter My Vaults",
       seeHowItWorks: "See how it works",
+      reviewSecurity: "Review security",
       enterMyVaults: "Enter My Vaults",
       createVault: "Create vault",
       openActivity: "Open activity",
@@ -104,85 +105,157 @@ const enMessages = {
       "Goal Vault is a calm USDC savings product on Base for one goal at a time, with clear withdrawal rules and honest progress tracking.",
   },
   landing: {
-    heroBadge: "Base-native USDC saving",
-    heroTitle: "Protect the money meant for something that matters.",
-    heroSubtitle: "Create one goal, fund it in USDC, and keep withdrawals locked until the rule allows it.",
-    heroHighlights: ["One goal per vault", "USDC only on Base", "Withdraw when the rule allows"],
+    heroBadge: "Base-native protected saving",
+    heroTitle: "One vault. One goal. One clear rule.",
+    heroSubtitle:
+      "Create a goal-focused vault in USDC, keep funding it over time, and only withdraw when the protection rule says you can.",
+    heroHighlights: ["Time lock, cooldown, or guardian", "USDC only on Base", "Chain truth for money movement"],
     heroPreviewLabel: "Sample protected vault",
     heroPreviewGoal: "Emergency Reserve",
-    heroPreviewDescription:
-      "Protect six months of living costs until late summer, with deposits open whenever you are ready.",
-    heroPreviewFooter: "Base • USDC • Withdrawals wait for the chosen date",
+    heroPreviewDescription: "A calm reserve for six months of living costs, protected until late summer.",
+    heroPreviewFooter: "Withdrawals stay locked until the selected protection rule is satisfied.",
+    heroPreviewRuleLabel: "Current protection",
+    heroPreviewRuleValue: "Time lock until August 30, 2026",
+    heroPreviewStateLabel: "Vault state",
+    heroPreviewStateValue: "Funding stays open. Withdrawal stays unavailable.",
+    heroPreviewTimelineTitle: "What this vault tells you at a glance",
+    heroPreviewTimelineItems: [
+      "Goal name, saved amount, and target stay visible together",
+      "The rule explains why money is still protected",
+      "Recent activity makes progress feel real without becoming noisy",
+    ],
     heroPreviewActivityLabel: "Example activity",
     heroPreviewActivityCreated: "Vault created and indexed cleanly",
     heroPreviewActivityFunded: "Latest USDC deposit confirmed and reflected in progress",
-    demoPathEyebrow: "Best first walkthrough",
-    demoPathTitle: "Show the full product in four calm steps.",
-    demoPathDescription: "Open the app, create one vault, fund it with USDC, then return to the detail view and activity timeline.",
-    demoPathSteps: [
-      "Create one goal-focused vault",
-      "Review the unlock date before you confirm",
-      "Fund it with USDC",
-      "Return to the vault and activity timeline",
+    storyEyebrow: "Why Goal Vault",
+    storyTitle: "Saving feels different when the money already has a job.",
+    storyDescription:
+      "Goal Vault is for money you do not want to break casually: the emergency buffer, the tuition plan, the move, or the reserve that should stay intact until the moment is right.",
+    storyCards: [
+      {
+        title: "Protect one promise at a time",
+        description: "Each vault is built around one goal so progress and discipline stay emotionally clear.",
+      },
+      {
+        title: "Not a generic finance dashboard",
+        description: "The product stays calm on purpose. No trading noise, no token sprawl, no casino energy.",
+      },
+      {
+        title: "Base and USDC keep it narrow",
+        description: "One network and one asset make the product easier to understand, explain, and trust.",
+      },
     ],
-    howItWorksEyebrow: "Three calm steps",
-    howItWorksTitle: "Make saving feel deliberate again.",
-    howItWorksSupport: ["Start with intention", "Make the rule clear", "Fund it gradually"],
+    howItWorksEyebrow: "How it works",
+    howItWorksTitle: "From intention to protected savings in four clear steps.",
+    howItWorksDescription:
+      "The product flow stays tight: create the vault, choose the rule, fund it with USDC, then wait until the rule makes withdrawal eligible.",
+    howItWorksSupport: ["Create with intent", "Choose the protection", "Fund gradually", "Withdraw only when eligible"],
     howItWorksSteps: [
       {
-        title: "Name the goal",
-        description: "Start with one clear purpose so progress always feels personal and concrete.",
+        title: "Create the vault",
+        description: "Start with one goal so the balance, target, and progress all point at the same outcome.",
       },
       {
-        title: "Protect it with time",
-        description: "Choose when it unlocks so this money is harder to break into on impulse.",
+        title: "Choose the protection rule",
+        description: "Pick a time lock, cooldown unlock, or guardian approval flow based on what this goal needs.",
       },
       {
-        title: "Fund it over time",
-        description: "Deposit USDC whenever you can and watch the goal move from intention to reality.",
+        title: "Fund it with USDC",
+        description: "Deposit when you can. The vault stays open for funding without loosening the withdrawal rule.",
+      },
+      {
+        title: "Withdraw only when eligible",
+        description: "The app makes the rule visible so you know what must happen before money can move out.",
+      },
+    ],
+    rulesEyebrow: "Protection rules",
+    rulesTitle: "Choose the rule that protects this goal.",
+    rulesDescription:
+      "Every vault has one understandable rule. The product tells you what is locked, what changes eligibility, and what comes next.",
+    ruleCards: [
+      {
+        eyebrow: "Time lock",
+        title: "Wait for a specific date",
+        description: "Set one future date and keep the vault closed until that date arrives.",
+      },
+      {
+        eyebrow: "Cooldown unlock",
+        title: "Add a pause before the money moves",
+        description: "Request an unlock first, let the cooldown run, then withdraw only after it matures.",
+      },
+      {
+        eyebrow: "Guardian approval",
+        title: "Require a second person to confirm",
+        description: "Use a guardian when this goal needs another human checkpoint before withdrawal.",
       },
     ],
     securityEyebrow: "Trust model",
-    securityTitle: "Serious withdrawals start with clear rules.",
+    securityTitle: "Designed to feel calm because the rules are clear.",
     securityDescription:
-      "Goal Vault keeps the promise narrow: Base, USDC, one goal, and one rule you can understand instantly.",
-    securitySummaryTitle: "Calm product boundaries",
+      "Goal Vault keeps the promise narrow: Base, USDC, one goal at a time, and protection rules the user can understand instantly.",
+    securitySummaryTitle: "What the product is optimizing for",
     securitySummaryDescription:
-      "Goal Vault explains the contract truth, the display metadata, and the sync layer separately so the product stays understandable under real-world lag.",
+      "Clarity comes first. Onchain state controls balances and withdrawals, while backend indexing and metadata help the app stay readable and current.",
     securityPrinciples: [
       {
-        title: "Base-native by design",
-        description: "The product stays narrow: one network, one asset, and one clear saving experience.",
+        title: "Wallet ownership stays central",
+        description: "You control the wallet. The app reflects the vault state, but it does not custody your money.",
       },
       {
-        title: "Rule clarity first",
-        description: "Your vault always tells you what is locked, what unlocks it, and when money can move.",
+        title: "Onchain financial truth",
+        description: "Deposits, balances, and withdrawals follow confirmed chain state instead of backend convenience.",
       },
       {
-        title: "Private goal metadata",
-        description: "Display details can stay offchain while the financial rules remain onchain.",
+        title: "Metadata is for display, not permission",
+        description: "Goal names, notes, and presentation details help the experience without replacing the contract rule.",
       },
       {
-        title: "Chain truth comes first",
-        description: "Balances, deposits, and withdrawals follow confirmed onchain state. The backend helps the app catch up faster, but it does not control your funds.",
+        title: "The product stays intentionally narrow",
+        description: "No yield promises, no swaps, and no speculative distractions around a savings goal.",
       },
     ],
     finalCtaEyebrow: "Start here",
-    finalCtaTitle: "Open the product and start your first protected vault.",
+    finalCtaTitle: "Open the product and start the first vault that matters.",
     finalCtaDescription:
-      "View your vaults, create a goal-focused vault, and move straight into the real saving flow on Base without leaving the same product surface.",
+      "Create one protected goal, review the rule before you confirm, and move into the real app flow without leaving the same product surface.",
+    finalCtaHighlights: ["Create a vault now", "Return to My Vaults later", "Keep the rule visible from day one"],
+    demoPathEyebrow: "Best first walkthrough",
+    demoPathTitle: "Show the full product in four calm steps.",
+    demoPathDescription:
+      "Open the app, create one vault, fund it with USDC, then return to the detail view and activity timeline.",
+    demoPathSteps: [
+      "Create one goal-focused vault",
+      "Choose the rule before you confirm",
+      "Fund it with USDC",
+      "Return to the vault and activity timeline",
+    ],
   },
   pages: {
     howItWorks: {
-      eyebrow: "Product flow",
-      title: "Create one vault, keep one promise clear.",
+      eyebrow: "How it works",
+      title: "Create the vault, choose the rule, fund it slowly.",
       description:
-        "Goal Vault strips the product back to the moments that matter: naming the goal, protecting it with time, and funding it calmly.",
+        "Goal Vault stays focused on the core loop: create one protected vault, fund it with USDC, and wait until the rule makes withdrawal eligible.",
+      highlights: ["One vault per goal", "USDC on Base", "Protection stays visible at every step"],
+      insightPoints: [
+        "Create once and keep the goal details clear",
+        "Choose the rule before the vault goes live",
+        "Fund over time without weakening the rule",
+        "Withdraw only when the rule says yes",
+      ],
     },
     security: {
       eyebrow: "Security",
       title: "A narrow trust model is easier to understand.",
-      description: "The product stays calm and factual: Base only, USDC only, onchain withdrawal rules, and offchain display data that never overrides chain truth.",
+      description:
+        "The product stays calm and factual: Base only, USDC only, wallet ownership first, and onchain rules that the backend never overrides.",
+      highlights: ["Wallet-owned", "Onchain withdrawals", "Metadata is display-only"],
+      insightPoints: [
+        "Balances and withdrawal eligibility come from confirmed chain state",
+        "Goal metadata improves readability without controlling permissions",
+        "Indexing helps the timeline catch up faster, but it does not move funds",
+        "The app avoids yield, swaps, and speculative behavior by design",
+      ],
     },
     myVaults: {
       eyebrow: "My Vaults",
@@ -615,6 +688,7 @@ const arMessages: AppMessages = {
     buttons: {
       openAppShell: "ادخل إلى خزائني",
       seeHowItWorks: "اطلع على طريقة العمل",
+      reviewSecurity: "راجع الأمان",
       enterMyVaults: "ادخل إلى خزائني",
       createVault: "أنشئ خزنة",
       openActivity: "افتح النشاط",
@@ -679,81 +753,155 @@ const arMessages: AppMessages = {
     description: "Goal Vault منتج ادخار هادئ بعملة USDC على Base لهدف واحد في كل مرة، مع قواعد سحب واضحة وتتبع تقدّم صادق.",
   },
   landing: {
-    heroBadge: "ادخار USDC أصيل على Base",
-    heroTitle: "احمِ المال المخصّص لشيء مهم فعلاً.",
-    heroSubtitle: "أنشئ هدفاً واحداً، موّله بعملة USDC، وأبقِ السحب مقفلاً حتى تسمح القاعدة بذلك.",
-    heroHighlights: ["هدف واحد لكل خزنة", "USDC فقط على Base", "السحب عندما تسمح القاعدة"],
+    heroBadge: "ادخار محمي أصيل على Base",
+    heroTitle: "خزنة واحدة. هدف واحد. قاعدة واضحة واحدة.",
+    heroSubtitle: "أنشئ خزنة لهدف محدد بعملة USDC، واصل تمويلها بهدوء، ولا تسحب إلا عندما تسمح قاعدة الحماية بذلك.",
+    heroHighlights: ["قفل زمني أو مهلة انتظار أو وصي", "USDC فقط على Base", "حقيقة المال تأتي من السلسلة"],
     heroPreviewLabel: "خزنة محمية نموذجية",
     heroPreviewGoal: "صندوق الطوارئ",
-    heroPreviewDescription: "احمِ ستة أشهر من تكاليف المعيشة حتى أواخر الصيف، مع بقاء الإيداعات متاحة متى ما أصبحت جاهزاً.",
-    heroPreviewFooter: "Base • USDC • السحب ينتظر التاريخ الذي اخترته",
+    heroPreviewDescription: "احتياطي هادئ لستة أشهر من تكاليف المعيشة، محمي حتى أواخر الصيف.",
+    heroPreviewFooter: "يبقى السحب مقفلاً حتى تتحقق قاعدة الحماية المختارة بالكامل.",
+    heroPreviewRuleLabel: "الحماية الحالية",
+    heroPreviewRuleValue: "قفل زمني حتى 30 أغسطس 2026",
+    heroPreviewStateLabel: "حالة الخزنة",
+    heroPreviewStateValue: "التمويل متاح. السحب غير متاح بعد.",
+    heroPreviewTimelineTitle: "ما الذي توضحه الخزنة فوراً",
+    heroPreviewTimelineItems: [
+      "اسم الهدف والمبلغ المدخر والمستهدف في مكان واحد",
+      "القاعدة تشرح بوضوح لماذا لا يزال المال محمياً",
+      "النشاط الأخير يجعل التقدم حقيقياً من دون ضجيج",
+    ],
     heroPreviewActivityLabel: "نشاط توضيحي",
     heroPreviewActivityCreated: "تم إنشاء الخزنة وفهرستها بشكل نظيف",
     heroPreviewActivityFunded: "تم تأكيد آخر إيداع USDC وظهر في التقدم",
+    storyEyebrow: "لماذا Goal Vault",
+    storyTitle: "يختلف الادخار عندما يكون للمال مهمة واضحة من البداية.",
+    storyDescription:
+      "Goal Vault مخصص للمال الذي لا تريد كسره بسهولة: احتياطي الطوارئ، خطة الدراسة، خطوة الانتقال، أو المبلغ الذي يجب أن يبقى سليماً حتى يحين وقته.",
+    storyCards: [
+      {
+        title: "احمِ وعداً واحداً في كل مرة",
+        description: "كل خزنة تدور حول هدف واحد حتى يبقى التقدّم والانضباط واضحين ومفهومين.",
+      },
+      {
+        title: "ليس لوحة مالية عامة",
+        description: "يبقى المنتج هادئاً عن قصد. لا ضجيج تداول ولا تشعب أصول ولا طاقة كازينو.",
+      },
+      {
+        title: "Base وUSDC يبقيان النطاق ضيقاً",
+        description: "شبكة واحدة وأصل واحد يجعلان التجربة أسهل في الفهم والشرح والثقة.",
+      },
+    ],
+    howItWorksEyebrow: "كيف يعمل",
+    howItWorksTitle: "من النية إلى ادخار محمي في أربع خطوات واضحة.",
+    howItWorksDescription:
+      "تدفق المنتج يبقى مركزاً: أنشئ الخزنة، اختر قاعدة الحماية، موّلها بعملة USDC، ثم انتظر حتى تجعل القاعدة السحب مؤهلاً.",
+    howItWorksSupport: ["أنشئ بنية واضحة", "اختر الحماية", "موّل تدريجياً", "اسحب فقط عند الاستحقاق"],
+    howItWorksSteps: [
+      {
+        title: "أنشئ الخزنة",
+        description: "ابدأ بهدف واحد حتى تشير الرصيد والهدف والتقدّم كلها إلى النتيجة نفسها.",
+      },
+      {
+        title: "اختر قاعدة الحماية",
+        description: "اختر قفلاً زمنياً أو مهلة انتظار أو موافقة وصي حسب ما يحتاجه هذا الهدف.",
+      },
+      {
+        title: "موّلها بعملة USDC",
+        description: "أودِع كلما استطعت. تبقى الخزنة مفتوحة للتمويل من دون تخفيف قاعدة السحب.",
+      },
+      {
+        title: "اسحب فقط عند الاستحقاق",
+        description: "يبقي التطبيق القاعدة مرئية حتى تعرف ما الذي يجب أن يحدث قبل خروج المال.",
+      },
+    ],
+    rulesEyebrow: "قواعد الحماية",
+    rulesTitle: "اختر القاعدة التي تحمي هذا الهدف.",
+    rulesDescription:
+      "كل خزنة تحمل قاعدة واحدة مفهومة. يوضح المنتج ما هو مقفل، وما الذي يغيّر الأهلية، وما الذي سيحدث بعد ذلك.",
+    ruleCards: [
+      {
+        eyebrow: "قفل زمني",
+        title: "انتظر حتى تاريخ محدد",
+        description: "حدد تاريخاً مستقبلياً واحداً وأبقِ الخزنة مغلقة حتى يحين.",
+      },
+      {
+        eyebrow: "مهلة انتظار",
+        title: "أضف فترة هدوء قبل تحرك المال",
+        description: "اطلب فتح السحب أولاً ثم انتظر انتهاء المهلة قبل أن يصبح السحب ممكناً.",
+      },
+      {
+        eyebrow: "موافقة وصي",
+        title: "اجعل شخصاً آخر يؤكد القرار",
+        description: "استخدم وصياً عندما يحتاج هذا الهدف إلى نقطة تحقق بشرية ثانية قبل السحب.",
+      },
+    ],
+    securityEyebrow: "نموذج الثقة",
+    securityTitle: "صُمم ليشعر بالهدوء لأن القواعد واضحة.",
+    securityDescription:
+      "يحافظ Goal Vault على وعد ضيق: Base وUSDC وهدف واحد في كل مرة وقواعد حماية يفهمها المستخدم فوراً.",
+    securitySummaryTitle: "ما الذي يحاول المنتج تحسينه",
+    securitySummaryDescription:
+      "الوضوح أولاً. تتحكم الحالة على السلسلة في الأرصدة والسحوبات، بينما تساعد الفهرسة والبيانات الوصفية الخلفية الواجهة على أن تبقى مقروءة ومحدثة.",
+    securityPrinciples: [
+      {
+        title: "ملكية المحفظة تبقى أساسية",
+        description: "أنت تتحكم في المحفظة. يعكس التطبيق حالة الخزنة لكنه لا يحتفظ بأموالك.",
+      },
+      {
+        title: "الحقيقة المالية على السلسلة",
+        description: "الإيداعات والأرصدة والسحوبات تتبع الحالة المؤكدة على السلسلة لا سهولة الخلفية.",
+      },
+      {
+        title: "البيانات الوصفية للعرض لا للصلاحيات",
+        description: "أسماء الأهداف والملاحظات والتفاصيل البصرية تحسن التجربة من دون أن تستبدل قاعدة العقد.",
+      },
+      {
+        title: "النطاق الضيق مقصود",
+        description: "لا وعود عائد ولا مبادلات ولا مشتتات مضاربية حول هدف ادخار جاد.",
+      },
+    ],
+    finalCtaEyebrow: "ابدأ من هنا",
+    finalCtaTitle: "افتح المنتج وابدأ أول خزنة لها معنى فعلاً.",
+    finalCtaDescription:
+      "أنشئ هدفاً محمياً واحداً، وراجع القاعدة قبل التأكيد، وادخل إلى التدفق الحقيقي من السطح نفسه.",
+    finalCtaHighlights: ["أنشئ خزنة الآن", "ارجع إلى خزائني لاحقاً", "أبقِ القاعدة مرئية من اليوم الأول"],
     demoPathEyebrow: "أفضل مسار أولي",
     demoPathTitle: "اعرض المنتج كاملاً في أربع خطوات هادئة.",
     demoPathDescription: "افتح التطبيق وأنشئ خزنة واحدة وموّلها بعملة USDC ثم عُد إلى صفحة التفاصيل وخط النشاط.",
     demoPathSteps: [
       "أنشئ خزنة لهدف واحد واضح",
-      "راجع تاريخ الفتح قبل التأكيد",
+      "اختر القاعدة قبل التأكيد",
       "موّلها بعملة USDC",
       "ارجع إلى الخزنة وخط النشاط",
     ],
-    howItWorksEyebrow: "ثلاث خطوات هادئة",
-    howItWorksTitle: "اجعل الادخار عملاً مقصوداً من جديد.",
-    howItWorksSupport: ["ابدأ بنية واضحة", "اجعل القاعدة واضحة", "موّله تدريجياً"],
-    howItWorksSteps: [
-      {
-        title: "سمِّ الهدف",
-        description: "ابدأ بهدف واضح واحد حتى يبقى التقدّم شخصياً وملموساً.",
-      },
-      {
-        title: "احمه بالوقت",
-        description: "اختر وقت الفتح حتى يصعب كسر هذه الخطة بدافع لحظي.",
-      },
-      {
-        title: "موّله تدريجياً",
-        description: "أودِع USDC كلما استطعت وشاهد الهدف ينتقل من نية إلى واقع.",
-      },
-    ],
-    securityEyebrow: "نموذج الثقة",
-    securityTitle: "السحوبات الجادة تبدأ بقواعد واضحة.",
-    securityDescription: "يحافظ Goal Vault على الوعد بشكل ضيق: Base وUSDC وهدف واحد وقاعدة واحدة يمكنك فهمها فوراً.",
-    securitySummaryTitle: "حدود منتج هادئة",
-    securitySummaryDescription:
-      "يفصل Goal Vault بين حقيقة العقد وبيانات العرض وطبقة المزامنة حتى يبقى المنتج مفهوماً حتى عند وجود تأخر في التحديث.",
-    securityPrinciples: [
-      {
-        title: "مصمم خصيصاً لـ Base",
-        description: "المنتج يبقى ضيق النطاق: شبكة واحدة وأصل واحد وتجربة ادخار واضحة.",
-      },
-      {
-        title: "وضوح القاعدة أولاً",
-        description: "ستخبرك الخزنة دائماً بما هو مقفل وما الذي يفتحه ومتى يمكن أن تتحرك الأموال.",
-      },
-      {
-        title: "بيانات الهدف خاصة",
-        description: "يمكن أن تبقى تفاصيل العرض خارج السلسلة بينما تبقى القواعد المالية على السلسلة.",
-      },
-      {
-        title: "حقيقة السلسلة أولاً",
-        description: "الأرصدة والإيداعات والسحوبات تتبع الحالة المؤكدة على السلسلة. الخلفية تساعد الواجهة على التحديث بسرعة أكبر، لكنها لا تتحكم في أموالك.",
-      },
-    ],
-    finalCtaEyebrow: "ابدأ من هنا",
-    finalCtaTitle: "افتح المنتج وابدأ أول خزنة محمية لك.",
-    finalCtaDescription: "استعرض خزائنك وأنشئ خزنة لهدف واضح وادخل مباشرة إلى تدفق الادخار الحقيقي على Base من السطح نفسه.",
   },
   pages: {
     howItWorks: {
-      eyebrow: "تدفق المنتج",
-      title: "أنشئ خزنة واحدة وحافظ على وعد واحد واضح.",
-      description: "يعيد Goal Vault المنتج إلى اللحظات المهمة فقط: تسمية الهدف، حمايته بالوقت، وتمويله بهدوء.",
+      eyebrow: "كيف يعمل",
+      title: "أنشئ الخزنة، اختر القاعدة، وموّلها بهدوء.",
+      description:
+        "يبقى Goal Vault مركزاً على الحلقة الأساسية: أنشئ خزنة محمية واحدة، موّلها بعملة USDC، وانتظر حتى تجعل القاعدة السحب مؤهلاً.",
+      highlights: ["خزنة واحدة لكل هدف", "USDC على Base", "الحماية تبقى مرئية في كل خطوة"],
+      insightPoints: [
+        "أنشئ الخزنة مرة واحدة وأبقِ تفاصيل الهدف واضحة",
+        "اختر القاعدة قبل أن تصبح الخزنة حية",
+        "موّلها تدريجياً من دون إضعاف القاعدة",
+        "اسحب فقط عندما تقول القاعدة نعم",
+      ],
     },
     security: {
       eyebrow: "الأمان",
       title: "نموذج الثقة الضيق أسهل في الفهم.",
-      description: "المنتج هادئ وواقعي عمداً: Base فقط وUSDC فقط وقواعد سحب على السلسلة وبيانات عرض خارج السلسلة لا تتجاوز حقيقة السلسلة أبداً.",
+      description:
+        "المنتج هادئ وواقعي عمداً: Base فقط وUSDC فقط وملكية المحفظة أولاً وقواعد سحب على السلسلة لا تتجاوزها الخلفية أبداً.",
+      highlights: ["المحفظة مملوكة لك", "السحب على السلسلة", "البيانات الوصفية للعرض فقط"],
+      insightPoints: [
+        "الأرصدة وأهلية السحب تأتيان من الحالة المؤكدة على السلسلة",
+        "البيانات الوصفية للهدف تحسن القراءة من دون أن تتحكم في الصلاحيات",
+        "الفهرسة تساعد الخط الزمني على اللحاق بالحالة لكنها لا تحرك الأموال",
+        "التطبيق يتجنب العائد والمبادلات والسلوك المضاربي عن قصد",
+      ],
     },
     myVaults: {
       eyebrow: "خزائني",

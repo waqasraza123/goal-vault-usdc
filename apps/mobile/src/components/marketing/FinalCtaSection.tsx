@@ -32,9 +32,28 @@ export const FinalCtaSection = ({
           </View>
           <AppHeading size="xl">{messages.landing.finalCtaTitle}</AppHeading>
           <AppText tone="secondary">{messages.landing.finalCtaDescription}</AppText>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing[2] }}>
+            {messages.landing.finalCtaHighlights.map((item) => (
+              <View
+                key={item}
+                style={{
+                  borderRadius: radii.pill,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                  backgroundColor: colors.surface,
+                  paddingHorizontal: spacing[3],
+                  paddingVertical: spacing[2],
+                }}
+              >
+                <AppText size="sm" tone="secondary" weight="semibold">
+                  {item}
+                </AppText>
+              </View>
+            ))}
+          </View>
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing[3] }}>
-            <PrimaryButton icon="arrow-right" label={messages.common.buttons.enterMyVaults} onPress={onEnterVaults} />
-            <SecondaryButton icon="plus" label={messages.common.buttons.createVault} onPress={onCreateVault} />
+            <PrimaryButton icon="plus" label={messages.common.buttons.createVault} onPress={onCreateVault} />
+            <SecondaryButton icon="arrow-right" label={messages.common.buttons.enterMyVaults} onPress={onEnterVaults} />
           </View>
         </View>
       </SurfaceCard>

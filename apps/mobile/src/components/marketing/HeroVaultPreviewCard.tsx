@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 
-import { formatLongDate, formatProgress, formatUsdc } from "../../lib/format";
+import { formatProgress, formatUsdc } from "../../lib/format";
 import { useI18n } from "../../lib/i18n";
 import { colors, radii, spacing } from "../../theme";
 import { AnimatedNumberText, AppHeading, AppText, MotionView, ProgressBar, StatusChip, SurfaceCard } from "../primitives";
@@ -13,7 +13,11 @@ export const HeroVaultPreviewCard = () => {
   const progress = 0.62;
 
   return (
-    <SurfaceCard tone="default" level="floating" style={{ backgroundColor: colors.backgroundElevated, gap: spacing[5] }}>
+    <SurfaceCard
+      tone="accent"
+      level="floating"
+      style={{ backgroundColor: colors.backgroundElevated, borderColor: colors.borderStrong, gap: spacing[5] }}
+    >
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: spacing[3] }}>
         <MotionView style={{ gap: spacing[2], flex: 1 }} preset="rise" intensity="emphasis">
           <AppText size="sm" tone="accent" weight="semibold">
@@ -23,6 +27,26 @@ export const HeroVaultPreviewCard = () => {
           <AppText tone="secondary">{messages.landing.heroPreviewDescription}</AppText>
         </MotionView>
         <StatusChip label={messages.vaults.status.active} />
+      </View>
+      <View
+        style={{
+          borderRadius: radii.lg,
+          borderWidth: 1,
+          borderColor: colors.borderStrong,
+          backgroundColor: colors.accent,
+          padding: spacing[4],
+          gap: spacing[2],
+        }}
+      >
+        <AppText size="sm" style={{ color: colors.white, opacity: 0.84 }} weight="semibold">
+          {messages.landing.heroPreviewLabel}
+        </AppText>
+        <AppHeading size="xl" style={{ color: colors.white }}>
+          {formatUsdc(savedAmount)}
+        </AppHeading>
+        <AppText style={{ color: colors.white }}>
+          {messages.common.labels.saved} {messages.common.labels.of} {formatUsdc(targetAmount)}
+        </AppText>
       </View>
       <View
         style={{
@@ -38,8 +62,8 @@ export const HeroVaultPreviewCard = () => {
             gap: spacing[1],
             borderRadius: radii.lg,
             borderWidth: 1,
-            borderColor: colors.border,
-            backgroundColor: colors.surfaceGlass,
+            borderColor: colors.borderStrong,
+            backgroundColor: colors.surfaceMuted,
             padding: spacing[4],
           }}
         >
@@ -55,8 +79,8 @@ export const HeroVaultPreviewCard = () => {
             gap: spacing[1],
             borderRadius: radii.lg,
             borderWidth: 1,
-            borderColor: colors.border,
-            backgroundColor: colors.surfaceGlass,
+            borderColor: colors.borderStrong,
+            backgroundColor: colors.surfaceMuted,
             padding: spacing[4],
           }}
         >
@@ -64,6 +88,42 @@ export const HeroVaultPreviewCard = () => {
               {messages.common.labels.targetAmount}
             </AppText>
             <AnimatedNumberText formatValue={formatUsdc} size="xl" value={targetAmount} weight="semibold" />
+        </View>
+      </View>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing[3] }}>
+        <View
+          style={{
+            flex: 1,
+            minWidth: 150,
+            gap: spacing[2],
+            borderRadius: radii.lg,
+            borderWidth: 1,
+            borderColor: colors.borderStrong,
+            backgroundColor: colors.surfaceMuted,
+            padding: spacing[4],
+          }}
+        >
+          <AppText size="sm" tone="secondary">
+            {messages.landing.heroPreviewRuleLabel}
+          </AppText>
+          <AppText weight="semibold">{messages.landing.heroPreviewRuleValue}</AppText>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            minWidth: 150,
+            gap: spacing[2],
+            borderRadius: radii.lg,
+            borderWidth: 1,
+            borderColor: colors.borderStrong,
+            backgroundColor: colors.warningSoft,
+            padding: spacing[4],
+          }}
+        >
+          <AppText size="sm" tone="secondary">
+            {messages.landing.heroPreviewStateLabel}
+          </AppText>
+          <AppText weight="semibold">{messages.landing.heroPreviewStateValue}</AppText>
         </View>
       </View>
       <View style={{ gap: spacing[2] }}>
@@ -80,15 +140,15 @@ export const HeroVaultPreviewCard = () => {
         style={{
           borderRadius: radii.lg,
           borderWidth: 1,
-          borderColor: colors.border,
-          backgroundColor: colors.surfaceGlass,
+          borderColor: colors.borderStrong,
+          backgroundColor: colors.accentSoft,
           padding: spacing[4],
           gap: spacing[3],
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: spacing[2] }}>
           <MaterialCommunityIcons color={colors.accentStrong} name="calendar-lock-outline" size={18} />
-          <AppText tone="secondary">Unlocks on {formatLongDate("2026-08-30T00:00:00.000Z")}</AppText>
+          <AppText tone="secondary">{messages.landing.heroPreviewRuleValue}</AppText>
         </View>
         <View style={{ flexDirection: "row", alignItems: "center", gap: spacing[2] }}>
           <MaterialCommunityIcons color={colors.accentStrong} name="cash-lock" size={18} />
@@ -99,7 +159,31 @@ export const HeroVaultPreviewCard = () => {
         style={{
           borderRadius: radii.lg,
           borderWidth: 1,
-          borderColor: colors.border,
+          borderColor: colors.borderStrong,
+          backgroundColor: colors.surfaceGlass,
+          padding: spacing[4],
+          gap: spacing[3],
+        }}
+      >
+        <AppText size="sm" tone="accent" weight="semibold">
+          {messages.landing.heroPreviewTimelineTitle}
+        </AppText>
+        <View style={{ gap: spacing[3] }}>
+          {messages.landing.heroPreviewTimelineItems.map((item) => (
+            <View key={item} style={{ flexDirection: "row", alignItems: "flex-start", gap: spacing[3] }}>
+              <MaterialCommunityIcons color={colors.accentStrong} name="check-circle-outline" size={18} />
+              <AppText style={{ flex: 1 }} tone="secondary">
+                {item}
+              </AppText>
+            </View>
+          ))}
+        </View>
+      </View>
+      <View
+        style={{
+          borderRadius: radii.lg,
+          borderWidth: 1,
+          borderColor: colors.borderStrong,
           backgroundColor: colors.surfaceGlass,
           padding: spacing[4],
           gap: spacing[3],

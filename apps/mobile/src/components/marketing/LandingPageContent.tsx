@@ -1,19 +1,19 @@
 import type { ReactNode } from "react";
-import { useI18n } from "../../lib/i18n";
-import { GuidedStepsCard } from "../feedback";
 import { PageContainer, Screen } from "../primitives";
 import { spacing } from "../../theme";
 import { FinalCtaSection } from "./FinalCtaSection";
 import { HeroSection } from "./HeroSection";
 import { HowItWorksSection } from "./HowItWorksSection";
+import { RuleProtectionSection } from "./RuleProtectionSection";
 import { SecurityTrustSection } from "./SecurityTrustSection";
+import { StoryPrinciplesSection } from "./StoryPrinciplesSection";
 
 export interface LandingPageContentProps {
   connectionNotice?: ReactNode;
   showConnectionNotice?: boolean;
   onCreateVault: () => void;
   onEnterVaults: () => void;
-  onSeeHowItWorks: () => void;
+  onReviewSecurity: () => void;
 }
 
 export const LandingPageContent = ({
@@ -21,24 +21,17 @@ export const LandingPageContent = ({
   showConnectionNotice = false,
   onCreateVault,
   onEnterVaults,
-  onSeeHowItWorks,
+  onReviewSecurity,
 }: LandingPageContentProps) => {
-  const { messages } = useI18n();
-
   return (
     <Screen contentContainerStyle={{ paddingBottom: spacing[12] }}>
       <PageContainer width="dashboard" style={{ gap: spacing[12], paddingTop: spacing[6] }}>
-        <HeroSection onEnterVaults={onEnterVaults} onSeeHowItWorks={onSeeHowItWorks} />
-        <GuidedStepsCard
-          description={messages.landing.demoPathDescription}
-          eyebrow={messages.landing.demoPathEyebrow}
-          icon="play-circle-outline"
-          steps={messages.landing.demoPathSteps}
-          title={messages.landing.demoPathTitle}
-        />
-        {showConnectionNotice ? connectionNotice ?? null : null}
+        <HeroSection onCreateVault={onCreateVault} onEnterVaults={onEnterVaults} onReviewSecurity={onReviewSecurity} />
+        <StoryPrinciplesSection />
         <HowItWorksSection />
+        <RuleProtectionSection />
         <SecurityTrustSection />
+        {showConnectionNotice ? connectionNotice ?? null : null}
         <FinalCtaSection onCreateVault={onCreateVault} onEnterVaults={onEnterVaults} />
       </PageContainer>
     </Screen>

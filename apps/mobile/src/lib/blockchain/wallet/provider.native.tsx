@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, type PropsWithChildren } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
 import {
   AppKit as ReownNativeModal,
   AppKitProvider as ReownNativeProvider,
@@ -18,6 +19,7 @@ import { goalVaultSupportedViemChainList, goalVaultSupportedViemChains } from ".
 import { useAnalyticsContext } from "../../analytics";
 import { clientEnv } from "../../env/client";
 import { createConnectionState, createWalletSession, getPreferredSupportedChainId } from "./helpers";
+import { isNativeWalletRuntimeSupported } from "./native-runtime";
 import { WalletContext } from "./state";
 import type { WalletContextValue } from "./types";
 
@@ -79,14 +81,19 @@ const nativeStorage: Storage = {
   },
 };
 
+const nativeWalletRuntimeEnabled =
+  walletRuntimeConfig.isEnabled &&
+  walletRuntimeConfig.projectId &&
+  isNativeWalletRuntimeSupported(Constants.appOwnership);
+
 const nativeWalletInstance =
-  walletRuntimeConfig.isEnabled && walletRuntimeConfig.projectId
+  nativeWalletRuntimeEnabled
     ? createAppKit({
         adapters: [new EthersAdapter()],
         defaultNetwork: nativeNetworks[0],
         metadata: walletMetadata,
         networks: nativeNetworks,
-        projectId: walletRuntimeConfig.projectId,
+        projectId: walletRuntimeConfig.projectId!,
         storage: nativeStorage,
         themeMode: "light",
       })

@@ -1,20 +1,26 @@
 import { View } from "react-native";
+import type { ComponentProps } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useAdaptiveLayout } from "../../hooks/useAdaptiveLayout";
 import { useI18n } from "../../lib/i18n";
+import { getLandingPageModel } from "../../lib/public/marketing-content";
 import { colors, createShadowStyle, radii, spacing } from "../../theme";
 import { AppHeading, AppText, MotionView, PrimaryButton, SecondaryButton, SectionContainer } from "../primitives";
 import { HeroVaultPreviewCard } from "./HeroVaultPreviewCard";
 
 export const HeroSection = ({
+  onCreateVault,
   onEnterVaults,
-  onSeeHowItWorks,
+  onReviewSecurity,
 }: {
+  onCreateVault: () => void;
   onEnterVaults: () => void;
-  onSeeHowItWorks: () => void;
+  onReviewSecurity: () => void;
 }) => {
   const adaptiveLayout = useAdaptiveLayout();
-  const { inlineDirection, messages } = useI18n();
+  const { inlineDirection, locale, messages } = useI18n();
+  const model = getLandingPageModel(locale);
 
   return (
     <SectionContainer
@@ -48,7 +54,7 @@ export const HeroSection = ({
           </AppText>
         </MotionView>
         <MotionView delay={130} style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[2] }}>
-          {messages.landing.heroHighlights.map((item) => (
+          {messages.landing.heroHighlights.map((item, index) => (
             <View
               key={item}
               style={{
@@ -60,9 +66,16 @@ export const HeroSection = ({
                 paddingVertical: spacing[2],
               }}
             >
-              <AppText size="sm" tone="secondary" weight="semibold">
-                {item}
-              </AppText>
+              <View style={{ flexDirection: inlineDirection(), alignItems: "center", gap: spacing[2] }}>
+                <MaterialCommunityIcons
+                  color={colors.accentStrong}
+                  name={(model.ruleCards[index]?.icon ?? "check-circle-outline") as ComponentProps<typeof MaterialCommunityIcons>["name"]}
+                  size={16}
+                />
+                <AppText size="sm" tone="secondary" weight="semibold">
+                  {item}
+                </AppText>
+              </View>
             </View>
           ))}
         </MotionView>
@@ -86,19 +99,48 @@ export const HeroSection = ({
           }}
         >
           <AppText size="sm" tone="accent" weight="semibold">
-            {messages.landing.demoPathEyebrow}
+            {messages.landing.storyEyebrow}
           </AppText>
           <AppText tone="secondary">
-            {messages.landing.demoPathDescription}
+            {messages.landing.storyDescription}
           </AppText>
         </MotionView>
-        <MotionView delay={250} style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[3] }}>
-          <PrimaryButton icon="arrow-right" label={messages.common.buttons.openAppShell} onPress={onEnterVaults} />
+        <MotionView delay={250} style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[3], alignItems: "center" }}>
+          <PrimaryButton icon="plus" label={model.heroActions[0].label} onPress={onCreateVault} />
+          <SecondaryButton icon="arrow-right" label={model.heroActions[1].label} onPress={onEnterVaults} />
           <SecondaryButton
             icon="arrow-top-right"
-            label={messages.common.buttons.seeHowItWorks}
-            onPress={onSeeHowItWorks}
+            label={messages.common.buttons.reviewSecurity}
+            onPress={onReviewSecurity}
           />
+        </MotionView>
+        <MotionView delay={310} style={{ gap: spacing[3] }}>
+          <AppText size="sm" tone="accent" weight="semibold">
+            {messages.landing.demoPathTitle}
+          </AppText>
+          <View style={{ gap: spacing[2] }}>
+            {messages.landing.demoPathSteps.map((step, index) => (
+              <View key={step} style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
+                <View
+                  style={{
+                    width: 26,
+                    height: 26,
+                    borderRadius: 13,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: colors.accentSoft,
+                  }}
+                >
+                  <AppText size="sm" tone="accent" weight="semibold">
+                    {index + 1}
+                  </AppText>
+                </View>
+                <AppText style={{ flex: 1 }} tone="secondary">
+                  {step}
+                </AppText>
+              </View>
+            ))}
+          </View>
         </MotionView>
       </MotionView>
       <MotionView delay={180} intensity="emphasis" style={{ flex: 1, justifyContent: "center", paddingBottom: spacing[8] }}>

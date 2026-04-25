@@ -1,13 +1,13 @@
 export const gradients = {
   hero: {
-    primary: ["rgba(47, 143, 91, 0.22)", "rgba(47, 143, 91, 0)"],
-    secondary: ["rgba(199, 120, 47, 0.18)", "rgba(199, 120, 47, 0)"],
+    primary: ["rgba(91, 99, 255, 0.34)", "rgba(91, 99, 255, 0)"],
+    secondary: ["rgba(255, 122, 89, 0.24)", "rgba(255, 122, 89, 0)"],
   },
   surface: {
-    default: ["rgba(255, 255, 255, 0.94)", "rgba(251, 249, 242, 0.82)"],
-    accent: ["rgba(240, 248, 241, 0.98)", "rgba(250, 244, 232, 0.9)"],
+    default: ["rgba(255, 255, 255, 0.96)", "rgba(237, 242, 255, 0.88)"],
+    accent: ["rgba(237, 241, 255, 0.98)", "rgba(255, 240, 236, 0.9)"],
   },
   progress: {
-    fill: ["#52a972", "#28734d"],
+    fill: ["#7b84ff", "#3344dd"],
   },
 } as const;

@@ -1,0 +1,10 @@
+diff --git a/dist/esm/exports/ethers.js b/dist/esm/exports/ethers.js
+index 83bc376b46970841058cdacf110dc7f98fbd6fa8..27735cbafd30095f6eeb4c7548d1b9e0aa64966e 100644
+--- a/dist/esm/exports/ethers.js
++++ b/dist/esm/exports/ethers.js
+@@ -1,5 +1,4 @@
+ export * from '../src/ethers/EthersHelpersUtil.js';
+-export * from '../src/ethers/BaseProvider.js';
+ export * from '../src/ethers/SafeProvider.js';
+ export * from '../src/ethers/InjectedProvider.js';
+ export * from '../src/ethers/EthersProvider.js';

@@ -1,0 +1,34 @@
+diff --git a/dist/esm/src/client.js b/dist/esm/src/client.js
+index 9087981dc7b845aff514a9682087a6ff92c99c33..53fceeff1ec7389ed58dc375c0574e3d125e9e11 100644
+--- a/dist/esm/src/client.js
++++ b/dist/esm/src/client.js
+@@ -6,7 +6,9 @@ import { ConstantsUtil, PresetsUtil } from '@reown/appkit-common';
+ import { AssetController, ChainController, ConnectorUtil, CoreHelperUtil, OptionsController, SIWXUtil, StorageUtil, WcHelpersUtil, getPreferredAccountType } from '@reown/appkit-controllers';
+ import { AdapterBlueprint, ProviderController, WalletConnectConnector } from '@reown/appkit-controllers';
+ import { HelpersUtil } from '@reown/appkit-utils';
+-import { BaseProvider, EthersHelpersUtil, InjectedProvider, SafeProvider } from '@reown/appkit-utils/ethers';
++import { EthersHelpersUtil } from '../../../../appkit-utils/dist/esm/src/ethers/EthersHelpersUtil.js';
++import { InjectedProvider } from '../../../../appkit-utils/dist/esm/src/ethers/InjectedProvider.js';
++import { SafeProvider } from '../../../../appkit-utils/dist/esm/src/ethers/SafeProvider.js';
+ import { EthersMethods } from './utils/EthersMethods.js';
+ export class EthersAdapter extends AdapterBlueprint {
+     constructor() {
+@@ -18,7 +20,7 @@ export class EthersAdapter extends AdapterBlueprint {
+         this.ethersProviders = {};
+     }
+     async createEthersConfig() {
+-        const { metadata, enableCoinbase, enableInjected, enableEIP6963 } = OptionsController.state;
++        const { metadata, enableInjected, enableEIP6963 } = OptionsController.state;
+         if (!metadata) {
+             return undefined;
+         }
+@@ -27,9 +29,6 @@ export class EthersAdapter extends AdapterBlueprint {
+             await injectedProvider.initialize();
+             this.ethersProviders.injected = injectedProvider;
+         }
+-        if (enableCoinbase !== false) {
+-            this.ethersProviders.baseAccount = new BaseProvider();
+-        }
+         if (CoreHelperUtil.isSafeApp()) {
+             const safeProvider = new SafeProvider();
+             await safeProvider.initialize();

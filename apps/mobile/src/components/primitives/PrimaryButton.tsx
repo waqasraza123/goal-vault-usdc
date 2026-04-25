@@ -36,15 +36,15 @@ export const PrimaryButton = ({ label, onPress, disabled, icon }: PrimaryButtonP
           paddingHorizontal: spacing[5],
           paddingVertical: spacing[4],
           borderWidth: 1,
-          borderColor: disabled ? colors.borderStrong : colors.accentStrong,
+          borderColor: disabled ? colors.borderStrong : colors.white,
           ...createShadowStyle({
             color: colors.accentStrong,
-            opacity: disabled ? 0 : 0.18,
-            radius: 18,
-            offsetY: 10,
-            elevation: disabled ? 0 : 6,
+            opacity: disabled ? 0 : 0.24,
+            radius: 24,
+            offsetY: 14,
+            elevation: disabled ? 0 : 8,
           }),
-          elevation: disabled ? 0 : 6,
+          elevation: disabled ? 0 : 8,
         })}
       >
         <View style={{ flexDirection: inlineDirection(), alignItems: "center", justifyContent: "center", gap: spacing[2] }}>

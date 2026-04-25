@@ -101,6 +101,8 @@ Still not implemented:
 - The app now owns locale state in `apps/mobile/src/lib/i18n/`, persists the selected language, and applies `lang` plus `dir` at the document/root shell level so web and native share one RTL/LTR model.
 - Phase 1 is now scaffolded in-repo with a universal Expo app shell, typed shared models, adaptive layout primitives, and static product screens.
 - Phase 2 now adds Reown AppKit as the wallet strategy, `viem` read clients, centralized Base/Base Sepolia config, initial Solidity package boundaries, and app-owned connection/read hooks.
+- Native Reown wallet flows must degrade safely in Expo Go. The app now treats Expo Go as an unsupported native wallet runtime and falls back to the unconfigured wallet state instead of initializing the native AppKit bridge there.
+- Web Reown wallet flows now intentionally disable the Coinbase Base-account connector and rely on injected or EIP-6963 plus WalletConnect paths so Expo or Metro bundling stays clear of the optional Base SDK dependency chain.
 - Wallet SDK specifics must stay isolated to `apps/mobile/src/lib/blockchain/wallet/`; presentation components consume only app-level hooks and connection state.
 - The first write flow must keep transaction stages app-owned and explicit instead of leaking wallet SDK state into presentation screens.
 - Metadata stays display-only. The app now uses a session cache after onchain success so just-created vaults remain visible before full backend/indexer rollout.
@@ -168,6 +170,7 @@ Still not implemented:
 - Preserve the one-codebase Expo Router structure instead of adding separate web/native surfaces during later integrations.
 - Keep the public marketing experience independent from wallet runtime readiness so landing, How It Works, and Security remain usable on web before any connection state is available.
 - Keep app-home navigation on an explicit `/vaults` route instead of relying on grouped-root paths that overlap the public landing URL.
+- Keep the Reown dependency patches in `patches/` aligned with Expo or Metro compatibility until upstream package exports stop pulling unsupported subpaths into the bundle.
 
 ## Standard Verification
 - `find docs -maxdepth 3 -type f | sort`

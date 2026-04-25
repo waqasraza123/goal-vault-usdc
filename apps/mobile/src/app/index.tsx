@@ -32,7 +32,7 @@ export default function LandingScreen() {
         connectionNotice={<WalletStatusCard />}
         onCreateVault={() => router.push(routes.createVault)}
         onEnterVaults={() => router.push(routes.appHome)}
-        onSeeHowItWorks={() => router.push(routes.howItWorks)}
+        onReviewSecurity={() => router.push(routes.security)}
         showConnectionNotice={marketingState.showConnectionNotice}
       />
     </MarketingShell>

@@ -14,7 +14,7 @@ export const VaultProgressPanel = ({ vault }: VaultProgressPanelProps) => {
   const { messages } = useI18n();
 
   return (
-    <SurfaceCard>
+    <SurfaceCard tone="accent">
       <MotionView style={{ gap: spacing[2] }}>
         <AppHeading size="md">{messages.common.labels.progress}</AppHeading>
         <AnimatedNumberText formatValue={formatUsdc} size="xl" value={vault.savedAmount} weight="semibold" />
@@ -31,8 +31,8 @@ export const VaultProgressPanel = ({ vault }: VaultProgressPanelProps) => {
             gap: spacing[1],
             borderRadius: radii.lg,
             borderWidth: 1,
-            borderColor: colors.border,
-            backgroundColor: colors.backgroundElevated,
+            borderColor: colors.borderStrong,
+            backgroundColor: colors.surfaceGlass,
             padding: spacing[4],
           }}
         >
@@ -48,8 +48,8 @@ export const VaultProgressPanel = ({ vault }: VaultProgressPanelProps) => {
             gap: spacing[1],
             borderRadius: radii.lg,
             borderWidth: 1,
-            borderColor: colors.border,
-            backgroundColor: colors.backgroundElevated,
+            borderColor: colors.borderStrong,
+            backgroundColor: colors.warningSoft,
             padding: spacing[4],
           }}
         >

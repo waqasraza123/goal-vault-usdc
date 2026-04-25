@@ -33,6 +33,22 @@ export const CreateVaultPreviewCard = ({ values, targetAmount }: CreateVaultPrev
           <AppText tone="secondary">{values.note || messages.pages.createVault.preview.emptyNote}</AppText>
           {values.category ? <AppText tone="secondary">{values.category}</AppText> : null}
         </MotionView>
+        <View
+          style={{
+            borderRadius: radii.lg,
+            borderWidth: 1,
+            borderColor: getVaultAccentTone(values.accentTheme),
+            backgroundColor: getVaultAccentTone(values.accentTheme),
+            padding: spacing[4],
+            gap: spacing[2],
+          }}
+        >
+          <AppText size="sm" style={{ color: colors.white, opacity: 0.82 }} weight="semibold">
+            {messages.common.labels.targetAmount}
+          </AppText>
+          <AnimatedNumberText formatValue={formatUsdc} size="xl" style={{ color: colors.white }} value={targetAmount || 0} weight="semibold" />
+          <AppText style={{ color: colors.white }}>{protectionLabel}</AppText>
+        </View>
 
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing[3] }}>
           <View
@@ -42,7 +58,7 @@ export const CreateVaultPreviewCard = ({ values, targetAmount }: CreateVaultPrev
               gap: spacing[1],
               borderRadius: radii.lg,
               borderWidth: 1,
-              borderColor: colors.border,
+              borderColor: colors.borderStrong,
               backgroundColor: colors.surfaceGlass,
               padding: spacing[4],
             }}
@@ -59,8 +75,8 @@ export const CreateVaultPreviewCard = ({ values, targetAmount }: CreateVaultPrev
               gap: spacing[1],
               borderRadius: radii.lg,
               borderWidth: 1,
-              borderColor: colors.border,
-              backgroundColor: colors.surfaceGlass,
+              borderColor: colors.borderStrong,
+              backgroundColor: colors.warningSoft,
               padding: spacing[4],
             }}
           >
@@ -85,7 +101,7 @@ export const CreateVaultPreviewCard = ({ values, targetAmount }: CreateVaultPrev
           style={{
             borderRadius: radii.lg,
             borderWidth: 1,
-            borderColor: colors.border,
+            borderColor: colors.borderStrong,
             backgroundColor: colors.surfaceGlass,
             padding: spacing[4],
             gap: spacing[2],
@@ -98,8 +114,8 @@ export const CreateVaultPreviewCard = ({ values, targetAmount }: CreateVaultPrev
           style={{
             borderRadius: radii.lg,
             borderWidth: 1,
-            borderColor: colors.border,
-            backgroundColor: colors.surfaceGlass,
+            borderColor: colors.borderStrong,
+            backgroundColor: colors.accentSoft,
             padding: spacing[4],
             gap: spacing[2],
           }}

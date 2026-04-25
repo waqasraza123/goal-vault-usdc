@@ -34,28 +34,28 @@ export const SecondaryButton = ({ label, onPress, icon, disabled }: SecondaryBut
           backgroundColor: disabled ? colors.surfaceMuted : pressed ? colors.surfaceStrong : colors.surfaceGlass,
           borderRadius: radii.pill,
           borderWidth: 1,
-          borderColor: disabled ? colors.borderStrong : pressed ? colors.borderStrong : colors.border,
+          borderColor: disabled ? colors.borderStrong : pressed ? colors.accentStrong : colors.borderStrong,
           paddingHorizontal: spacing[5],
           paddingVertical: spacing[4],
           ...createShadowStyle({
             color: colors.overlayStrong,
-            opacity: disabled ? 0 : 0.08,
-            radius: 16,
+            opacity: disabled ? 0 : 0.1,
+            radius: 18,
             offsetY: 10,
-            elevation: disabled ? 0 : 2,
+            elevation: disabled ? 0 : 3,
           }),
-          elevation: disabled ? 0 : 2,
+          elevation: disabled ? 0 : 3,
         })}
       >
         <View style={{ flexDirection: inlineDirection(), alignItems: "center", justifyContent: "center", gap: spacing[2] }}>
           {icon ? (
             <MaterialCommunityIcons
-              color={disabled ? colors.textMuted : colors.textPrimary}
+              color={disabled ? colors.textMuted : colors.accentStrong}
               name={getDirectionalIcon(icon)}
               size={18}
             />
           ) : null}
-          <AppText style={disabled ? { color: colors.textMuted } : undefined} weight="semibold">
+          <AppText style={disabled ? { color: colors.textMuted } : { color: colors.accentStrong }} weight="semibold">
             {label}
           </AppText>
         </View>

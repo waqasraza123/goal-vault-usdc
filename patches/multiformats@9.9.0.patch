@@ -1,0 +1,16 @@
+diff --git a/package.json b/package.json
+index b204fc4995244988a9cc5801c730e3799b59d896..09b9202059539fc549b77a69095a594a70352067 100644
+--- a/package.json
++++ b/package.json
+@@ -52,6 +52,11 @@
+       "require": "./cjs/src/basics.js",
+       "import": "./esm/src/basics.js"
+     },
++    "./cjs/src/basics.js": {
++      "browser": "./esm/src/basics.js",
++      "require": "./cjs/src/basics.js",
++      "import": "./esm/src/basics.js"
++    },
+     "./block": {
+       "browser": "./esm/src/block.js",
+       "require": "./cjs/src/block.js",

@@ -124,19 +124,19 @@ export default function MyVaultsScreen() {
 
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing[4] }}>
           <MotionView style={{ flex: 1, minWidth: 220 }}>
-            <SurfaceCard style={{ flex: 1, minWidth: 220 }}>
+            <SurfaceCard tone="accent" style={{ flex: 1, minWidth: 220 }}>
               <AppText tone="secondary">{messages.common.labels.totalSaved}</AppText>
               <AnimatedNumberText formatValue={formatUsdc} size="xl" value={totalSaved} weight="semibold" />
             </SurfaceCard>
           </MotionView>
           <MotionView delay={70} style={{ flex: 1, minWidth: 220 }}>
-            <SurfaceCard style={{ flex: 1, minWidth: 220 }}>
+            <SurfaceCard style={{ flex: 1, minWidth: 220, backgroundColor: colors.surfaceGlass, borderColor: colors.borderStrong }}>
               <AppText tone="secondary">{messages.common.labels.vaultCount}</AppText>
               <AnimatedNumberText size="xl" value={vaults.length} weight="semibold" />
             </SurfaceCard>
           </MotionView>
           <MotionView delay={140} style={{ flex: 1, minWidth: 220 }}>
-            <SurfaceCard tone="muted" style={{ flex: 1, minWidth: 220, backgroundColor: colors.accentSoft }}>
+            <SurfaceCard tone="muted" style={{ flex: 1, minWidth: 220, backgroundColor: colors.warningSoft, borderColor: colors.warning }}>
               <AppText tone="secondary">{messages.common.labels.eligibleSoon}</AppText>
               <AnimatedNumberText size="xl" value={unlockedCount} weight="semibold" />
               <View

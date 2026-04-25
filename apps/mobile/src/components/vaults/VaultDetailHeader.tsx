@@ -25,7 +25,7 @@ export const VaultDetailHeader = ({ vault }: VaultDetailHeaderProps) => {
           : "Guardian approval required.";
 
   return (
-    <SurfaceCard level="floating" style={{ backgroundColor: colors.backgroundElevated }}>
+    <SurfaceCard level="floating" style={{ backgroundColor: colors.backgroundElevated, borderColor: colors.borderStrong }}>
       <View style={{ gap: spacing[4] }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: spacing[3] }}>
           <VaultCardStatus status={vault.status} />
@@ -33,8 +33,8 @@ export const VaultDetailHeader = ({ vault }: VaultDetailHeaderProps) => {
             style={{
               borderRadius: radii.pill,
               borderWidth: 1,
-              borderColor: colors.border,
-              backgroundColor: colors.surfaceGlass,
+              borderColor: colors.borderStrong,
+              backgroundColor: colors.surfaceMuted,
               paddingHorizontal: spacing[3],
               paddingVertical: spacing[2],
             }}
@@ -51,6 +51,24 @@ export const VaultDetailHeader = ({ vault }: VaultDetailHeaderProps) => {
             {messages.vaults.status[vault.status]}
           </AppText>
         </MotionView>
+        <View
+          style={{
+            borderRadius: radii.lg,
+            borderWidth: 1,
+            borderColor: colors.borderStrong,
+            backgroundColor: colors.accent,
+            padding: spacing[4],
+            gap: spacing[2],
+          }}
+        >
+          <AppText size="sm" style={{ color: colors.white, opacity: 0.82 }} weight="semibold">
+            {messages.common.labels.totalSaved}
+          </AppText>
+          <AnimatedNumberText formatValue={formatUsdc} size="xl" style={{ color: colors.white }} value={vault.savedAmount} weight="semibold" />
+          <AppText style={{ color: colors.white }}>
+            {messages.common.labels.of} {formatUsdc(vault.targetAmount)}
+          </AppText>
+        </View>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing[3] }}>
           <View
             style={{
@@ -59,7 +77,7 @@ export const VaultDetailHeader = ({ vault }: VaultDetailHeaderProps) => {
               gap: spacing[1],
               borderRadius: radii.lg,
               borderWidth: 1,
-              borderColor: colors.border,
+              borderColor: colors.borderStrong,
               backgroundColor: colors.surfaceGlass,
               padding: spacing[4],
             }}
@@ -76,8 +94,8 @@ export const VaultDetailHeader = ({ vault }: VaultDetailHeaderProps) => {
               gap: spacing[1],
               borderRadius: radii.lg,
               borderWidth: 1,
-              borderColor: colors.border,
-              backgroundColor: colors.surfaceGlass,
+              borderColor: colors.borderStrong,
+              backgroundColor: colors.warningSoft,
               padding: spacing[4],
             }}
           >
@@ -91,7 +109,7 @@ export const VaultDetailHeader = ({ vault }: VaultDetailHeaderProps) => {
           style={{
             borderRadius: radii.lg,
             borderWidth: 1,
-            borderColor: colors.border,
+            borderColor: colors.borderStrong,
             backgroundColor: colors.surfaceGlass,
             padding: spacing[4],
             gap: spacing[2],

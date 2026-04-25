@@ -28,13 +28,13 @@ export const VaultRulePanel = ({ vault, eligibility }: VaultRulePanelProps) => {
         : `Guardian approval is required before withdrawal becomes eligible.`;
 
   return (
-    <SurfaceCard tone="muted">
+    <SurfaceCard tone="muted" style={{ backgroundColor: colors.surfaceMuted }}>
       <MotionView
         style={{
           alignSelf: "flex-start",
           borderRadius: radii.pill,
           borderWidth: 1,
-          borderColor: colors.border,
+          borderColor: colors.borderStrong,
           backgroundColor: colors.surfaceGlass,
           paddingHorizontal: spacing[3],
           paddingVertical: spacing[2],
@@ -50,7 +50,7 @@ export const VaultRulePanel = ({ vault, eligibility }: VaultRulePanelProps) => {
         style={{
           borderRadius: radii.lg,
           borderWidth: 1,
-          borderColor: colors.border,
+          borderColor: colors.borderStrong,
           backgroundColor: colors.surfaceGlass,
           padding: spacing[4],
           gap: spacing[2],

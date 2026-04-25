@@ -4,6 +4,23 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@noble/hashes@1.3.2':
+    hash: 505eb5756dd9d55e9c4d2ba1e11c74e1aca4899f6528761e36b548514e58b415
+    path: patches/@noble__hashes@1.3.2.patch
+  '@noble/hashes@1.8.0':
+    hash: 8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa
+    path: patches/@noble__hashes@1.8.0.patch
+  '@reown/appkit-adapter-ethers@1.8.19':
+    hash: 9e251827a01ddf709962be7a02ee37b7a668938a27336999cd4b47c8353a949c
+    path: patches/@reown__appkit-adapter-ethers@1.8.19.patch
+  '@reown/appkit-utils@1.8.19':
+    hash: 27a793e604597da493e83ce6b5341ffc3ed78c415db81d2f94e51d2d52bcf1b9
+    path: patches/@reown__appkit-utils@1.8.19.patch
+  multiformats@9.9.0:
+    hash: 640447f9d0723920113ee2e9e95ee2385a53332696b8cc67e7a8647dc7d8d55d
+    path: patches/multiformats@9.9.0.patch
+
 importers:
 
   .:
@@ -83,7 +100,7 @@ importers:
         version: 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(zod@4.3.6)
       '@reown/appkit-adapter-ethers':
         specifier: ^1.8.19
-        version: 1.8.19(@ethersproject/sha2@5.8.0)(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(ethers@6.16.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(zod@4.3.6)
+        version: 1.8.19(patch_hash=9e251827a01ddf709962be7a02ee37b7a668938a27336999cd4b47c8353a949c)(@ethersproject/sha2@5.8.0)(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(ethers@6.16.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(zod@4.3.6)
       '@reown/appkit-ethers-react-native':
         specifier: ^2.0.3
         version: 2.0.3(1ddc49afe947c392521e88dc27aba96f)
@@ -6034,7 +6051,7 @@ snapshots:
 
   '@noble/curves@1.2.0':
     dependencies:
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.2(patch_hash=505eb5756dd9d55e9c4d2ba1e11c74e1aca4899f6528761e36b548514e58b415)
 
   '@noble/curves@1.8.0':
     dependencies:
@@ -6042,20 +6059,20 @@ snapshots:
 
   '@noble/curves@1.9.1':
     dependencies:
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
 
   '@noble/curves@1.9.7':
     dependencies:
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
 
-  '@noble/hashes@1.3.2': {}
+  '@noble/hashes@1.3.2(patch_hash=505eb5756dd9d55e9c4d2ba1e11c74e1aca4899f6528761e36b548514e58b415)': {}
 
   '@noble/hashes@1.4.0':
     optional: true
 
   '@noble/hashes@1.7.0': {}
 
-  '@noble/hashes@1.8.0': {}
+  '@noble/hashes@1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)': {}
 
   '@openzeppelin/contracts@5.6.1': {}
 
@@ -6457,7 +6474,7 @@ snapshots:
     dependencies:
       nanoid: 3.3.11
 
-  '@reown/appkit-adapter-ethers@1.8.19(@ethersproject/sha2@5.8.0)(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(ethers@6.16.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(zod@4.3.6)':
+  '@reown/appkit-adapter-ethers@1.8.19(patch_hash=9e251827a01ddf709962be7a02ee37b7a668938a27336999cd4b47c8353a949c)(@ethersproject/sha2@5.8.0)(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(ethers@6.16.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(zod@4.3.6)':
     dependencies:
       '@ethersproject/sha2': 5.8.0
       '@reown/appkit': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(zod@4.3.6)
@@ -6465,7 +6482,7 @@ snapshots:
       '@reown/appkit-controllers': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(zod@4.3.6)
       '@reown/appkit-polyfills': 1.8.19
       '@reown/appkit-scaffold-ui': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)
-      '@reown/appkit-utils': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)
+      '@reown/appkit-utils': 1.8.19(patch_hash=27a793e604597da493e83ce6b5341ffc3ed78c415db81d2f94e51d2d52bcf1b9)(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)
       '@reown/appkit-wallet': 1.8.19(typescript@5.9.3)
       '@walletconnect/universal-provider': 2.23.7(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(typescript@5.9.3)(zod@4.3.6)
       ethers: 6.16.0
@@ -6622,7 +6639,7 @@ snapshots:
       '@reown/appkit-common': 1.8.19(typescript@5.9.3)(zod@4.3.6)
       '@reown/appkit-controllers': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(zod@4.3.6)
       '@reown/appkit-ui': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(zod@4.3.6)
-      '@reown/appkit-utils': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)
+      '@reown/appkit-utils': 1.8.19(patch_hash=27a793e604597da493e83ce6b5341ffc3ed78c415db81d2f94e51d2d52bcf1b9)(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)
       lit: 3.3.0
       valtio: 2.1.7(@types/react@19.2.14)(react@19.2.0)
     transitivePeerDependencies:
@@ -6707,7 +6724,7 @@ snapshots:
       '@reown/appkit-controllers': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(zod@4.3.6)
       '@reown/appkit-pay': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(zod@4.3.6)
       '@reown/appkit-ui': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(zod@4.3.6)
-      '@reown/appkit-utils': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)
+      '@reown/appkit-utils': 1.8.19(patch_hash=27a793e604597da493e83ce6b5341ffc3ed78c415db81d2f94e51d2d52bcf1b9)(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)
       '@reown/appkit-wallet': 1.8.19(typescript@5.9.3)
       lit: 3.3.0
     transitivePeerDependencies:
@@ -6788,7 +6805,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-utils@1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)':
+  '@reown/appkit-utils@1.8.19(patch_hash=27a793e604597da493e83ce6b5341ffc3ed78c415db81d2f94e51d2d52bcf1b9)(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)':
     dependencies:
       '@reown/appkit-common': 1.8.19(typescript@5.9.3)(zod@4.3.6)
       '@reown/appkit-controllers': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(zod@4.3.6)
@@ -6854,7 +6871,7 @@ snapshots:
       '@reown/appkit-polyfills': 1.8.19
       '@reown/appkit-scaffold-ui': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)
       '@reown/appkit-ui': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(zod@4.3.6)
-      '@reown/appkit-utils': 1.8.19(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)
+      '@reown/appkit-utils': 1.8.19(patch_hash=27a793e604597da493e83ce6b5341ffc3ed78c415db81d2f94e51d2d52bcf1b9)(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(@types/react@19.2.14)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(valtio@2.1.7(@types/react@19.2.14)(react@19.2.0))(zod@4.3.6)
       '@reown/appkit-wallet': 1.8.19(typescript@5.9.3)
       '@walletconnect/universal-provider': 2.23.7(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))(typescript@5.9.3)(zod@4.3.6)
       bs58: 6.0.0
@@ -6925,12 +6942,12 @@ snapshots:
   '@scure/bip32@1.7.0':
     dependencies:
       '@noble/curves': 1.9.7
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/base': 1.2.6
 
   '@scure/bip39@1.6.0':
     dependencies:
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/base': 1.2.6
 
   '@sinclair/typebox@0.27.10': {}
@@ -7922,7 +7939,7 @@ snapshots:
       '@msgpack/msgpack': 3.1.2
       '@noble/ciphers': 1.3.0
       '@noble/curves': 1.9.7
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/base': 1.2.6
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/keyvaluestorage': 1.1.1(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))
@@ -7966,7 +7983,7 @@ snapshots:
       '@msgpack/msgpack': 3.1.3
       '@noble/ciphers': 1.3.0
       '@noble/curves': 1.9.7
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/base': 1.2.6
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/keyvaluestorage': 1.1.1(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.6(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0)))
@@ -8737,7 +8754,7 @@ snapshots:
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
       '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.2(patch_hash=505eb5756dd9d55e9c4d2ba1e11c74e1aca4899f6528761e36b548514e58b415)
       '@types/node': 22.7.5
       aes-js: 4.0.0-beta.5
       tslib: 2.7.0
@@ -9721,7 +9738,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  multiformats@9.9.0: {}
+  multiformats@9.9.0(patch_hash=640447f9d0723920113ee2e9e95ee2385a53332696b8cc67e7a8647dc7d8d55d): {}
 
   multitars@1.0.0: {}
 
@@ -9821,7 +9838,7 @@ snapshots:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/ciphers': 1.3.0
       '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.4(typescript@5.9.3)(zod@3.22.4)
@@ -9836,7 +9853,7 @@ snapshots:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/ciphers': 1.3.0
       '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.4(typescript@5.9.3)(zod@3.25.76)
@@ -9852,7 +9869,7 @@ snapshots:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/ciphers': 1.3.0
       '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.4(typescript@5.9.3)(zod@4.3.6)
@@ -9866,7 +9883,7 @@ snapshots:
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/curves': 1.9.7
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.4(typescript@5.9.3)(zod@4.3.6)
@@ -9882,7 +9899,7 @@ snapshots:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/ciphers': 1.3.0
       '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.4(typescript@5.9.3)(zod@4.3.6)
@@ -10555,7 +10572,7 @@ snapshots:
 
   uint8arrays@3.1.1:
     dependencies:
-      multiformats: 9.9.0
+      multiformats: 9.9.0(patch_hash=640447f9d0723920113ee2e9e95ee2385a53332696b8cc67e7a8647dc7d8d55d)
 
   uncrypto@0.1.3: {}
 
@@ -10657,7 +10674,7 @@ snapshots:
   viem@2.48.4(typescript@5.9.3)(zod@3.22.4):
     dependencies:
       '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.3(typescript@5.9.3)(zod@3.22.4)
@@ -10674,7 +10691,7 @@ snapshots:
   viem@2.48.4(typescript@5.9.3)(zod@3.25.76):
     dependencies:
       '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.3(typescript@5.9.3)(zod@3.25.76)
@@ -10692,7 +10709,7 @@ snapshots:
   viem@2.48.4(typescript@5.9.3)(zod@4.3.6):
     dependencies:
       '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.8.0(patch_hash=8f29ec539b57f03e3a9292181436650de05718872694552273344b31198d92aa)
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.3(typescript@5.9.3)(zod@4.3.6)

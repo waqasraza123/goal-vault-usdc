@@ -60,11 +60,24 @@ export const SurfaceCard = ({
           position: "absolute",
           top: -40,
           right: -24,
-          width: 132,
-          height: 132,
-          borderRadius: 66,
+          width: 164,
+          height: 164,
+          borderRadius: 82,
           backgroundColor: tone === "accent" ? colors.heroGlowPrimary : colors.canvasGlow,
-          opacity: tone === "muted" ? 0.64 : 0.84,
+          opacity: tone === "muted" ? 0.72 : 0.92,
+        }}
+      />
+      <View
+        style={{
+          pointerEvents: "none",
+          position: "absolute",
+          bottom: -54,
+          left: -24,
+          width: 152,
+          height: 152,
+          borderRadius: 76,
+          backgroundColor: tone === "accent" ? colors.heroGlowSecondary : colors.accentSoft,
+          opacity: tone === "muted" ? 0.42 : 0.54,
         }}
       />
       <View
@@ -76,7 +89,18 @@ export const SurfaceCard = ({
           right: 0,
           height: 1,
           backgroundColor: colors.white,
-          opacity: 0.74,
+          opacity: 0.8,
+        }}
+      />
+      <View
+        style={{
+          pointerEvents: "none",
+          position: "absolute",
+          inset: 0,
+          borderRadius: radii.xl,
+          borderWidth: 1,
+          borderColor: colors.white,
+          opacity: 0.24,
         }}
       />
       <View style={{ gap: spacing[4] }}>{children}</View>

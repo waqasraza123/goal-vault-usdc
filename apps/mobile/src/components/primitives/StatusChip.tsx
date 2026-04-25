@@ -29,12 +29,12 @@ export const StatusChip = ({ label, tone = "active" }: StatusChipProps) => {
         backgroundColor: toneMap[tone].backgroundColor,
         ...createShadowStyle({
           color: toneMap[tone].glowColor,
-          opacity: 0.2,
-          radius: 12,
-          offsetY: 6,
-          elevation: 1,
+          opacity: 0.26,
+          radius: 16,
+          offsetY: 8,
+          elevation: 2,
         }),
-        elevation: 1,
+        elevation: 2,
       }}
     >
       <AppText size="sm" style={{ color: toneMap[tone].textColor }} weight="semibold">

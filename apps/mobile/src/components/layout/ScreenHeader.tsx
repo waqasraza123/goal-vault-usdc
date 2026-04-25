@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { View } from "react-native";
 
 import { useAdaptiveLayout } from "../../hooks/useAdaptiveLayout";
-import { spacing } from "../../theme";
+import { colors, radii, spacing } from "../../theme";
 import { AppHeading, AppText, MotionView } from "../primitives";
 
 export interface ScreenHeaderProps {
@@ -26,9 +26,21 @@ export const ScreenHeader = ({ eyebrow, title, description, action }: ScreenHead
     >
       <MotionView intensity="structural" style={{ flex: 1, gap: spacing[3] }}>
         {eyebrow ? (
-          <AppText size="sm" tone="accent" weight="semibold">
-            {eyebrow}
-          </AppText>
+          <View
+            style={{
+              alignSelf: "flex-start",
+              borderRadius: radii.pill,
+              borderWidth: 1,
+              borderColor: colors.borderStrong,
+              backgroundColor: colors.accentSoft,
+              paddingHorizontal: spacing[3],
+              paddingVertical: spacing[2],
+            }}
+          >
+            <AppText size="sm" tone="accent" weight="semibold">
+              {eyebrow}
+            </AppText>
+          </View>
         ) : null}
         <View style={{ gap: spacing[2] }}>
           <AppHeading size="xl">{title}</AppHeading>

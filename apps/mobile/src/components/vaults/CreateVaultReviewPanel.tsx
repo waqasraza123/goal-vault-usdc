@@ -15,7 +15,7 @@ export const CreateVaultReviewPanel = ({ review }: { review: CreateVaultReviewMo
         : review.guardianAddress;
 
   return (
-    <SurfaceCard>
+    <SurfaceCard tone="accent">
       <MotionView style={{ gap: spacing[3] }}>
         <View style={{ gap: spacing[1] }}>
           <AppText size="sm" tone="secondary">{messages.common.labels.goal}</AppText>
@@ -35,8 +35,8 @@ export const CreateVaultReviewPanel = ({ review }: { review: CreateVaultReviewMo
               gap: spacing[1],
               borderRadius: radii.lg,
               borderWidth: 1,
-              borderColor: colors.border,
-              backgroundColor: colors.backgroundElevated,
+              borderColor: colors.borderStrong,
+              backgroundColor: colors.surfaceGlass,
               padding: spacing[4],
             }}
           >
@@ -50,8 +50,8 @@ export const CreateVaultReviewPanel = ({ review }: { review: CreateVaultReviewMo
               gap: spacing[1],
               borderRadius: radii.lg,
               borderWidth: 1,
-              borderColor: colors.border,
-              backgroundColor: colors.backgroundElevated,
+              borderColor: colors.borderStrong,
+              backgroundColor: colors.warningSoft,
               padding: spacing[4],
             }}
           >
@@ -69,7 +69,7 @@ export const CreateVaultReviewPanel = ({ review }: { review: CreateVaultReviewMo
           style={{
             borderRadius: radii.lg,
             borderWidth: 1,
-            borderColor: colors.border,
+            borderColor: colors.borderStrong,
             backgroundColor: colors.surfaceMuted,
             padding: spacing[4],
             gap: spacing[2],
@@ -86,7 +86,7 @@ export const CreateVaultReviewPanel = ({ review }: { review: CreateVaultReviewMo
             gap: spacing[3],
             borderRadius: radii.lg,
             borderWidth: 1,
-            borderColor: colors.border,
+            borderColor: colors.borderStrong,
             backgroundColor: colors.surfaceGlass,
             padding: spacing[4],
           }}

@@ -1,4 +1,6 @@
+import type { ComponentProps } from "react";
 import { View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useAdaptiveLayout } from "../../hooks/useAdaptiveLayout";
 import { getStaggerDelay } from "../../lib/motion/list-motion";
@@ -9,6 +11,12 @@ import { AppHeading, AppText, MotionView, SectionContainer, SurfaceCard } from "
 export const SecurityTrustSection = () => {
   const adaptiveLayout = useAdaptiveLayout();
   const { messages } = useI18n();
+  const principleIcons: Array<ComponentProps<typeof MaterialCommunityIcons>["name"]> = [
+    "wallet-outline",
+    "bank-check",
+    "card-text-outline",
+    "compass-outline",
+  ];
 
   return (
     <SectionContainer
@@ -42,7 +50,19 @@ export const SecurityTrustSection = () => {
       <View style={{ flexDirection: adaptiveLayout.useSplitLayout ? "row" : "column", gap: spacing[4] }}>
         {messages.landing.securityPrinciples.map((item, index) => (
           <MotionView key={item.title} delay={getStaggerDelay(index)} style={{ flex: 1 }}>
-            <SurfaceCard style={{ flex: 1 }}>
+            <SurfaceCard style={{ flex: 1, backgroundColor: index === 1 ? colors.backgroundElevated : colors.surfaceGlass }}>
+              <View
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 21,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: colors.accentSoft,
+                }}
+              >
+                <MaterialCommunityIcons color={colors.accentStrong} name={principleIcons[index] ?? "shield-check-outline"} size={20} />
+              </View>
               <AppHeading size="md">{item.title}</AppHeading>
               <AppText tone="secondary">{item.description}</AppText>
             </SurfaceCard>

@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import { View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import type { VaultSummary } from "../../types";
 import { useI18n } from "../../lib/i18n";
@@ -18,6 +19,12 @@ export interface VaultCardProps {
 export const VaultCard = ({ vault }: VaultCardProps) => {
   const router = useRouter();
   const { messages } = useI18n();
+  const ruleLabel =
+    vault.ruleType === "guardianApproval"
+      ? "Guardian approval"
+      : vault.ruleType === "cooldownUnlock"
+        ? "Cooldown unlock"
+        : messages.common.labels.timeLock;
 
   return (
     <SurfaceCard
@@ -26,6 +33,7 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
         flex: 1,
         minWidth: 280,
         backgroundColor: vault.savedAmount > 0 ? colors.backgroundElevated : colors.surfaceGlass,
+        borderColor: vault.progressRatio >= 1 ? colors.positive : colors.borderStrong,
       }}
     >
       <MotionView style={{ gap: spacing[3] }}>
@@ -35,8 +43,8 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
             style={{
               borderRadius: radii.pill,
               borderWidth: 1,
-              borderColor: colors.border,
-              backgroundColor: colors.surfaceGlass,
+              borderColor: colors.borderStrong,
+              backgroundColor: colors.surfaceMuted,
               paddingHorizontal: spacing[3],
               paddingVertical: spacing[2],
             }}
@@ -48,13 +56,29 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
         </View>
         <View style={{ gap: spacing[1] }}>
           <AppHeading size="md">{vault.goalName}</AppHeading>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: spacing[2] }}>
+            <MaterialCommunityIcons
+              color={vault.ruleType === "guardianApproval" ? colors.warning : colors.accentStrong}
+              name={
+                vault.ruleType === "guardianApproval"
+                  ? "account-supervisor-circle-outline"
+                  : vault.ruleType === "cooldownUnlock"
+                    ? "timer-sand"
+                    : "calendar-lock-outline"
+              }
+              size={18}
+            />
+            <AppText size="sm" tone="accent" weight="semibold">
+              {ruleLabel}
+            </AppText>
+          </View>
           {vault.note ? (
             <View
               style={{
                 borderRadius: radii.md,
                 borderWidth: 1,
-                borderColor: colors.border,
-                backgroundColor: colors.surfaceGlass,
+                borderColor: colors.borderStrong,
+                backgroundColor: colors.surfaceMuted,
                 padding: spacing[4],
               }}
             >
@@ -82,8 +106,8 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
         style={{
           borderRadius: radii.md,
           borderWidth: 1,
-          borderColor: colors.border,
-          backgroundColor: colors.surfaceGlass,
+          borderColor: colors.borderStrong,
+          backgroundColor: colors.surfaceMuted,
           padding: spacing[4],
         }}
       >

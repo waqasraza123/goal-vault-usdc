@@ -48,11 +48,11 @@ export const Screen = ({
           <View
             style={{
               position: "absolute",
-              top: -84,
-              right: -52,
-              width: 240,
-              height: 240,
-              borderRadius: 120,
+              top: -112,
+              right: -64,
+              width: 320,
+              height: 320,
+              borderRadius: 160,
               backgroundColor: colors.heroGlowPrimary,
               opacity: 0.34,
             }}
@@ -61,10 +61,10 @@ export const Screen = ({
             style={{
               position: "absolute",
               top: 180,
-              left: -78,
-              width: 188,
-              height: 188,
-              borderRadius: 94,
+              left: -96,
+              width: 220,
+              height: 220,
+              borderRadius: 110,
               backgroundColor: colors.heroGlowSecondary,
               opacity: 0.26,
             }}
@@ -72,13 +72,25 @@ export const Screen = ({
           <View
             style={{
               position: "absolute",
-              bottom: -56,
-              right: 24,
-              width: 220,
-              height: 220,
-              borderRadius: 110,
+              top: "42%",
+              right: "10%",
+              width: 168,
+              height: 168,
+              borderRadius: 84,
+              backgroundColor: colors.accentGlow,
+              opacity: 0.2,
+            }}
+          />
+          <View
+            style={{
+              position: "absolute",
+              bottom: -64,
+              right: 8,
+              width: 260,
+              height: 260,
+              borderRadius: 130,
               backgroundColor: colors.canvasGlow,
-              opacity: 0.44,
+              opacity: 0.48,
             }}
           />
         </View>

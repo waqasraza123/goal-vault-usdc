@@ -26,7 +26,7 @@ export const DesktopHeader = ({ links, ctaLabel, ctaHref }: DesktopHeaderProps) 
   const { inlineDirection, justifyEnd, justifyStart, messages } = useI18n();
 
   return (
-    <View style={{ borderBottomWidth: 1, borderBottomColor: colors.border, backgroundColor: colors.backgroundElevated }}>
+    <View style={{ borderBottomWidth: 1, borderBottomColor: colors.borderStrong, backgroundColor: colors.backgroundElevated }}>
       <PageContainer width="dashboard">
         <View
           style={{
@@ -40,7 +40,7 @@ export const DesktopHeader = ({ links, ctaLabel, ctaHref }: DesktopHeaderProps) 
           <Link href={routes.landing} asChild>
             <Pressable>
               <View style={{ gap: spacing[1] }}>
-                <AppHeading size="sm">{productConfig.shortName}</AppHeading>
+                <AppHeading size="sm" style={{ color: colors.accentStrong }}>{productConfig.shortName}</AppHeading>
                 <AppText size="sm" tone="muted">
                   {messages.navigation.desktopTagline}
                 </AppText>
@@ -55,7 +55,9 @@ export const DesktopHeader = ({ links, ctaLabel, ctaHref }: DesktopHeaderProps) 
                     paddingHorizontal: spacing[3],
                     paddingVertical: spacing[2],
                     borderRadius: radii.pill,
-                    backgroundColor: pressed ? colors.surfaceStrong : colors.backgroundElevated,
+                    borderWidth: 1,
+                    borderColor: pressed ? colors.borderStrong : colors.border,
+                    backgroundColor: pressed ? colors.surfaceStrong : colors.surfaceGlass,
                   })}
                 >
                   <AppText tone="secondary" weight="medium">
