@@ -175,8 +175,9 @@ Still not implemented:
 ## Standard Verification
 - `find docs -maxdepth 3 -type f | sort`
 - `pnpm typecheck`
-- `pnpm --filter @goal-vault/mobile exec expo export --platform web --output-dir ../../dist-web`
-- `pnpm --filter @goal-vault/mobile exec expo export --platform ios --output-dir ../../dist-ios`
+- `pnpm --filter @goal-vault/mobile exec expo export --platform web --output-dir ../../dist/web`
+- `pnpm --filter @goal-vault/mobile exec expo export --platform ios --output-dir ../../dist/ios`
+- `pnpm --filter @goal-vault/mobile exec expo export --platform android --output-dir ../../dist/android`
 - `git status --short`
 - `sed -n '1,220p' docs/project-state.md`
 - `sed -n '1,220p' docs/_local/current-session.md`

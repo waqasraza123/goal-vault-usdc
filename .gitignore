@@ -8,7 +8,10 @@ node_modules/
 **/.turbo/
 coverage/
 dist/
+dist-*/
 dist-web/
+dist-ios/
+dist-android/
 web-build/
 build/
 *.tsbuildinfo
