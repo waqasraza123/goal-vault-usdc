@@ -3,6 +3,7 @@ import { Pressable, View } from "react-native";
 
 import { productConfig } from "@goal-vault/config";
 
+import { useBreakpoint } from "../../hooks/useBreakpoint";
 import { useI18n } from "../../lib/i18n";
 import { routes } from "../../lib/routing";
 import { colors, radii, spacing } from "../../theme";
@@ -10,6 +11,7 @@ import { AppHeading, AppText, PageContainer } from "../primitives";
 
 export const AppFooter = () => {
   const { inlineDirection, messages } = useI18n();
+  const breakpoint = useBreakpoint();
   const router = useRouter();
   const links = [
     {
@@ -27,11 +29,11 @@ export const AppFooter = () => {
   ];
 
   return (
-    <View style={{ borderTopWidth: 1, borderTopColor: colors.borderStrong, backgroundColor: colors.backgroundElevated }}>
-      <PageContainer style={{ paddingVertical: spacing[5], gap: spacing[4] }}>
+    <View className="border-t border-slate-200 bg-white">
+      <PageContainer style={{ paddingVertical: breakpoint.isCompact ? spacing[4] : spacing[5], gap: breakpoint.isCompact ? spacing[3] : spacing[4] }}>
         <View style={{ gap: spacing[2] }}>
-          <AppHeading size="sm" style={{ color: colors.accentStrong }}>{productConfig.name}</AppHeading>
-          <AppText size="sm" tone="muted">
+          <AppHeading size="sm" style={{ color: colors.textPrimary }}>{productConfig.name}</AppHeading>
+          <AppText size="sm" tone="muted" numberOfLines={breakpoint.isCompact ? 3 : undefined}>
             {messages.footer.description.replace("Goal Vault", productConfig.name)}
           </AppText>
         </View>
@@ -40,13 +42,10 @@ export const AppFooter = () => {
             <Pressable
               key={link.label}
               onPress={() => router.push(link.href)}
+              className="rounded-2xl border border-slate-200 bg-white px-3 py-2 active:bg-slate-100"
               style={({ pressed }) => ({
-                borderRadius: radii.pill,
-                borderWidth: 1,
-                borderColor: colors.borderStrong,
+                borderRadius: radii.md,
                 backgroundColor: pressed ? colors.surfaceStrong : colors.surfaceGlass,
-                paddingHorizontal: spacing[3],
-                paddingVertical: spacing[2],
               })}
             >
               <AppText size="sm" style={{ color: colors.accentStrong }} weight="semibold">

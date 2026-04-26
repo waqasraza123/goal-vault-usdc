@@ -9,6 +9,7 @@ import { motionPresets } from "../../lib/motion/presets";
 import { createSpring, createTiming } from "../../lib/motion/transitions";
 
 export interface MotionViewProps {
+  className?: string;
   style?: StyleProp<ViewStyle>;
   preset?: MotionPreset;
   intensity?: MotionIntensity;
@@ -17,6 +18,7 @@ export interface MotionViewProps {
 
 export const MotionView = ({
   children,
+  className,
   style,
   preset = "rise",
   intensity = "structural",
@@ -69,6 +71,7 @@ export const MotionView = ({
 
   return (
     <Animated.View
+      className={className}
       style={[
         useMemo(
           () => ({

@@ -32,7 +32,7 @@ export const SecondaryButton = ({ label, onPress, icon, disabled }: SecondaryBut
         onPressOut={motion.onPressOut}
         style={({ pressed }) => ({
           backgroundColor: disabled ? colors.surfaceMuted : pressed ? colors.surfaceStrong : colors.surfaceGlass,
-          borderRadius: radii.pill,
+          borderRadius: radii.md,
           borderWidth: 1,
           borderColor: disabled ? colors.borderStrong : pressed ? colors.accentStrong : colors.borderStrong,
           paddingHorizontal: spacing[5],

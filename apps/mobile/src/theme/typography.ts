@@ -50,7 +50,7 @@ export const typography = {
     bold: "700",
   },
   tracking: {
-    tight: -1.1,
+    tight: 0,
     normal: 0,
     wide: 0.6,
   },

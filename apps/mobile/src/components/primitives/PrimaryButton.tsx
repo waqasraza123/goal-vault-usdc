@@ -32,7 +32,7 @@ export const PrimaryButton = ({ label, onPress, disabled, icon }: PrimaryButtonP
         onPressOut={motion.onPressOut}
         style={({ pressed }) => ({
           backgroundColor: disabled ? colors.border : pressed ? colors.accentStrong : colors.accent,
-          borderRadius: radii.pill,
+          borderRadius: radii.md,
           paddingHorizontal: spacing[5],
           paddingVertical: spacing[4],
           borderWidth: 1,

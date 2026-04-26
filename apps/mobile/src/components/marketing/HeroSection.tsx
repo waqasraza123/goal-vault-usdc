@@ -1,12 +1,13 @@
-import { View } from "react-native";
+import { Platform, Pressable, View, type ViewStyle } from "react-native";
 import type { ComponentProps } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useAdaptiveLayout } from "../../hooks/useAdaptiveLayout";
+import { formatProgress, formatUsdc } from "../../lib/format";
 import { useI18n } from "../../lib/i18n";
 import { getLandingPageModel } from "../../lib/public/marketing-content";
 import { colors, createShadowStyle, radii, spacing } from "../../theme";
-import { AppHeading, AppText, MotionView, PrimaryButton, SecondaryButton, SectionContainer } from "../primitives";
+import { AppHeading, AppText, MotionView, PrimaryButton, ProgressBar, SecondaryButton, SectionContainer } from "../primitives";
 import { HeroVaultPreviewCard } from "./HeroVaultPreviewCard";
 
 export const HeroSection = ({
@@ -21,6 +22,145 @@ export const HeroSection = ({
   const adaptiveLayout = useAdaptiveLayout();
   const { inlineDirection, locale, messages } = useI18n();
   const model = getLandingPageModel(locale);
+  const savedAmount = 7450;
+  const targetAmount = 12000;
+  const progress = 0.62;
+  const mobileHeroTitleParts = messages.landing.heroTitle.split(". ").filter(Boolean);
+  const mobileHeroClassName = "overflow-hidden rounded-[28px] bg-vault-ink shadow-vault";
+  const mobileHeroWidth = adaptiveLayout.width > 0 ? Math.max(280, adaptiveLayout.width - adaptiveLayout.contentPadding * 2) : 350;
+
+  if (adaptiveLayout.isCompact) {
+    return (
+      <SectionContainer gap={spacing[4]}>
+        <MotionView
+          className={mobileHeroClassName}
+          preset="hero"
+          intensity="emphasis"
+          style={{
+            alignSelf: "flex-start",
+            gap: spacing[4],
+            width: Platform.OS === "web" ? "100%" : mobileHeroWidth,
+            paddingHorizontal: spacing[5],
+            paddingBottom: spacing[5],
+            paddingTop: spacing[4],
+            ...({ boxSizing: "border-box" } as ViewStyle),
+          }}
+        >
+          <View className="absolute left-0 right-0 top-0 h-1.5 bg-vault-cyan" />
+          <View className="absolute bottom-0 left-0 h-1.5 w-1/2 bg-vault-emerald" />
+          <View className="absolute bottom-0 right-0 h-1.5 w-1/2 bg-vault-fuchsia" />
+          <View
+            className="self-start rounded-2xl border border-cyan-300/30 bg-white/10 px-3 py-2"
+            style={{ alignSelf: "flex-start" }}
+          >
+            <AppText size="xs" style={{ color: "#a5f3fc" }} weight="semibold">
+              {messages.landing.heroBadge}
+            </AppText>
+          </View>
+          <View style={{ gap: spacing[3], width: "100%" }}>
+            <View style={{ gap: 0 }}>
+              {mobileHeroTitleParts.map((part, index) => (
+                <AppText
+                  key={`${part}-${index}`}
+                  size="xl"
+                  style={{ color: colors.white, fontSize: 36, lineHeight: 42 }}
+                  weight="bold"
+                >
+                  {part.endsWith(".") ? part : `${part}.`}
+                </AppText>
+              ))}
+            </View>
+            <AppText size="md" style={{ color: "#cbd5e1", flexShrink: 1, width: "100%" }}>
+              {messages.landing.heroSubtitle}
+            </AppText>
+          </View>
+          <View
+            className="rounded-3xl bg-white"
+            style={{ gap: spacing[4], padding: spacing[4], ...({ boxSizing: "border-box" } as ViewStyle) }}
+          >
+            <View style={{ flexDirection: inlineDirection(), justifyContent: "space-between", gap: spacing[3] }}>
+              <View style={{ flex: 1, gap: spacing[1] }}>
+                <AppText size="xs" tone="muted" weight="semibold">
+                  {messages.landing.heroPreviewLabel}
+                </AppText>
+                <AppHeading size="md">{messages.landing.heroPreviewGoal}</AppHeading>
+              </View>
+            </View>
+            <View className="rounded-2xl bg-blue-600" style={{ gap: spacing[1], padding: spacing[4] }}>
+              <AppText size="xs" style={{ color: "#bfdbfe" }} weight="semibold">
+                {messages.common.labels.totalSaved}
+              </AppText>
+              <AppHeading size="lg" style={{ color: colors.white }}>
+                {formatUsdc(savedAmount)}
+              </AppHeading>
+              <AppText size="sm" style={{ color: "#dbeafe" }}>
+                {messages.common.labels.of} {formatUsdc(targetAmount)}
+              </AppText>
+            </View>
+            <View style={{ gap: spacing[2] }}>
+              <View style={{ flexDirection: inlineDirection(), alignItems: "center", justifyContent: "space-between" }}>
+                <AppText size="sm" tone="secondary" weight="semibold">
+                  {messages.common.labels.progress}
+                </AppText>
+                <AppText size="sm" weight="semibold">
+                  {formatProgress(progress)}
+                </AppText>
+              </View>
+              <ProgressBar progress={progress} />
+            </View>
+            <View style={{ gap: spacing[2] }}>
+              {messages.landing.heroHighlights.slice(0, 2).map((item, index) => (
+                <View key={item} style={{ flexDirection: inlineDirection(), alignItems: "center", gap: spacing[2] }}>
+                  <MaterialCommunityIcons
+                    color={index === 0 ? colors.accentStrong : colors.positive}
+                    name={(model.ruleCards[index]?.icon ?? "check-circle-outline") as ComponentProps<typeof MaterialCommunityIcons>["name"]}
+                    size={17}
+                  />
+                  <AppText style={{ flex: 1 }} size="sm" tone="secondary" weight="semibold">
+                    {item}
+                  </AppText>
+                </View>
+              ))}
+            </View>
+          </View>
+          <View style={{ gap: spacing[2] }}>
+            <Pressable
+              accessibilityRole="button"
+              onPress={onCreateVault}
+              className="min-h-12 rounded-2xl bg-blue-500 px-4 py-3 active:bg-blue-600"
+            >
+              <View style={{ flexDirection: inlineDirection(), alignItems: "center", justifyContent: "center", gap: spacing[2] }}>
+                <MaterialCommunityIcons color={colors.white} name="plus" size={18} />
+                <AppText align="center" style={{ color: colors.white }} weight="semibold">
+                  {model.heroActions[0].label}
+                </AppText>
+              </View>
+            </Pressable>
+            <View style={{ flexDirection: inlineDirection(), gap: spacing[2] }}>
+              <Pressable
+                accessibilityRole="button"
+                onPress={onEnterVaults}
+                className="min-h-11 flex-1 rounded-2xl border border-white/20 bg-white/10 px-3 py-3 active:bg-white/15"
+              >
+                <AppText align="center" numberOfLines={1} size="sm" style={{ color: colors.white }} weight="semibold">
+                  {model.heroActions[1].label}
+                </AppText>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                onPress={onReviewSecurity}
+                className="min-h-11 flex-1 rounded-2xl border border-white/20 bg-white/10 px-3 py-3 active:bg-white/15"
+              >
+                <AppText align="center" numberOfLines={1} size="sm" style={{ color: colors.white }} weight="semibold">
+                  {messages.common.buttons.reviewSecurity}
+                </AppText>
+              </Pressable>
+            </View>
+          </View>
+        </MotionView>
+      </SectionContainer>
+    );
+  }
 
   return (
     <SectionContainer

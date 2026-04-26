@@ -1,4 +1,4 @@
-import type { AppLocale } from "./index";
+import type { AppLocale } from "./messages";
 
 export const isAppLocale = (value: string | null | undefined): value is AppLocale => value === "en" || value === "ar";
 

@@ -10,13 +10,54 @@ import { AppHeading, AppText, MotionView, SectionContainer, SurfaceCard } from "
 
 export const HowItWorksSection = () => {
   const adaptiveLayout = useAdaptiveLayout();
-  const { messages } = useI18n();
+  const { inlineDirection, messages } = useI18n();
   const stepIcons: Array<ComponentProps<typeof MaterialCommunityIcons>["name"]> = [
     "bullseye-arrow",
     "shield-lock-outline",
     "cash-plus",
     "check-decagram-outline",
   ];
+
+  if (adaptiveLayout.isCompact) {
+    return (
+      <SectionContainer
+        gap={spacing[4]}
+        header={
+          <MotionView style={{ gap: spacing[2] }}>
+            <AppText size="sm" tone="accent" weight="semibold">
+              {messages.landing.howItWorksEyebrow}
+            </AppText>
+            <AppHeading size="lg">{messages.landing.howItWorksTitle}</AppHeading>
+            <AppText size="sm" tone="secondary">{messages.landing.howItWorksDescription}</AppText>
+          </MotionView>
+        }
+      >
+        <View className="rounded-3xl border border-slate-200 bg-white p-3 shadow-vault-soft" style={{ gap: spacing[2] }}>
+          {messages.landing.howItWorksSteps.map((step, index) => (
+            <MotionView key={step.title} delay={getStaggerDelay(index)} style={{ gap: spacing[2] }}>
+              <View
+                className="rounded-2xl bg-slate-50 p-3"
+                style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}
+              >
+                <View className="h-10 w-10 items-center justify-center rounded-2xl bg-blue-100">
+                  <MaterialCommunityIcons color={colors.accentStrong} name={stepIcons[index] ?? "check-circle-outline"} size={19} />
+                </View>
+                <View style={{ flex: 1, gap: spacing[1] }}>
+                  <View style={{ flexDirection: inlineDirection(), alignItems: "center", justifyContent: "space-between", gap: spacing[2] }}>
+                    <AppHeading size="sm" style={{ flex: 1 }}>{step.title}</AppHeading>
+                    <AppText size="xs" tone="accent" weight="semibold">
+                      {String(index + 1).padStart(2, "0")}
+                    </AppText>
+                  </View>
+                  <AppText size="sm" tone="secondary">{step.description}</AppText>
+                </View>
+              </View>
+            </MotionView>
+          ))}
+        </View>
+      </SectionContainer>
+    );
+  }
 
   return (
     <SectionContainer

@@ -1,6 +1,6 @@
 import type { Href } from "expo-router";
 
-import { getLocaleMessages, type AppLocale } from "../i18n";
+import { getLocaleMessages, type AppLocale } from "../i18n/messages";
 import { routes } from "../routing";
 
 type MarketingMessages = ReturnType<typeof getLocaleMessages>;

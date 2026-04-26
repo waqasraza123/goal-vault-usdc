@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { View, type StyleProp, type ViewStyle } from "react-native";
+import { Platform, View, type StyleProp, type ViewStyle } from "react-native";
 
 import { useAdaptiveLayout } from "../../hooks/useAdaptiveLayout";
 import { tokens } from "../../theme";
@@ -15,15 +15,19 @@ export const PageContainer = ({
   width = "page",
 }: PropsWithChildren<PageContainerProps>) => {
   const adaptiveLayout = useAdaptiveLayout();
+  const horizontalPadding = adaptiveLayout.contentPadding;
+  const useNaturalWebWidth = Platform.OS === "web" && adaptiveLayout.isCompact;
+  const compactWebWidth = `calc(100vw - ${horizontalPadding * 2}px)` as unknown as ViewStyle["width"];
 
   return (
     <View
       style={[
         {
-          width: "100%",
+          width: useNaturalWebWidth ? compactWebWidth : "100%",
           maxWidth: tokens.maxWidth[width],
           alignSelf: "center",
-          paddingHorizontal: adaptiveLayout.contentPadding,
+          paddingHorizontal: useNaturalWebWidth ? 0 : horizontalPadding,
+          ...({ boxSizing: "border-box" } as ViewStyle),
         },
         style,
       ]}

@@ -1,0 +1,27 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+@import "nativewind/theme";
+
+@source "./src/**/*.{ts,tsx}";
+
+@theme {
+  --color-vault-ink: #07111f;
+  --color-vault-muted: #53627c;
+  --color-vault-canvas: #f8fafc;
+  --color-vault-panel: #ffffff;
+  --color-vault-line: #d9e2ef;
+  --color-vault-blue: #2563eb;
+  --color-vault-cyan: #06b6d4;
+  --color-vault-emerald: #10b981;
+  --color-vault-fuchsia: #d946ef;
+  --color-vault-lime: #a3e635;
+  --radius-vault: 1rem;
+  --radius-vault-sm: 0.75rem;
+  --shadow-vault: 0 24px 80px rgba(15, 23, 42, 0.16);
+  --shadow-vault-soft: 0 12px 36px rgba(15, 23, 42, 0.1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
