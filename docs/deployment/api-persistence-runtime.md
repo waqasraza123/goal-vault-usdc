@@ -3,7 +3,7 @@
 ## Purpose
 The API persistence runtime guard makes storage mode explicit before managed database runtime work begins.
 
-The API still runs on SQLite-backed persistence today. PostgreSQL is now a recognized configuration value, but it is intentionally blocked at env validation, API startup, `/ready`, and API preflight until a real managed database adapter is implemented.
+The API still runs on SQLite-backed persistence today. PostgreSQL is now a recognized configuration value, and an inactive PostgreSQL store core exists behind the same persistence ports, but PostgreSQL mode is intentionally blocked at env validation, API startup, `/ready`, and API preflight until a real driver, connection pool, credential model, schema/import execution path, parity process, and rollback path are accepted.
 
 This prevents an operator from setting `API_DATABASE_URL` and assuming the current API is using the managed database.
 
@@ -11,7 +11,7 @@ This prevents an operator from setting `API_DATABASE_URL` and assuming the curre
 - `API_PERSISTENCE_DRIVER`
   - `sqlite` or `postgresql`
   - defaults to `sqlite`
-  - `postgresql` is recognized but blocked until the runtime adapter exists
+  - `postgresql` is recognized but blocked until the runtime connection layer is accepted
 - `API_DATA_DIR`
   - SQLite data directory used while `API_PERSISTENCE_DRIVER=sqlite`
 - `API_DATABASE_URL`
@@ -38,6 +38,7 @@ In SQLite mode:
 - API store construction flows through `createApiPersistenceStores`
 - API route and service modules consume `ApiIndexerStore` and `ApiAnalyticsStore` ports
 - API read paths await persistence port methods so future external database adapters can perform network I/O
+- an inactive PostgreSQL store core exists but is not constructed by the runtime factory
 - the API keeps using `goal-vault-indexer.sqlite` and `goal-vault-analytics.sqlite`
 - managed database plan, schema, export, import plan, and parity artifacts remain handoff artifacts only
 
@@ -63,6 +64,8 @@ The factory returns:
 - the selected persistence driver
 
 Route modules should consume stores from the API context instead of constructing persistence adapters directly. They should also import persisted record types from the persistence port module rather than from SQLite implementation files, and they should await persistence reads even when the current SQLite implementation resolves immediately. This keeps the future PostgreSQL adapter isolated to the persistence boundary.
+
+`apps/api/src/modules/persistence/postgresql-store.ts` provides the inactive PostgreSQL store core. It depends only on an injected query executor and does not read secrets, open connections, run migrations, apply import SQL, or change runtime driver selection.
 
 ## Blocked PostgreSQL Mode
 PostgreSQL mode is reserved for the future runtime adapter:
@@ -96,8 +99,9 @@ The current provider-neutral path remains:
 5. Generate the import plan and SQL artifact.
 6. Execute schema and import steps through approved provider-owned access.
 7. Generate and execute parity checks through approved operational access.
-8. Add the real PostgreSQL runtime adapter.
-9. Switch `API_PERSISTENCE_DRIVER` to `postgresql` only after the adapter, rollback path, and preflight checks are accepted.
+8. Add the provider-approved PostgreSQL driver and connection pool.
+9. Wire the PostgreSQL store core through `createApiPersistenceStores`.
+10. Switch `API_PERSISTENCE_DRIVER` to `postgresql` only after the adapter, rollback path, and preflight checks are accepted.
 
 ## Boundary
-This phase adds explicit runtime guardrails. It does not add a PostgreSQL driver, connect to a managed database, change API persistence behavior, execute import SQL, run parity checks, deploy the API, or move traffic.
+Current runtime guardrails remain active. The inactive PostgreSQL store core does not add a PostgreSQL driver, connect to a managed database, change API persistence behavior, execute import SQL, run parity checks, deploy the API, or move traffic.
