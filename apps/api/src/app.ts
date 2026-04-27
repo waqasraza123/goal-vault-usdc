@@ -40,7 +40,7 @@ export const buildApp = ({ context, env }: { context: IndexerContext; env: ApiRu
   });
 
   registerHealthRoutes(app, context, env);
-  registerAnalyticsRoutes(app, env);
+  registerAnalyticsRoutes(app, context, env);
   registerIndexerRoutes(app, context, env);
   registerVaultRoutes(app);
   registerVaultEventRoutes(app);

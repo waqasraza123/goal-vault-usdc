@@ -1,0 +1,24 @@
+import type { ApiRuntimeEnv } from "../../env";
+import { AnalyticsStore } from "../../lib/observability/analytics";
+import { IndexerStore } from "../indexer/indexer-store";
+
+export interface ApiPersistenceStores {
+  driver: ApiRuntimeEnv["persistence"]["driver"];
+  indexerStore: IndexerStore;
+  analyticsStore: AnalyticsStore;
+}
+
+export const createApiPersistenceStores = async (env: ApiRuntimeEnv): Promise<ApiPersistenceStores> => {
+  if (!env.persistence.runtimeReady || env.persistence.driver !== "sqlite") {
+    throw new Error(env.persistence.message);
+  }
+
+  const indexerStore = new IndexerStore(env.persistence.sqliteDataDir);
+  await indexerStore.initialize();
+
+  return {
+    driver: env.persistence.driver,
+    indexerStore,
+    analyticsStore: new AnalyticsStore(env.persistence.sqliteDataDir),
+  };
+};

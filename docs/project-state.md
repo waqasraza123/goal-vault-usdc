@@ -31,6 +31,7 @@ The repository now has a real v1 foundation:
 - API data snapshot and restore tooling for the current SQLite-backed persistence layer
 - API runtime preflight tooling for redacted staging and production environment validation
 - API persistence runtime guardrails that keep SQLite explicit and block PostgreSQL mode until an adapter exists
+- centralized API persistence store construction for the current SQLite indexer and analytics stores
 - provider-neutral API traffic plan tooling for promotion, rollback, and disablement records
 - provider-neutral managed database planning for future PostgreSQL migration
 - provider-neutral PostgreSQL schema bundle artifacts for the current API persistence contract
@@ -116,6 +117,7 @@ Still not implemented:
 - Phase 28: managed database export bundle for SQLite snapshot to JSONL import handoff
 - Phase 29: managed database import plan for PostgreSQL import SQL handoff
 - Phase 30: API persistence runtime guardrails for explicit SQLite mode and blocked PostgreSQL mode
+- Phase 31: API persistence store factory for centralized SQLite store construction
 
 ## Important Decisions
 - The product should feel like a premium savings tool, not a DeFi dashboard.
@@ -197,6 +199,8 @@ Still not implemented:
 - Managed database import plans do not connect to PostgreSQL, use credentials, apply schema, import rows, or compare rows until provider-owned execution is selected.
 - Phase 30 adds API runtime persistence driver validation so SQLite is explicit and PostgreSQL mode is blocked until a real adapter exists.
 - API persistence runtime reports must never include `API_DATABASE_URL`; they may only report whether the managed database URL is configured.
+- Phase 31 centralizes API persistence store construction through `createApiPersistenceStores` so route modules do not directly construct SQLite analytics storage.
+- The current persistence store factory only creates SQLite-backed stores; PostgreSQL remains blocked until a real adapter, credentials model, and rollback path exist.
 - Product docs live in `docs/product/goal-vault/`:
   - `goal.md` for the concise product goal
   - `plan.md` for the detailed execution-oriented plan
@@ -238,6 +242,7 @@ Still not implemented:
 - The Phase 28 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-28.md`.
 - The Phase 29 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-29.md`.
 - The Phase 30 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-30.md`.
+- The Phase 31 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-31.md`.
 - The CI and release workflow note lives at `docs/plans/goal-vault-ci-release-workflows.md`.
 - The contract deployment runbook lives at `docs/deployment/contract-deployment.md`.
 - The API image runbook lives at `docs/deployment/api-image.md`.

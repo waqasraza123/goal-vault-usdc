@@ -10,6 +10,7 @@ import { privateKeyToAccount } from "viem/accounts";
 
 import type { ApiRuntimeEnv } from "../../env";
 import { goalVaultFactoryAbi } from "../../lib/contracts";
+import { AnalyticsStore } from "../../lib/observability/analytics";
 import type { IndexerContext } from "../indexer/context";
 import { IndexerStore } from "../indexer/indexer-store";
 import { verifyVaultMetadataWriteRequest } from "./metadata-security";
@@ -138,6 +139,7 @@ test("verifyVaultMetadataWriteRequest validates the signed owner and materialize
     const context: IndexerContext = {
       env: createEnv(dataDir),
       store,
+      analyticsStore: new AnalyticsStore(dataDir),
       clients: {
         84532: {
           getTransactionReceipt: async () => ({

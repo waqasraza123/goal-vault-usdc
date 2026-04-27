@@ -7,42 +7,28 @@
 Commit and push current work, then implement the next production-grade step focused on code and detailed documentation without running full tests or builds.
 
 ## Last Completed Step
-Added Phase 30 API persistence runtime guardrails for explicit SQLite mode and blocked PostgreSQL mode.
+Added Phase 31 API persistence store factory for centralized SQLite store construction.
 
 ## Files Touched
-- `.env.example`
-- `.github/workflows/api-preflight.yml`
 - `README.md`
 - `apps/api/src/app.ts`
 - `apps/api/src/app.test.ts`
-- `apps/api/src/env.ts`
-- `apps/api/src/index.ts`
-- `apps/api/src/jobs/runtime-preflight.ts`
-- `apps/api/src/modules/health/health.service.ts`
-- `apps/api/src/modules/health/readiness.service.ts`
+- `apps/api/src/modules/analytics/analytics.routes.ts`
+- `apps/api/src/modules/indexer/context.ts`
 - `apps/api/src/modules/indexer/factory-sync.service.test.ts`
+- `apps/api/src/modules/persistence/stores.ts`
 - `apps/api/src/modules/vaults/metadata-security.test.ts`
-- `packages/api-client/src/schemas.ts`
-- `packages/shared/src/domain/deployment.ts`
-- `docs/deployment/api-image.md`
-- `docs/deployment/api-managed-database-plan.md`
 - `docs/deployment/api-persistence-runtime.md`
-- `docs/deployment/api-preflight.md`
-- `docs/deployment/api-traffic-plan.md`
-- `docs/deployment/release-manifest.md`
-- `docs/plans/goal-vault-ci-release-workflows.md`
-- `docs/plans/goal-vault-env-reference.md`
-- `docs/plans/goal-vault-launch-checklist.md`
-- `docs/plans/goal-vault-universal-react-native-phase-30.md`
+- `docs/plans/goal-vault-universal-react-native-phase-31.md`
 - `docs/project-state.md`
 - `docs/_local/current-session.md`
 
 ## Durable Decisions Captured
-- SQLite remains the only runtime-ready API persistence driver.
-- `API_PERSISTENCE_DRIVER=postgresql` is recognized but blocked by env validation until a real adapter is implemented.
-- `API_DATABASE_URL` is treated as secret and is reported only as configured or missing.
-- `/health`, `/ready`, API startup logs, and API preflight now expose the selected persistence driver without printing secrets.
-- Managed database artifacts remain handoff artifacts until runtime adapter, rollback, and parity procedures are accepted.
+- `createApiPersistenceStores` now owns current API persistence store construction.
+- SQLite remains the only runtime-ready API persistence store implementation.
+- `createIndexerContext` receives both indexer and analytics stores from the persistence factory.
+- Analytics routes consume the context-owned analytics store instead of constructing storage directly.
+- PostgreSQL remains blocked until a real adapter, credentials model, rollback path, and parity procedures are accepted.
 
 ## Scope Boundaries
 - No tests, builds, Docker builds, EAS builds, Expo exports, live data exports, import plan execution, snapshots, restores, deployments, database connections, live parity queries, data comparisons, migrations, provider changes, or traffic changes were run by request.

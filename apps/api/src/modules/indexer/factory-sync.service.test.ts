@@ -6,6 +6,7 @@ import test from "node:test";
 
 import type { ApiRuntimeEnv } from "../../env";
 import { goalVaultFactoryAbi } from "../../lib/contracts";
+import { AnalyticsStore } from "../../lib/observability/analytics";
 import type { IndexerContext } from "./context";
 import { syncFactoryEventsForChain } from "./factory-sync.service";
 import { IndexerStore } from "./indexer-store";
@@ -144,6 +145,7 @@ test("syncFactoryEventsForChain ingests legacy and V2 creation events without du
     const context: IndexerContext = {
       env: createEnv(dataDir),
       store,
+      analyticsStore: new AnalyticsStore(dataDir),
       clients: {
         84532: {
           getBlockNumber: async () => 25n,

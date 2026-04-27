@@ -6,6 +6,7 @@ import test from "node:test";
 
 import type { ApiRuntimeEnv } from "./env";
 import { buildApp } from "./app";
+import { AnalyticsStore } from "./lib/observability/analytics";
 import type { IndexerContext } from "./modules/indexer/context";
 import { IndexerStore } from "./modules/indexer/indexer-store";
 import { internalAccessHeaderName } from "./lib/security/internal-access";
@@ -69,6 +70,7 @@ test("internal indexer routes require the configured token", async () => {
     const context: IndexerContext = {
       env,
       store,
+      analyticsStore: new AnalyticsStore(dataDir),
       clients: {},
       logger: null,
     };
@@ -121,6 +123,7 @@ test("vault metadata route rejects invalid and unsigned requests", async () => {
     const context: IndexerContext = {
       env,
       store,
+      analyticsStore: new AnalyticsStore(dataDir),
       clients: {
         84532: {} as never,
       },

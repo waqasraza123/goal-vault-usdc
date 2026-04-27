@@ -3,12 +3,13 @@ import type { FastifyInstance } from "fastify";
 import type { AnalyticsBatchResponse } from "@goal-vault/shared";
 
 import type { ApiRuntimeEnv } from "../../env";
-import { analyticsBatchSchema, AnalyticsStore } from "../../lib/observability/analytics";
+import { analyticsBatchSchema } from "../../lib/observability/analytics";
 import { classifyObservedError } from "../../lib/observability/event-classification";
 import { logObservabilitySignal } from "../../lib/observability/logger";
+import type { IndexerContext } from "../indexer/context";
 
-export const registerAnalyticsRoutes = (app: FastifyInstance, env: ApiRuntimeEnv) => {
-  const store = new AnalyticsStore(env.dataDir);
+export const registerAnalyticsRoutes = (app: FastifyInstance, context: IndexerContext, env: ApiRuntimeEnv) => {
+  const store = context.analyticsStore;
 
   app.post("/analytics/events", async (request, reply): Promise<AnalyticsBatchResponse | { message: string }> => {
     if (!env.analyticsEnabled) {

@@ -3,18 +3,20 @@ import { createPublicClient, http } from "viem";
 import { base, baseSepolia } from "viem/chains";
 
 import type { ApiRuntimeEnv } from "../../env";
-import { IndexerStore } from "./indexer-store";
+import type { AnalyticsStore } from "../../lib/observability/analytics";
+import type { IndexerStore } from "./indexer-store";
+import { createApiPersistenceStores } from "../persistence/stores";
 
 export interface IndexerContext {
   env: ApiRuntimeEnv;
   store: IndexerStore;
+  analyticsStore: AnalyticsStore;
   clients: Partial<Record<8453 | 84532, ReturnType<typeof createPublicClient> | null>>;
   logger: FastifyBaseLogger | null;
 }
 
 export const createIndexerContext = async (env: ApiRuntimeEnv): Promise<IndexerContext> => {
-  const store = new IndexerStore(env.dataDir);
-  await store.initialize();
+  const stores = await createApiPersistenceStores(env);
 
   const clients: Partial<Record<8453 | 84532, ReturnType<typeof createPublicClient> | null>> = {};
 
@@ -34,7 +36,8 @@ export const createIndexerContext = async (env: ApiRuntimeEnv): Promise<IndexerC
 
   return {
     env,
-    store,
+    store: stores.indexerStore,
+    analyticsStore: stores.analyticsStore,
     clients,
     logger: null,
   };
