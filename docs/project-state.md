@@ -191,6 +191,7 @@ Still not implemented:
 - NativeWind is configured in `apps/mobile` with CSS-first tokens in `global.css`, a root `_layout.tsx` CSS import, `react-native-css`, and `withNativewind` wrapping Metro while preserving the required `valtio` resolver alias.
 - The current public mobile visual direction uses deep slate foundations, vibrant blue, cyan, emerald, and fuchsia accents, tighter radii, modern shadows, compact mobile spacing, and avoids Apple-like glass or decorative blob-heavy mobile layouts.
 - The compact public homepage keeps the footer inside the scroll content, removes mobile decorative hero circles, and uses dense below-hero content sections to avoid the previous oversized empty scroll region.
+- The current mobile UI polish direction is documented in `docs/plans/goal-vault-mobile-ui-polish.md`, including reusable feedback surfaces, icon-led cards, semantic accent usage, RTL layout expectations, and empty-state treatment.
 - Phase 11 adds a typed analytics boundary in the universal app, lean API-side event ingestion, structured backend observability signals, and post-launch metric definitions without collecting freeform private vault content.
 - Phase 13 makes the API-backed read model the default product path for dashboard, detail, and activity, while keeping chain reads limited to correctness fallbacks and session overlays limited to in-flight recovery.
 - Phase 13 centralizes frontend merge logic for backend, chain, and session state so create, deposit, withdraw, and recovery refresh the same product surfaces consistently.
@@ -258,6 +259,7 @@ Still not implemented:
 - The Phase 15 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-15.md`.
 - The Phase 16 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-16.md`.
 - The Phase 15 rule-system note lives at `docs/plans/goal-vault-rule-system.md`.
+- The current mobile UI polish note lives at `docs/plans/goal-vault-mobile-ui-polish.md`.
 - The Phase 16 test coverage note lives at `docs/plans/goal-vault-test-coverage-notes.md`.
 - The Phase 17 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-17.md`.
 - The Phase 18 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-18.md`.

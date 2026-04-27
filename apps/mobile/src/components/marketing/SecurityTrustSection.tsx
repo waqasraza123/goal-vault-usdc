@@ -10,7 +10,7 @@ import { AppHeading, AppText, MotionView, SectionContainer, SurfaceCard } from "
 
 export const SecurityTrustSection = () => {
   const adaptiveLayout = useAdaptiveLayout();
-  const { messages } = useI18n();
+  const { inlineDirection, messages } = useI18n();
   const principleIcons: Array<ComponentProps<typeof MaterialCommunityIcons>["name"]> = [
     "wallet-outline",
     "bank-check",
@@ -34,37 +34,65 @@ export const SecurityTrustSection = () => {
         style={{
           borderRadius: radii.lg,
           borderWidth: 1,
-          borderColor: colors.border,
+          borderColor: colors.borderStrong,
           backgroundColor: colors.backgroundElevated,
           padding: spacing[5],
-          gap: spacing[2],
+          gap: spacing[3],
         }}
       >
-        <AppText size="sm" tone="accent" weight="semibold">
-          {messages.landing.securitySummaryTitle}
-        </AppText>
-        <AppText tone="secondary">
-          {messages.landing.securitySummaryDescription}
-        </AppText>
+        <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
+          <View
+            style={{
+              width: 42,
+              height: 42,
+              borderRadius: radii.md,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: colors.accentSoft,
+              borderWidth: 1,
+              borderColor: colors.borderStrong,
+            }}
+          >
+            <MaterialCommunityIcons color={colors.accentStrong} name="shield-star-outline" size={22} />
+          </View>
+          <View style={{ flex: 1, gap: spacing[1] }}>
+            <AppText size="sm" tone="accent" weight="semibold">
+              {messages.landing.securitySummaryTitle}
+            </AppText>
+            <AppText tone="secondary">
+              {messages.landing.securitySummaryDescription}
+            </AppText>
+          </View>
+        </View>
       </MotionView>
       <View style={{ flexDirection: adaptiveLayout.useSplitLayout ? "row" : "column", gap: spacing[4] }}>
         {messages.landing.securityPrinciples.map((item, index) => (
           <MotionView key={item.title} delay={getStaggerDelay(index)} style={{ flex: 1 }}>
-            <SurfaceCard style={{ flex: 1, backgroundColor: index === 1 ? colors.backgroundElevated : colors.surfaceGlass }}>
-              <View
-                style={{
-                  width: 42,
-                  height: 42,
-                  borderRadius: 21,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: colors.accentSoft,
-                }}
-              >
-                <MaterialCommunityIcons color={colors.accentStrong} name={principleIcons[index] ?? "shield-check-outline"} size={20} />
+            <SurfaceCard accentColor={index === 1 ? colors.positive : colors.accentStrong} style={{ flex: 1, backgroundColor: index === 1 ? colors.backgroundElevated : colors.surfaceGlass, padding: spacing[5] }}>
+              <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
+                <View
+                  style={{
+                    width: 42,
+                    height: 42,
+                    borderRadius: radii.md,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: index === 1 ? colors.positiveSoft : colors.accentSoft,
+                    borderWidth: 1,
+                    borderColor: index === 1 ? colors.positive : colors.borderStrong,
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    color={index === 1 ? colors.positive : colors.accentStrong}
+                    name={principleIcons[index] ?? "shield-check-outline"}
+                    size={22}
+                  />
+                </View>
+                <View style={{ flex: 1, gap: spacing[2] }}>
+                  <AppHeading size="md">{item.title}</AppHeading>
+                  <AppText tone="secondary">{item.description}</AppText>
+                </View>
               </View>
-              <AppHeading size="md">{item.title}</AppHeading>
-              <AppText tone="secondary">{item.description}</AppText>
             </SurfaceCard>
           </MotionView>
         ))}

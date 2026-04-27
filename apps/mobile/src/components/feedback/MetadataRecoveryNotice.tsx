@@ -1,5 +1,6 @@
 import { useI18n } from "../../lib/i18n";
-import { AppHeading, AppText, PrimaryButton, SecondaryButton, SurfaceCard } from "../primitives";
+import { PrimaryButton, SecondaryButton } from "../primitives";
+import { FeedbackStatusCard } from "./FeedbackStatusCard";
 
 export const MetadataRecoveryNotice = ({
   title,
@@ -15,11 +16,14 @@ export const MetadataRecoveryNotice = ({
   const { messages } = useI18n();
 
   return (
-    <SurfaceCard tone="muted">
-      <AppHeading size="md">{title ?? messages.feedback.metadataLiveTitle}</AppHeading>
-      <AppText tone="secondary">{description}</AppText>
+    <FeedbackStatusCard
+      description={description}
+      icon={onRetry ? "database-sync-outline" : "database-clock-outline"}
+      title={title ?? messages.feedback.metadataLiveTitle}
+      tone="warning"
+    >
       {onRetry ? <PrimaryButton icon="refresh" label={messages.common.buttons.retryDetailsSave} onPress={onRetry} /> : null}
       {onViewVault ? <SecondaryButton icon="shield-check-outline" label={messages.common.buttons.viewVault} onPress={onViewVault} /> : null}
-    </SurfaceCard>
+    </FeedbackStatusCard>
   );
 };

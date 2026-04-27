@@ -44,7 +44,7 @@ export const PublicRouteHero = ({
         gap: spacing[6],
       }}
     >
-      <MotionView intensity="emphasis" preset="hero" style={{ flex: 1, gap: spacing[5] }}>
+      <MotionView intensity="emphasis" preset="hero" style={{ flex: 1, gap: spacing[5], justifyContent: "center" }}>
         <View
           style={{
             alignSelf: "flex-start",
@@ -73,15 +73,18 @@ export const PublicRouteHero = ({
               style={{
                 borderRadius: radii.pill,
                 borderWidth: 1,
-                borderColor: colors.border,
-                backgroundColor: colors.surfaceGlass,
+                borderColor: colors.borderStrong,
+                backgroundColor: colors.backgroundElevated,
                 paddingHorizontal: spacing[3],
                 paddingVertical: spacing[2],
               }}
             >
-              <AppText size="sm" tone="secondary" weight="semibold">
-                {item}
-              </AppText>
+              <View style={{ flexDirection: inlineDirection(), alignItems: "center", gap: spacing[2] }}>
+                <MaterialCommunityIcons color={colors.positive} name="check-circle-outline" size={15} />
+                <AppText size="sm" tone="secondary" weight="semibold">
+                  {item}
+                </AppText>
+              </View>
             </View>
           ))}
         </View>
@@ -92,21 +95,29 @@ export const PublicRouteHero = ({
       </MotionView>
 
       <MotionView delay={160} intensity="emphasis" style={{ flex: 1 }}>
-        <SurfaceCard tone="accent" style={{ backgroundColor: colors.backgroundElevated, minHeight: 420 }}>
-          <View
-            style={{
-              alignSelf: "flex-start",
-              borderRadius: radii.pill,
-              backgroundColor: colors.accentSoft,
-              paddingHorizontal: spacing[3],
-              paddingVertical: spacing[2],
-            }}
-          >
-            <AppText size="sm" tone="accent" weight="semibold">
-              {insightEyebrow}
-            </AppText>
+        <SurfaceCard tone="accent" level="floating" style={{ backgroundColor: colors.backgroundElevated, minHeight: 420, padding: spacing[5] }}>
+          <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
+            <View
+              style={{
+                width: 46,
+                height: 46,
+                borderRadius: radii.md,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: colors.accentSoft,
+                borderWidth: 1,
+                borderColor: colors.borderStrong,
+              }}
+            >
+              <MaterialCommunityIcons color={colors.accentStrong} name="shield-star-outline" size={24} />
+            </View>
+            <View style={{ flex: 1, gap: spacing[1] }}>
+              <AppText size="sm" tone="accent" weight="semibold">
+                {insightEyebrow}
+              </AppText>
+              <AppHeading size="lg">{insightTitle}</AppHeading>
+            </View>
           </View>
-          <AppHeading size="lg">{insightTitle}</AppHeading>
           <View style={{ gap: spacing[3] }}>
             {insightPoints.map((item, index) => (
               <View
@@ -134,13 +145,13 @@ export const PublicRouteHero = ({
                   style={{
                     width: 32,
                     height: 32,
-                    borderRadius: 16,
+                    borderRadius: radii.sm,
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: colors.accentSoft,
+                    backgroundColor: index === 0 ? colors.positiveSoft : colors.accentSoft,
                   }}
                 >
-                  <MaterialCommunityIcons color={colors.accentStrong} name="check-bold" size={16} />
+                  <MaterialCommunityIcons color={index === 0 ? colors.positive : colors.accentStrong} name="check-bold" size={16} />
                 </View>
                 <View style={{ flex: 1, gap: spacing[1] }}>
                   <AppText size="sm" tone="muted" weight="semibold">

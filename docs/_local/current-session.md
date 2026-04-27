@@ -4,40 +4,32 @@
 2026-04-27
 
 ## Current Objective
-Continue production-grade mobile UI/UX polish focused on activity history and transaction feedback states.
+Commit current work, then continue production-grade mobile UI/UX polish with code and documentation only.
 
 ## Last Completed Step
-Committed and pushed the create/detail UI pass, then polished the activity ledger, reusable feedback card, success states, error states, transaction status details, empty states, and i18n labels.
+Polished secondary marketing pages and remaining recovery notices, then added a durable mobile UI polish documentation note.
 
 ## Files Touched
-- `apps/mobile/src/app/(app)/activity.tsx`
-- `apps/mobile/src/components/feedback/AppErrorState.tsx`
-- `apps/mobile/src/components/feedback/CreateVaultErrorState.tsx`
-- `apps/mobile/src/components/feedback/DepositErrorState.tsx`
-- `apps/mobile/src/components/feedback/FeedbackStatusCard.tsx`
-- `apps/mobile/src/components/feedback/TransactionStatusCard.tsx`
-- `apps/mobile/src/components/feedback/WithdrawErrorState.tsx`
-- `apps/mobile/src/components/feedback/index.ts`
-- `apps/mobile/src/components/primitives/EmptyState.tsx`
-- `apps/mobile/src/components/vaults/CreateVaultSuccessCard.tsx`
-- `apps/mobile/src/components/vaults/DepositSuccessCard.tsx`
-- `apps/mobile/src/components/vaults/WithdrawSuccessCard.tsx`
-- `apps/mobile/src/lib/i18n/messages.ts`
+- `apps/mobile/src/components/feedback/MetadataRecoveryNotice.tsx`
+- `apps/mobile/src/components/feedback/RecoveryNotice.tsx`
+- `apps/mobile/src/components/marketing/PublicRouteHero.tsx`
+- `apps/mobile/src/components/marketing/SecurityDisclosureSection.tsx`
+- `apps/mobile/src/components/marketing/SecurityTrustSection.tsx`
+- `docs/plans/goal-vault-mobile-ui-polish.md`
+- `docs/project-state.md`
 - `docs/_local/current-session.md`
 
 ## Durable Decisions Captured
-- Added a reusable `FeedbackStatusCard` for transaction and error/success state consistency.
-- Kept the existing Goal Vault visual system and product behavior.
-- Preserved bilingual support by adding English and Arabic labels for activity data-source status.
+- `docs/plans/goal-vault-mobile-ui-polish.md` is now the implementation-facing reference for current mobile visual polish.
+- Remaining recovery notices now reuse `FeedbackStatusCard` instead of custom one-off card shells.
+- Secondary marketing pages now follow the same icon-led card and semantic accent pattern used in authenticated product surfaces.
 
 ## Scope Boundaries
-- No production build, Expo export, deployment, database work, contract work, or live chain interactions were run.
-- No durable architecture or roadmap change was made, so `docs/project-state.md` was not updated.
-- No real test suite was run; lightweight static validation only.
+- No production build, Expo export, deployment, database work, contract work, live chain interaction, or real test suite was run.
+- Existing product behavior, wallet state handling, analytics events, i18n model, and backend fallback behavior were preserved.
 
 ## Verification Commands
-- `pnpm --filter @goal-vault/mobile typecheck`
 - `git diff --check`
 
 ## Handoff Note
-Next UI pass can target marketing secondary pages and remaining notices for complete visual consistency.
+Next code-focused step can finish any small visual inconsistencies in wallet/network notices or start non-UI launch readiness work.
