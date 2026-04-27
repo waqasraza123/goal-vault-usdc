@@ -41,6 +41,9 @@
 - Run the `API Managed Database Schema` workflow after the managed database plan.
 - Review the generated PostgreSQL SQL and JSON manifest before any provider-specific DDL application.
 - Confirm the schema manifest says `noDatabaseMutated: true` before treating it as a review artifact.
+- Run the `API Managed Database Parity` workflow after restore into a managed database target and before traffic movement.
+- Run the emitted parity query pairs through approved operational access.
+- Confirm the parity plan says `noDatabaseConnected: true` and `noDataCompared: true` before treating it as a review artifact.
 
 ## CI And Release Candidate
 - Confirm the GitHub Environment exists for the target release.

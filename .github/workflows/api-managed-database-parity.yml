@@ -1,0 +1,114 @@
+name: API Managed Database Parity
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Backend environment.
+        type: choice
+        required: true
+        options:
+          - staging
+          - production
+      parity_label:
+        description: Stable parity plan label.
+        type: string
+        required: true
+      mode:
+        description: Parity review mode.
+        type: choice
+        required: true
+        default: pre-traffic
+        options:
+          - restore-validation
+          - pre-traffic
+          - post-rollback
+      target_reference:
+        description: Non-secret managed database target reference.
+        type: string
+        required: true
+      schema_name:
+        description: PostgreSQL schema name.
+        type: string
+        required: false
+        default: goal_vault_api
+      source_snapshot:
+        description: API data snapshot artifact name or approved storage reference.
+        type: string
+        required: true
+      schema_manifest:
+        description: Managed database schema manifest artifact name or URL.
+        type: string
+        required: true
+      database_plan:
+        description: Managed database plan artifact name or URL.
+        type: string
+        required: false
+      schema_sql:
+        description: Managed database SQL artifact name or URL.
+        type: string
+        required: false
+      traffic_plan:
+        description: API traffic plan artifact name or URL.
+        type: string
+        required: false
+      observe_minutes:
+        description: Minimum observation window after parity acceptance.
+        type: string
+        required: false
+        default: "30"
+      operator:
+        description: Operator or team responsible for executing parity review.
+        type: string
+        required: false
+      notes:
+        description: Optional non-secret operator notes.
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: api-managed-database-parity-${{ inputs.target }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  FORCE_COLOR: 1
+  API_DATABASE_PARITY_TARGET: ${{ inputs.target }}
+  API_DATABASE_PARITY_LABEL: ${{ inputs.parity_label }}
+  API_DATABASE_PARITY_ENGINE: postgresql
+  API_DATABASE_PARITY_MODE: ${{ inputs.mode }}
+  API_DATABASE_PARITY_TARGET_REFERENCE: ${{ inputs.target_reference }}
+  API_DATABASE_PARITY_SCHEMA_NAME: ${{ inputs.schema_name }}
+  API_DATABASE_PARITY_SOURCE_SNAPSHOT: ${{ inputs.source_snapshot }}
+  API_DATABASE_PARITY_SCHEMA_MANIFEST: ${{ inputs.schema_manifest }}
+  API_DATABASE_PARITY_DATABASE_PLAN: ${{ inputs.database_plan }}
+  API_DATABASE_PARITY_SCHEMA_SQL: ${{ inputs.schema_sql }}
+  API_DATABASE_PARITY_TRAFFIC_PLAN: ${{ inputs.traffic_plan }}
+  API_DATABASE_PARITY_OBSERVE_MINUTES: ${{ inputs.observe_minutes }}
+  API_DATABASE_PARITY_OPERATOR: ${{ inputs.operator }}
+  API_DATABASE_PARITY_NOTES: ${{ inputs.notes }}
+  API_DATABASE_PARITY_DIR: artifacts
+
+jobs:
+  api-managed-database-parity:
+    name: Write ${{ inputs.target }} API managed database parity plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write API managed database parity plan
+        id: parity
+        run: node scripts/write-api-managed-database-parity-plan.mjs
+
+      - name: Upload API managed database parity plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-vault-api-managed-database-parity-${{ inputs.target }}
+          path: ${{ steps.parity.outputs.plan_path }}
+          if-no-files-found: error
