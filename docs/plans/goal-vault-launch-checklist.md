@@ -25,6 +25,8 @@
 - Check `GET /ready` for blocked or degraded checks.
 - Confirm `API_PUBLIC_BASE_URL` matches the public deployment URL.
 - Confirm indexer mode and sync interval are appropriate for the target environment.
+- Confirm container hosting uses `API_HOST=0.0.0.0`.
+- Confirm `API_DATA_DIR` points to durable mounted storage before relying on indexed history.
 
 ## CI And Release Candidate
 - Confirm the GitHub Environment exists for the target release.
@@ -32,6 +34,13 @@
 - Confirm required GitHub Environment variables and secrets match `docs/plans/goal-vault-ci-release-workflows.md`.
 - Run the `Release Candidate` workflow for `staging` or `production`.
 - Confirm the workflow typechecks, checks API readiness when configured, and uploads the expected export artifacts.
+
+## API Image
+- Run the `API Image` workflow in `build` mode first.
+- Publish only after release-candidate review by setting `mode` to `publish` and `confirm_publish` to `publish`.
+- Download the API image manifest artifact.
+- Deploy the published image manually to the selected backend host.
+- Check `/health` and `/ready` after host deployment.
 
 ## Web
 - Run `pnpm verify:mobile:web`.
@@ -65,5 +74,6 @@
 
 ## Rollback / Disable
 - If the API is unhealthy, disable public launch traffic or point the app back to a known-good API base URL.
+- If an API image is unhealthy, redeploy the previous known-good image tag.
 - If indexer background sync is disabled, do not claim indexed activity freshness until manual sync procedures are in place.
 - If a new factory deployment is wrong, restore the previous factory address in app/API configuration and stop promotion.

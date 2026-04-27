@@ -3,7 +3,7 @@
 ## Purpose
 This pass adds repository-owned GitHub Actions automation for the current production-shaped v1 codebase.
 
-The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment has a separate guarded manual workflow. No workflow publishes mobile store builds, mutates backend production infrastructure, or promotes traffic automatically.
+The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment and API image publishing have separate guarded manual workflows. No workflow publishes mobile store builds, mutates backend production infrastructure, or promotes traffic automatically.
 
 ## Workflow Files
 - `.github/actions/setup-pnpm/action.yml`
@@ -28,6 +28,11 @@ The CI and release-candidate workflows intentionally stop at verification and re
   - broadcasts only after explicit confirmation
   - validates the RPC chain ID before running Foundry deployment
   - uploads a deployment manifest after broadcast
+- `.github/workflows/api-image.yml`
+  - manual staging or production API image packaging
+  - builds by default
+  - publishes to GHCR only after explicit confirmation
+  - uploads an image manifest artifact
 
 ## Required GitHub Environments
 Create two GitHub Environments before relying on release-candidate runs:
@@ -90,15 +95,25 @@ Use the manual contract deployment workflow only after the relevant environment 
 4. Run `broadcast` only with `confirm_broadcast` set to `deploy`.
 5. Download the deployment manifest artifact and copy the factory address into app/API environment configuration.
 
+## API Image Gate
+Use the manual API image workflow when the API release candidate is ready:
+
+1. Choose `staging` or `production`.
+2. Run `build` mode first.
+3. Run `publish` only with `confirm_publish` set to `publish`.
+4. Download the image manifest artifact.
+5. Deploy the published image manually on the selected backend host.
+
 ## Operator Notes
 - Keep GitHub Environment values aligned with `docs/plans/goal-vault-env-reference.md`.
 - Keep production approval on the GitHub Environment instead of adding custom approval logic to workflow YAML.
 - Treat release-candidate artifacts as verification outputs, not deployable store releases.
 - Use `docs/deployment/contract-deployment.md` for contract simulation, broadcast, post-deploy config, and rollback handling.
+- Use `docs/deployment/api-image.md` for API image build, publish, runtime config, promotion, and rollback handling.
 - Add backend promotion jobs only after the staging backend and rollback policy are finalized.
 
 ## Deferred Automation
 - EAS cloud builds and app-store submission
-- Production backend deployment
+- Hosting-provider backend deployment
 - Database migration orchestration
 - Traffic promotion and rollback automation

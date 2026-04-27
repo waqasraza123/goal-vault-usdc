@@ -7,42 +7,40 @@
 Commit and push current work, then implement the next production-grade step focused on code and detailed documentation without running full tests or builds.
 
 ## Last Completed Step
-Added Phase 18 guarded contract deployment automation for `GoalVaultFactory`.
+Added Phase 19 API image packaging and guarded GHCR publishing workflow.
 
 ## Files Touched
-- `.env.example`
-- `.github/workflows/contracts-deploy.yml`
-- `.gitignore`
+- `.dockerignore`
+- `.github/workflows/api-image.yml`
 - `README.md`
 - `package.json`
-- `packages/contracts/package.json`
-- `packages/contracts/script/Deploy.s.sol`
-- `packages/contracts/scripts/write-deployment-manifest.mjs`
-- `docs/deployment/contract-deployment.md`
+- `pnpm-lock.yaml`
+- `apps/api/Dockerfile`
+- `apps/api/package.json`
+- `docs/deployment/api-image.md`
 - `docs/plans/goal-vault-ci-release-workflows.md`
 - `docs/plans/goal-vault-env-reference.md`
 - `docs/plans/goal-vault-launch-checklist.md`
-- `docs/plans/goal-vault-universal-react-native-phase-18.md`
+- `docs/plans/goal-vault-universal-react-native-phase-19.md`
 - `docs/project-state.md`
 - `docs/_local/current-session.md`
 
 ## Durable Decisions Captured
-- Contract deployment is now a guarded manual GitHub Actions path, not an automatic promotion.
-- Simulation is the default deployment mode.
-- Broadcast requires `confirm_broadcast=deploy`.
-- The workflow validates the RPC chain ID against the selected target before running Foundry deployment.
-- Broadcast mode uploads a deployment manifest artifact and generated deployment manifests remain ignored by git.
+- API releases can now be packaged as Docker images from the monorepo root.
+- API image publishing is manual, environment-scoped, and requires `confirm_publish=publish`.
+- API images are pushed to GHCR only in publish mode.
+- Image manifest artifacts capture target, mode, image, tags, commit SHA, and workflow run ID.
+- `tsx` is an API runtime dependency while the API production start path executes TypeScript directly.
 
 ## Scope Boundaries
-- No local tests, builds, exports, or contract deployments were run by request.
-- No contract was broadcast.
-- No backend promotion, traffic rollback, EAS cloud build, or store submission automation was added.
+- No local tests, builds, Docker builds, exports, or deployments were run by request.
+- No image was published.
+- No backend host, traffic promotion, rollback automation, store submission, or managed database infrastructure was added.
 
 ## Verification Commands
-- `ruby -e 'require "yaml"; ARGV.each { |path| YAML.load_file(path); puts path }' .github/workflows/contracts-deploy.yml`
-- `node --check packages/contracts/scripts/write-deployment-manifest.mjs`
-- `node -e 'JSON.parse(require("fs").readFileSync("package.json", "utf8")); JSON.parse(require("fs").readFileSync("packages/contracts/package.json", "utf8"));'`
+- `ruby -e 'require "yaml"; ARGV.each { |path| YAML.load_file(path); puts path }' .github/workflows/api-image.yml`
+- `node -e 'JSON.parse(require("fs").readFileSync("package.json", "utf8")); JSON.parse(require("fs").readFileSync("apps/api/package.json", "utf8"));'`
 - `git diff --check`
 
 ## Handoff Note
-Before using `Contract Deployment`, configure `USDC_ADDRESS` as a GitHub Environment variable and `CONTRACT_DEPLOY_RPC_URL` plus `CONTRACT_DEPLOYER_PRIVATE_KEY` as GitHub Environment secrets for `staging` and `production`.
+Use the `API Image` workflow in build mode first. Publish to GHCR only after release-candidate review, then deploy the image manually on the selected backend host with durable storage for `API_DATA_DIR`.

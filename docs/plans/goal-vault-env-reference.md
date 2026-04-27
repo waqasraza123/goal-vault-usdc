@@ -58,6 +58,12 @@
 - `API_BASE_SEPOLIA_START_BLOCK`
   - optional Base Sepolia sync starting block
 
+## API Image Variables
+- `API_HOST`
+  - use `0.0.0.0` inside container hosting
+- `API_DATA_DIR`
+  - should point to mounted durable storage before relying on SQLite-backed indexed state
+
 ## Build Variables
 - `IOS_BUILD_NUMBER`
   - iOS build number used by Expo config
@@ -69,6 +75,7 @@
 - Use GitHub Environment secrets for RPC URLs and contract deployer credentials.
 - Keep `staging` and `production` values separate through GitHub Environments instead of branching inside workflow YAML.
 - The release-candidate workflow expects `EXPO_PUBLIC_API_TIMEOUT_MS` to resolve to a positive integer and defaults to `8000` when unset.
+- The API image workflow publishes to GHCR through `GITHUB_TOKEN` and does not require provider deployment credentials.
 
 ## Environment Expectations
 - Development:

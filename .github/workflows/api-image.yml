@@ -1,0 +1,122 @@
+name: API Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Backend release environment.
+        type: choice
+        required: true
+        options:
+          - staging
+          - production
+      mode:
+        description: Build only or publish to GHCR.
+        type: choice
+        required: true
+        default: build
+        options:
+          - build
+          - publish
+      image_tag:
+        description: Optional extra image tag.
+        type: string
+        required: false
+      confirm_publish:
+        description: Type publish to allow GHCR push.
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: api-image-${{ inputs.target }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  FORCE_COLOR: 1
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/goal-vault-api
+
+jobs:
+  api-image:
+    name: ${{ inputs.mode }} API image for ${{ inputs.target }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Validate publish confirmation
+        if: ${{ inputs.mode == 'publish' && inputs.confirm_publish != 'publish' }}
+        run: |
+          echo "Publish mode requires confirm_publish=publish."
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        if: ${{ inputs.mode == 'publish' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image metadata
+        id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ inputs.target }}-${{ github.sha }}
+            type=raw,value=${{ inputs.target }}-${{ github.run_number }}
+            type=raw,value=${{ inputs.image_tag }},enable=${{ inputs.image_tag != '' }}
+          labels: |
+            org.opencontainers.image.title=Goal Vault API
+            org.opencontainers.image.description=Goal Vault Fastify API and indexer service
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            app.goal-vault.target=${{ inputs.target }}
+
+      - name: Build API image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          platforms: linux/amd64
+          push: ${{ inputs.mode == 'publish' }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Write image manifest
+        run: |
+          mkdir -p artifacts
+          cat > artifacts/goal-vault-api-image-${{ inputs.target }}.json <<EOF
+          {
+            "app": "goal-vault",
+            "component": "api",
+            "target": "${{ inputs.target }}",
+            "mode": "${{ inputs.mode }}",
+            "registry": "${{ env.REGISTRY }}",
+            "image": "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}",
+            "tags": ${{ toJson(steps.metadata.outputs.tags) }},
+            "commitSha": "${{ github.sha }}",
+            "workflowRunId": "${{ github.run_id }}",
+            "generatedAt": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          }
+          EOF
+
+      - name: Upload image manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-vault-api-image-${{ inputs.target }}
+          path: artifacts/goal-vault-api-image-${{ inputs.target }}.json
+          if-no-files-found: error
