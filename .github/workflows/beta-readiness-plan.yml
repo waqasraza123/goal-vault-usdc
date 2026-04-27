@@ -1,0 +1,132 @@
+name: Beta Readiness Plan
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Beta environment.
+        type: choice
+        required: true
+        options:
+          - staging
+          - production
+      readiness_label:
+        description: Stable beta readiness label.
+        type: string
+        required: true
+      persistence_driver:
+        description: Planned beta persistence driver.
+        type: choice
+        required: true
+        default: postgresql
+        options:
+          - sqlite
+          - postgresql
+      release_manifest:
+        description: Release manifest artifact name, URL, or local path.
+        type: string
+        required: true
+      preflight_report:
+        description: API preflight report artifact name, URL, or local path.
+        type: string
+        required: true
+      traffic_plan:
+        description: API traffic plan artifact name, URL, or local path.
+        type: string
+        required: true
+      database_runtime_plan:
+        description: Managed database runtime plan artifact name, URL, or local path. Required for PostgreSQL.
+        type: string
+        required: false
+      source_snapshot:
+        description: Source API data snapshot artifact name or approved storage reference.
+        type: string
+        required: true
+      rollback_snapshot:
+        description: Rollback API data snapshot artifact name or approved storage reference.
+        type: string
+        required: true
+      participant_limit:
+        description: Maximum invited beta participants for this gate.
+        type: string
+        required: true
+        default: "10"
+      max_vault_usdc:
+        description: Maximum recommended USDC per vault during beta.
+        type: string
+        required: true
+      support_reference:
+        description: Non-secret support queue, runbook, or escalation reference.
+        type: string
+        required: true
+      incident_owner:
+        description: Incident owner or team for this beta gate.
+        type: string
+        required: true
+      change_window:
+        description: Approved beta launch window.
+        type: string
+        required: false
+      observe_minutes:
+        description: Minimum observation window after beta traffic movement.
+        type: string
+        required: false
+        default: "30"
+      operator:
+        description: Operator or team responsible for the beta gate.
+        type: string
+        required: false
+      notes:
+        description: Optional non-secret operator notes.
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: beta-readiness-plan-${{ inputs.target }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  FORCE_COLOR: 1
+  BETA_READINESS_TARGET: ${{ inputs.target }}
+  BETA_READINESS_LABEL: ${{ inputs.readiness_label }}
+  BETA_READINESS_PERSISTENCE_DRIVER: ${{ inputs.persistence_driver }}
+  BETA_READINESS_RELEASE_MANIFEST: ${{ inputs.release_manifest }}
+  BETA_READINESS_PREFLIGHT_REPORT: ${{ inputs.preflight_report }}
+  BETA_READINESS_TRAFFIC_PLAN: ${{ inputs.traffic_plan }}
+  BETA_READINESS_DATABASE_RUNTIME_PLAN: ${{ inputs.database_runtime_plan }}
+  BETA_READINESS_SOURCE_SNAPSHOT: ${{ inputs.source_snapshot }}
+  BETA_READINESS_ROLLBACK_SNAPSHOT: ${{ inputs.rollback_snapshot }}
+  BETA_READINESS_PARTICIPANT_LIMIT: ${{ inputs.participant_limit }}
+  BETA_READINESS_MAX_VAULT_USDC: ${{ inputs.max_vault_usdc }}
+  BETA_READINESS_SUPPORT_REFERENCE: ${{ inputs.support_reference }}
+  BETA_READINESS_INCIDENT_OWNER: ${{ inputs.incident_owner }}
+  BETA_READINESS_CHANGE_WINDOW: ${{ inputs.change_window }}
+  BETA_READINESS_OBSERVE_MINUTES: ${{ inputs.observe_minutes }}
+  BETA_READINESS_OPERATOR: ${{ inputs.operator }}
+  BETA_READINESS_NOTES: ${{ inputs.notes }}
+  BETA_READINESS_DIR: artifacts
+
+jobs:
+  beta-readiness-plan:
+    name: Write ${{ inputs.target }} beta readiness plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write beta readiness plan
+        id: readiness
+        run: node scripts/write-beta-readiness-plan.mjs
+
+      - name: Upload beta readiness plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-vault-beta-readiness-${{ inputs.target }}
+          path: ${{ steps.readiness.outputs.plan_path }}
+          if-no-files-found: error

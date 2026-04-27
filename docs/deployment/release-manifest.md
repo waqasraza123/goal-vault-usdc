@@ -88,8 +88,9 @@ Use this manifest before manual promotion:
 7. Generate and review the API traffic plan.
 8. Confirm `/ready` is acceptable on the target API.
 9. When generating a managed database runtime cutover plan, prefer passing the downloaded release manifest JSON file path so local evidence validation can confirm target and image alignment.
-10. Save the release manifest, managed database plan/schema/export/import/parity artifacts when applicable, and traffic plan artifacts with the release notes.
-11. Promote traffic manually through the selected hosting provider.
+10. Generate a beta readiness plan before inviting real users.
+11. Save the release manifest, managed database plan/schema/export/import/parity artifacts when applicable, traffic plan, and beta readiness artifacts with the release notes.
+12. Promote traffic manually through the selected hosting provider.
 
 ## Rollback Use
 Use this manifest during rollback:

@@ -42,6 +42,7 @@ The repository now has a real v1 foundation:
 - local API preflight evidence validation for managed database runtime cutover planning
 - local release and traffic artifact evidence validation for managed database runtime cutover planning
 - PostgreSQL API runtime adapter, store factory wiring, and redacted preflight connection/schema checks behind the existing persistence ports
+- provider-neutral limited beta readiness artifact tying together release, preflight, traffic, persistence, rollback, support, and audience-limit evidence
 - provider-neutral API traffic plan tooling for promotion, rollback, and disablement records
 - provider-neutral managed database planning for future PostgreSQL migration
 - provider-neutral PostgreSQL schema bundle artifacts for the current API persistence contract
@@ -140,6 +141,7 @@ Still not implemented:
 - Phase 40: local API preflight evidence validation for managed database runtime cutover planning
 - Phase 41: local release and traffic artifact evidence validation for managed database runtime cutover planning
 - Phase 42: PostgreSQL API runtime adapter, persistence factory wiring, and redacted preflight connection/schema checks
+- Phase 43: limited beta readiness artifact for real-audience operational approval
 
 ## Important Decisions
 - The product should feel like a premium savings tool, not a DeFi dashboard.
@@ -236,6 +238,7 @@ Still not implemented:
 - Phase 40 adds local API preflight evidence validation to managed database runtime cutover planning so a local preflight JSON must show accepted PostgreSQL capability gates before a cutover plan is written.
 - Phase 41 adds local release manifest and API traffic plan evidence validation to managed database runtime cutover planning so local cutover plans must align target, action, candidate image, rollback image, release manifest, and preflight references.
 - Phase 42 adds the `pg` PostgreSQL runtime adapter, wires PostgreSQL stores through `createApiPersistenceStores`, and makes API preflight verify connection plus required schema tables without printing database credentials.
+- Phase 43 adds a provider-neutral beta readiness plan workflow that validates release, API preflight, traffic, database runtime, snapshot, support, incident owner, participant-limit, and per-vault USDC-limit evidence before real users are invited.
 - Product docs live in `docs/product/goal-vault/`:
   - `goal.md` for the concise product goal
   - `plan.md` for the detailed execution-oriented plan
@@ -290,6 +293,7 @@ Still not implemented:
 - The Phase 40 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-40.md`.
 - The Phase 41 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-41.md`.
 - The Phase 42 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-42.md`.
+- The Phase 43 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-43.md`.
 - The CI and release workflow note lives at `docs/plans/goal-vault-ci-release-workflows.md`.
 - The contract deployment runbook lives at `docs/deployment/contract-deployment.md`.
 - The API image runbook lives at `docs/deployment/api-image.md`.
@@ -305,6 +309,7 @@ Still not implemented:
 - The mobile distribution runbook lives at `docs/deployment/mobile-distribution.md`.
 - The release manifest runbook lives at `docs/deployment/release-manifest.md`.
 - The API data snapshot runbook lives at `docs/deployment/api-data-snapshots.md`.
+- The beta readiness runbook lives at `docs/deployment/beta-readiness.md`.
 
 ## Deferred / Not Yet Implemented
 - Accepted managed database schema/import/parity execution, production PostgreSQL cutover, and rollback operation

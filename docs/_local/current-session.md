@@ -7,38 +7,35 @@
 Commit current work, then implement the next real-audience beta readiness step with code and documentation only.
 
 ## Last Completed Step
-Added PostgreSQL API runtime adapter wiring, persistence factory activation, and redacted preflight connection/schema checks.
+Added limited beta readiness artifact generation, workflow automation, and operator documentation.
 
 ## Files Touched
-- `apps/api/package.json`
-- `apps/api/src/env.ts`
-- `apps/api/src/jobs/runtime-preflight.ts`
-- `apps/api/src/modules/health/readiness.service.ts`
-- `apps/api/src/modules/persistence/postgresql-driver.ts`
-- `apps/api/src/modules/persistence/postgresql-store.ts`
-- `apps/api/src/modules/persistence/stores.ts`
-- `docs/deployment/api-persistence-runtime.md`
-- `docs/deployment/api-preflight.md`
+- `.github/workflows/beta-readiness-plan.yml`
+- `package.json`
+- `scripts/write-api-managed-database-runtime-plan.mjs`
+- `scripts/write-beta-readiness-plan.mjs`
+- `docs/deployment/beta-readiness.md`
+- `docs/deployment/release-manifest.md`
 - `docs/plans/goal-vault-ci-release-workflows.md`
 - `docs/plans/goal-vault-env-reference.md`
 - `docs/plans/goal-vault-launch-checklist.md`
-- `docs/plans/goal-vault-universal-react-native-phase-42.md`
+- `docs/plans/goal-vault-universal-react-native-phase-43.md`
 - `docs/project-state.md`
 - `docs/_local/current-session.md`
-- `pnpm-lock.yaml`
 
 ## Durable Decisions Captured
-- PostgreSQL mode now uses `pg` through the API persistence boundary instead of direct route or service imports.
-- PostgreSQL startup and preflight require `API_DATABASE_URL`, successful connection, and the required schema tables.
-- API runtime and preflight reports continue to redact database credentials.
+- Real-user beta launch now has a provider-neutral readiness artifact before invitations are sent.
+- Beta readiness requires release, preflight, traffic, snapshot, support, incident owner, participant-limit, and maximum vault amount evidence.
+- PostgreSQL beta readiness additionally requires a managed database runtime plan reference.
 
 ## Scope Boundaries
-- No production build, Expo export, deployment, database provisioning, schema application, import, parity comparison, traffic movement, contract work, live chain interaction, or real test suite was run.
-- Existing API route behavior and SQLite default persistence were preserved.
+- No production build, Expo export, deployment, database provisioning, schema application, import, parity comparison, traffic movement, beta invitations, contract work, live chain interaction, or real test suite was run.
+- Existing runtime behavior was preserved; this step adds only operator artifact generation and documentation.
 
 ## Verification Commands
-- `pnpm --filter @goal-vault/api typecheck`
+- `node --check scripts/write-beta-readiness-plan.mjs`
+- `node --check scripts/write-api-managed-database-runtime-plan.mjs`
 - `git diff --check`
 
 ## Handoff Note
-Next code-focused step can add operator-side managed database cutover evidence for a real provider, or implement provider-specific backend promotion and rollback automation.
+Next code-focused step can implement provider-specific backend promotion and rollback automation, or add a support/incident intake surface for beta users.

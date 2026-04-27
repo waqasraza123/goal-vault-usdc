@@ -201,6 +201,24 @@ Use GitHub Environment variables for public, non-secret release metadata:
 - `API_DATABASE_RUNTIME_OPERATOR`
 - `API_DATABASE_RUNTIME_NOTES`
 - `API_DATABASE_RUNTIME_DIR`
+- `BETA_READINESS_TARGET`
+- `BETA_READINESS_LABEL`
+- `BETA_READINESS_PERSISTENCE_DRIVER`
+- `BETA_READINESS_RELEASE_MANIFEST`
+- `BETA_READINESS_PREFLIGHT_REPORT`
+- `BETA_READINESS_TRAFFIC_PLAN`
+- `BETA_READINESS_DATABASE_RUNTIME_PLAN`
+- `BETA_READINESS_SOURCE_SNAPSHOT`
+- `BETA_READINESS_ROLLBACK_SNAPSHOT`
+- `BETA_READINESS_PARTICIPANT_LIMIT`
+- `BETA_READINESS_MAX_VAULT_USDC`
+- `BETA_READINESS_SUPPORT_REFERENCE`
+- `BETA_READINESS_INCIDENT_OWNER`
+- `BETA_READINESS_CHANGE_WINDOW`
+- `BETA_READINESS_OBSERVE_MINUTES`
+- `BETA_READINESS_OPERATOR`
+- `BETA_READINESS_NOTES`
+- `BETA_READINESS_DIR`
 - `API_DATABASE_SCHEMA_TARGET`
 - `API_DATABASE_SCHEMA_LABEL`
 - `API_DATABASE_SCHEMA_ENGINE`
@@ -269,6 +287,14 @@ Use the manual API preflight workflow before deploying or promoting a backend im
 4. Download the preflight report artifact.
 5. Confirm `API_PERSISTENCE_DRIVER=sqlite`, or confirm PostgreSQL preflight passes connection and schema checks before any managed database cutover.
 6. Fix any validation errors before API image deployment or traffic movement.
+
+## Beta Readiness Gate
+Use the manual beta readiness workflow before inviting real users:
+
+1. Choose `staging` or `production`.
+2. Provide release manifest, API preflight, traffic plan, source snapshot, rollback snapshot, support reference, incident owner, participant limit, and maximum recommended vault amount.
+3. Provide the managed database runtime plan when PostgreSQL persistence is selected.
+4. Download the readiness artifact and review launch and rollback steps with the operator before sending beta invites.
 
 ## API Traffic Plan Gate
 Use the manual API traffic plan workflow before provider-specific traffic changes:

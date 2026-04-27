@@ -526,11 +526,9 @@ const plan = {
   runtimeSteps: buildRuntimeSteps(mode, observeMinutes),
   rollbackSteps,
   blockedUntil: [
-    "A PostgreSQL driver adapter is added around the pooled executor boundary.",
-    "`createApiPersistenceStores` wires PostgreSQL mode to the PostgreSQL store core.",
-    "Runtime env validation is updated to allow PostgreSQL only when the connection layer is configured.",
-    "Preflight capability checks report the PostgreSQL driver adapter, store factory wiring, and connection check as ready.",
+    "API preflight passes PostgreSQL connection and schema checks for this runtime target.",
     "Schema, import, parity, release manifest, and traffic plan artifacts are reviewed for this runtime label.",
+    "Rollback snapshot, rollback image, and rollback URL are available in approved operational storage.",
   ],
   git: {
     commitSha: optionalText("GITHUB_SHA"),

@@ -34,6 +34,13 @@
 - Create an API data snapshot before manual backend traffic movement.
 - Store API data snapshots only in approved operational storage.
 
+## Limited Beta Gate
+- Generate a beta readiness plan before inviting real users.
+- Confirm release manifest, API preflight, API traffic plan, persistence runtime plan when applicable, source snapshot, and rollback snapshot references are present.
+- Confirm participant limit, maximum recommended USDC per vault, support reference, and incident owner are recorded.
+- Confirm rollback steps are reviewed with the operator before sending invitations.
+- Treat beta limits as operational guidance, not protocol-enforced limits.
+
 ## Managed Database Planning
 - Run the `API Managed Database Plan` workflow before provisioning or migrating external database infrastructure.
 - Use a non-secret target reference, not a database connection string.
