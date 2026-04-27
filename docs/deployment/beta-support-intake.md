@@ -12,6 +12,7 @@ Goal Vault beta support intake gives real users a structured way to report produ
   - `PATCH /internal/support/requests/:id`
 - Runtime toggle: `API_ENABLE_SUPPORT`
 - Default state: enabled
+- Offline export: `pnpm beta:support:export` and `Beta Support Export` workflow
 - Storage:
   - SQLite: `goal-vault-analytics.sqlite`, table `support_requests`
   - PostgreSQL: `<API_PERSISTENCE_SCHEMA_NAME>.support_requests`
@@ -139,8 +140,10 @@ The managed database schema, export, import, parity, runtime preflight, and runt
 2. Confirm `/support` is visible in app navigation.
 3. Confirm the support reference in the beta readiness artifact points to the app route or the operator support channel.
 4. Review submitted support rows only through approved operational access.
-5. Do not copy sensitive user messages into commits, release manifests, readiness plans, or public issue trackers.
+5. Generate a beta support export from an API data snapshot when offline review is needed.
+6. Use summary exports by default; use private exports only with explicit operational approval.
+7. Do not copy sensitive user messages into commits, release manifests, readiness plans, or public issue trackers.
 
 ## Boundary
 
-This feature does not send email, create tickets in a third-party system, page an incident tool, expose an admin dashboard, or provide public support-request reads. It creates a durable intake record that operators can inspect through approved database or internal API access during beta.
+This feature does not send email, create tickets in a third-party system, page an incident tool, expose an admin dashboard, or provide public support-request reads. It creates a durable intake record that operators can inspect through approved database access, internal API access, or guarded snapshot-based support exports during beta.

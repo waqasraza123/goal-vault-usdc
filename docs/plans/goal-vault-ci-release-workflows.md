@@ -3,7 +3,7 @@
 ## Purpose
 This pass adds repository-owned GitHub Actions automation for the current production-shaped v1 codebase.
 
-The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, Vercel API traffic command planning, managed database planning, managed database schema generation, managed database export generation, managed database import planning, managed database parity planning, managed database runtime activation planning, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
+The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, Vercel API traffic command planning, beta support export generation, managed database planning, managed database schema generation, managed database export generation, managed database import planning, managed database parity planning, managed database runtime activation planning, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
 
 ## Workflow Files
 - `.github/actions/setup-pnpm/action.yml`
@@ -48,6 +48,11 @@ The CI and release-candidate workflows intentionally stop at verification and re
   - validates Vercel project references, deployment URLs, production domain, and traffic plan evidence
   - uploads exact promote or rollback command strings without running Vercel CLI
   - emits manual-only disablement steps because disablement depends on project routing policy
+- `.github/workflows/beta-support-export.yml`
+  - manual staging or production beta support export generation
+  - reads a downloaded API data snapshot artifact or runner-local snapshot directory
+  - writes summary or explicitly confirmed private support JSONL exports
+  - uploads a private operational artifact without connecting to live storage or mutating support status
 - `.github/workflows/api-managed-database-plan.yml`
   - manual staging or production managed database planning
   - records current SQLite schema inventory and PostgreSQL cutover requirements
@@ -239,6 +244,19 @@ Use GitHub Environment variables for public, non-secret release metadata:
 - `BETA_READINESS_OPERATOR`
 - `BETA_READINESS_NOTES`
 - `BETA_READINESS_DIR`
+- `BETA_SUPPORT_EXPORT_TARGET`
+- `BETA_SUPPORT_EXPORT_LABEL`
+- `BETA_SUPPORT_EXPORT_MODE`
+- `BETA_SUPPORT_EXPORT_CONFIRM_PRIVATE`
+- `BETA_SUPPORT_EXPORT_SOURCE`
+- `BETA_SUPPORT_EXPORT_STATUS`
+- `BETA_SUPPORT_EXPORT_CATEGORY`
+- `BETA_SUPPORT_EXPORT_PRIORITY`
+- `BETA_SUPPORT_EXPORT_LIMIT`
+- `BETA_SUPPORT_EXPORT_OPERATOR`
+- `BETA_SUPPORT_EXPORT_INCIDENT_REFERENCE`
+- `BETA_SUPPORT_EXPORT_NOTES`
+- `BETA_SUPPORT_EXPORT_DIR`
 - `API_DATABASE_SCHEMA_TARGET`
 - `API_DATABASE_SCHEMA_LABEL`
 - `API_DATABASE_SCHEMA_ENGINE`
@@ -319,6 +337,16 @@ Use the manual beta readiness workflow before inviting real users:
 2. Provide release manifest, API preflight, traffic plan, source snapshot, rollback snapshot, support reference, incident owner, participant limit, and maximum recommended vault amount.
 3. Provide the managed database runtime plan when PostgreSQL persistence is selected.
 4. Download the readiness artifact and review launch and rollback steps with the operator before sending beta invites.
+
+## Beta Support Export Gate
+Use the manual beta support export workflow when operators need offline support review:
+
+1. Choose `staging` or `production`.
+2. Provide an API data snapshot artifact plus run ID, or a runner-local snapshot directory.
+3. Use `summary` mode for routine review.
+4. Use `private` mode only with `confirm_private=export-private-support` when full request text or contact details are needed.
+5. Download the export artifact and confirm the manifest says `commitAllowed: false`, `noLiveDatabaseConnected: true`, and `noSupportStatusMutated: true`.
+6. Update request statuses through the internal support triage API after review.
 
 ## API Traffic Plan Gate
 Use the manual API traffic plan workflow before provider-specific traffic changes:
@@ -428,6 +456,7 @@ Use the manual release manifest workflow before traffic movement:
 - Use `docs/deployment/api-preflight.md` for API runtime env validation before backend deployment.
 - Use `docs/deployment/api-traffic-plan.md` for provider-neutral traffic movement, rollback, and disablement planning.
 - Use `docs/deployment/vercel-api-traffic.md` for Vercel-specific command planning after a provider-neutral traffic plan exists.
+- Use `docs/deployment/beta-support-export.md` for offline support review from API data snapshots.
 - Use `docs/deployment/mobile-distribution.md` for EAS builds, store submission, and mobile rollback handling.
 - Use `docs/deployment/release-manifest.md` to record promotion and rollback pointers before manual traffic changes.
 - Add provider-specific backend execution jobs only after the staging backend host, Vercel project policy, approval model, and rollback policy are finalized.

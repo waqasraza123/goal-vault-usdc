@@ -21,6 +21,7 @@
     "api:traffic:plan": "node scripts/write-api-traffic-plan.mjs",
     "api:traffic:vercel": "node scripts/write-vercel-api-traffic-command.mjs",
     "beta:readiness": "node scripts/write-beta-readiness-plan.mjs",
+    "beta:support:export": "node scripts/write-beta-support-export.mjs",
     "test": "turbo run test",
     "test:ts": "pnpm --filter @goal-vault/api --filter @goal-vault/mobile --filter @goal-vault/api-client --filter @goal-vault/contracts-sdk test",
     "test:contracts": "pnpm --filter @goal-vault/contracts test",

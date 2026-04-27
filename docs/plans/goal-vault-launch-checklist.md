@@ -42,8 +42,17 @@
 - Confirm participant limit, maximum recommended USDC per vault, support reference, and incident owner are recorded.
 - Confirm `/support` accepts structured support requests when it is the recorded support reference.
 - Confirm at least one operator can move a support request from `open` to `triage` and `closed` through the internal API.
+- Confirm beta support exports can be generated from an API data snapshot when offline review is needed.
 - Confirm rollback steps are reviewed with the operator before sending invitations.
 - Treat beta limits as operational guidance, not protocol-enforced limits.
+
+## Beta Support Export
+- Create an API data snapshot before exporting support rows.
+- Run the `Beta Support Export` workflow in `summary` mode for routine beta review.
+- Use `private` mode only with explicit confirmation when full request text or contact details are needed.
+- Confirm the manifest says `commitAllowed: false`, `noLiveDatabaseConnected: true`, and `noSupportStatusMutated: true`.
+- Store support exports only in approved operational storage and delete them after the review window.
+- Update support request status through the internal support triage API after offline review.
 
 ## Managed Database Planning
 - Run the `API Managed Database Plan` workflow before provisioning or migrating external database infrastructure.

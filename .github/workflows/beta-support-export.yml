@@ -1,0 +1,142 @@
+name: Beta Support Export
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Backend environment.
+        type: choice
+        required: true
+        options:
+          - staging
+          - production
+      export_label:
+        description: Stable support export label.
+        type: string
+        required: true
+      mode:
+        description: Export mode.
+        type: choice
+        required: true
+        default: summary
+        options:
+          - summary
+          - private
+      confirm_private:
+        description: Required value export-private-support when mode is private.
+        type: string
+        required: false
+      snapshot_artifact:
+        description: Optional API data snapshot artifact name to download.
+        type: string
+        required: false
+      snapshot_run_id:
+        description: Workflow run ID that produced snapshot_artifact.
+        type: string
+        required: false
+      snapshot_source:
+        description: Runner-local API data snapshot directory when no artifact is downloaded.
+        type: string
+        required: false
+      status:
+        description: Optional status filter.
+        type: string
+        required: false
+      category:
+        description: Optional category filter.
+        type: string
+        required: false
+      priority:
+        description: Optional priority filter.
+        type: string
+        required: false
+      limit:
+        description: Maximum support requests to export, up to 1000.
+        type: string
+        required: false
+        default: "500"
+      operator:
+        description: Operator or team responsible for handling the export.
+        type: string
+        required: false
+      incident_reference:
+        description: Optional non-secret incident or review reference.
+        type: string
+        required: false
+      notes:
+        description: Optional handling notes.
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: beta-support-export-${{ inputs.target }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  FORCE_COLOR: 1
+  BETA_SUPPORT_EXPORT_TARGET: ${{ inputs.target }}
+  BETA_SUPPORT_EXPORT_LABEL: ${{ inputs.export_label }}
+  BETA_SUPPORT_EXPORT_MODE: ${{ inputs.mode }}
+  BETA_SUPPORT_EXPORT_CONFIRM_PRIVATE: ${{ inputs.confirm_private }}
+  BETA_SUPPORT_EXPORT_SOURCE: ${{ inputs.snapshot_artifact != '' && 'artifacts/source-snapshot' || inputs.snapshot_source }}
+  BETA_SUPPORT_EXPORT_STATUS: ${{ inputs.status }}
+  BETA_SUPPORT_EXPORT_CATEGORY: ${{ inputs.category }}
+  BETA_SUPPORT_EXPORT_PRIORITY: ${{ inputs.priority }}
+  BETA_SUPPORT_EXPORT_LIMIT: ${{ inputs.limit }}
+  BETA_SUPPORT_EXPORT_OPERATOR: ${{ inputs.operator }}
+  BETA_SUPPORT_EXPORT_INCIDENT_REFERENCE: ${{ inputs.incident_reference }}
+  BETA_SUPPORT_EXPORT_NOTES: ${{ inputs.notes }}
+  BETA_SUPPORT_EXPORT_DIR: artifacts/beta-support-exports
+
+jobs:
+  beta-support-export:
+    name: Write ${{ inputs.target }} beta support export
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Validate snapshot source
+        if: ${{ inputs.snapshot_artifact == '' && inputs.snapshot_source == '' }}
+        run: |
+          echo "Provide snapshot_artifact or snapshot_source."
+          exit 1
+
+      - name: Validate snapshot artifact run
+        if: ${{ inputs.snapshot_artifact != '' && inputs.snapshot_run_id == '' }}
+        run: |
+          echo "snapshot_run_id is required when snapshot_artifact is provided."
+          exit 1
+
+      - name: Validate private export confirmation
+        if: ${{ inputs.mode == 'private' && inputs.confirm_private != 'export-private-support' }}
+        run: |
+          echo "confirm_private must be export-private-support for private exports."
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download API data snapshot artifact
+        if: ${{ inputs.snapshot_artifact != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.snapshot_artifact }}
+          run-id: ${{ inputs.snapshot_run_id }}
+          github-token: ${{ github.token }}
+          path: artifacts/source-snapshot
+
+      - name: Write beta support export
+        id: export
+        run: node scripts/write-beta-support-export.mjs
+
+      - name: Upload beta support export
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-vault-beta-support-export-${{ inputs.target }}
+          path: ${{ steps.export.outputs.export_dir }}
+          if-no-files-found: error
