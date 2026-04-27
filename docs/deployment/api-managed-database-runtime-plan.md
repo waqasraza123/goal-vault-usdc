@@ -9,6 +9,8 @@ It is not a deployment workflow. It does not install a driver, connect to Postgr
 - `scripts/write-api-managed-database-runtime-plan.mjs`
   - validates target, engine, mode, schema name, driver package label, managed database target reference, artifact references, image references, and observation window
   - rejects target references that look like connection strings or credentials
+  - inspects `API_DATABASE_RUNTIME_PREFLIGHT_REPORT` when it points to a local JSON file
+  - blocks cutover-mode plans when local API preflight evidence does not show PostgreSQL driver, factory, connection-check, URL-configured, and runtime-ready gates as accepted
   - records acceptance gates for driver adapter, capability reporting, schema execution, import execution, parity, preflight, release manifest, traffic plan, and rollback snapshot evidence
   - writes a JSON runtime activation plan
   - emits the plan path for GitHub artifact upload
@@ -93,6 +95,22 @@ Before PostgreSQL runtime activation, operators must confirm:
 - Release manifest records candidate and rollback API images.
 - API traffic plan records candidate URL, rollback URL, candidate image, and rollback image.
 - Rollback snapshot is available in approved operational storage.
+
+## Local Evidence Validation
+When `API_DATABASE_RUNTIME_PREFLIGHT_REPORT` is a local JSON file path, the runtime plan script inspects it before writing the plan.
+
+For `cutover` mode, the local preflight report must show:
+
+- `status: "valid"`
+- `persistence.driver: "postgresql"`
+- `persistence.postgresUrlConfigured: true`
+- `persistence.runtimeReady: true`
+- `persistence.capabilities.postgresqlRuntimeReady: true`
+- `persistence.capabilities.postgresqlDriverAdapterReady: true`
+- `persistence.capabilities.postgresqlFactoryWiringReady: true`
+- `persistence.capabilities.postgresqlPreflightConnectionCheckReady: true`
+
+If the preflight reference is a remote URL or workflow artifact name, the script records that it was not locally inspected and leaves acceptance to operator review. References must still avoid secret names and credential material.
 
 ## Promotion Sequence
 Use the runtime plan after the earlier managed-database artifacts:

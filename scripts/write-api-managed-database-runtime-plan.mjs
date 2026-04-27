@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 
@@ -87,6 +87,147 @@ const requireArtifactReference = (name) => {
   return value;
 };
 
+const resolveLocalArtifactPath = (reference) => {
+  if (reference.includes("://")) {
+    return null;
+  }
+
+  const resolvedPath = path.isAbsolute(reference) ? reference : path.resolve(process.cwd(), reference);
+
+  if (!existsSync(resolvedPath)) {
+    return null;
+  }
+
+  return resolvedPath;
+};
+
+const readLocalJsonArtifact = (reference, label) => {
+  const artifactPath = resolveLocalArtifactPath(reference);
+
+  if (!artifactPath) {
+    return {
+      inspected: false,
+      reference,
+      reason: "Artifact reference is not a local file path in this workspace.",
+    };
+  }
+
+  let parsed;
+
+  try {
+    parsed = JSON.parse(readFileSync(artifactPath, "utf8"));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown JSON parse failure.";
+    throw new Error(`${label} must be valid JSON when it points to a local file: ${message}`);
+  }
+
+  return {
+    inspected: true,
+    reference,
+    path: artifactPath,
+    parsed,
+  };
+};
+
+const requireBoolean = (value, label) => {
+  if (typeof value !== "boolean") {
+    throw new Error(`${label} must be boolean in the API preflight report.`);
+  }
+
+  return value;
+};
+
+const inspectApiPreflightReport = ({ reference, mode }) => {
+  const result = readLocalJsonArtifact(reference, "API_DATABASE_RUNTIME_PREFLIGHT_REPORT");
+
+  if (!result.inspected) {
+    return result;
+  }
+
+  const report = result.parsed;
+  const persistence = report?.persistence;
+  const capabilities = persistence?.capabilities;
+
+  if (report?.app !== "goal-vault" || report?.component !== "api") {
+    throw new Error("API_DATABASE_RUNTIME_PREFLIGHT_REPORT must reference a Goal Vault API preflight report.");
+  }
+
+  if (!persistence || typeof persistence !== "object") {
+    throw new Error("API_DATABASE_RUNTIME_PREFLIGHT_REPORT is missing persistence evidence.");
+  }
+
+  if (!capabilities || typeof capabilities !== "object") {
+    throw new Error("API_DATABASE_RUNTIME_PREFLIGHT_REPORT is missing persistence capability evidence.");
+  }
+
+  const evidence = {
+    inspected: true,
+    reference,
+    path: result.path,
+    status: report.status,
+    environment: report.environment,
+    deploymentTarget: report.deploymentTarget,
+    persistence: {
+      driver: persistence.driver,
+      postgresUrlConfigured: requireBoolean(persistence.postgresUrlConfigured, "postgresUrlConfigured"),
+      runtimeReady: requireBoolean(persistence.runtimeReady, "runtimeReady"),
+      schemaName: persistence.schemaName,
+      postgresqlRuntimeReady: requireBoolean(capabilities.postgresqlRuntimeReady, "postgresqlRuntimeReady"),
+      postgresqlDriverAdapterReady: requireBoolean(capabilities.postgresqlDriverAdapterReady, "postgresqlDriverAdapterReady"),
+      postgresqlFactoryWiringReady: requireBoolean(capabilities.postgresqlFactoryWiringReady, "postgresqlFactoryWiringReady"),
+      postgresqlPreflightConnectionCheckReady: requireBoolean(
+        capabilities.postgresqlPreflightConnectionCheckReady,
+        "postgresqlPreflightConnectionCheckReady",
+      ),
+      blockedReasons: Array.isArray(capabilities.blockedReasons) ? capabilities.blockedReasons : [],
+    },
+  };
+
+  const mustBePostgresqlReady = mode === "cutover";
+
+  if (mustBePostgresqlReady) {
+    const failures = [];
+
+    if (evidence.status !== "valid") {
+      failures.push("preflight status is not valid");
+    }
+
+    if (evidence.persistence.driver !== "postgresql") {
+      failures.push("persistence driver is not postgresql");
+    }
+
+    if (!evidence.persistence.postgresUrlConfigured) {
+      failures.push("PostgreSQL URL is not configured");
+    }
+
+    if (!evidence.persistence.runtimeReady) {
+      failures.push("persistence runtime is not ready");
+    }
+
+    if (!evidence.persistence.postgresqlRuntimeReady) {
+      failures.push("PostgreSQL runtime capability is not ready");
+    }
+
+    if (!evidence.persistence.postgresqlDriverAdapterReady) {
+      failures.push("PostgreSQL driver adapter capability is not ready");
+    }
+
+    if (!evidence.persistence.postgresqlFactoryWiringReady) {
+      failures.push("PostgreSQL factory wiring capability is not ready");
+    }
+
+    if (!evidence.persistence.postgresqlPreflightConnectionCheckReady) {
+      failures.push("PostgreSQL preflight connection-check capability is not ready");
+    }
+
+    if (failures.length > 0) {
+      throw new Error(`Cutover runtime plan requires accepted PostgreSQL preflight evidence: ${failures.join("; ")}.`);
+    }
+  }
+
+  return evidence;
+};
+
 const requireImage = (name) => {
   const value = requireText(name);
 
@@ -157,6 +298,11 @@ const schemaName = requireIdentifier("API_DATABASE_RUNTIME_SCHEMA_NAME", "goal_v
 const driverPackage = requireText("API_DATABASE_RUNTIME_DRIVER_PACKAGE");
 const targetReference = requireNonSecretReference("API_DATABASE_RUNTIME_TARGET_REFERENCE");
 const observeMinutes = requirePositiveInteger("API_DATABASE_RUNTIME_OBSERVE_MINUTES", "30");
+const preflightReport = requireArtifactReference("API_DATABASE_RUNTIME_PREFLIGHT_REPORT");
+const preflightEvidence = inspectApiPreflightReport({
+  reference: preflightReport,
+  mode,
+});
 
 const plan = {
   app: "goal-vault",
@@ -181,7 +327,7 @@ const plan = {
     exportBundle: requireArtifactReference("API_DATABASE_RUNTIME_EXPORT_BUNDLE"),
     importPlan: requireArtifactReference("API_DATABASE_RUNTIME_IMPORT_PLAN"),
     parityPlan: requireArtifactReference("API_DATABASE_RUNTIME_PARITY_PLAN"),
-    preflightReport: requireArtifactReference("API_DATABASE_RUNTIME_PREFLIGHT_REPORT"),
+    preflightReport,
     releaseManifest: requireArtifactReference("API_DATABASE_RUNTIME_RELEASE_MANIFEST"),
     trafficPlan: requireArtifactReference("API_DATABASE_RUNTIME_TRAFFIC_PLAN"),
     sourceSnapshot: requireArtifactReference("API_DATABASE_RUNTIME_SOURCE_SNAPSHOT"),
@@ -196,6 +342,9 @@ const plan = {
     observeMinutes,
     operator: optionalText("API_DATABASE_RUNTIME_OPERATOR"),
     notes: optionalText("API_DATABASE_RUNTIME_NOTES"),
+  },
+  evidence: {
+    preflight: preflightEvidence,
   },
   requiredSecrets: [
     "API_DATABASE_URL",

@@ -7,30 +7,21 @@
 Commit and push current work, then implement the next production-grade step focused on code and detailed documentation without running full tests or builds.
 
 ## Last Completed Step
-Added Phase 39 redacted API persistence capability reporting.
+Added Phase 40 local API preflight evidence validation for managed database runtime cutover planning.
 
 ## Files Touched
 - `README.md`
-- `apps/api/src/app.test.ts`
-- `apps/api/src/modules/indexer/factory-sync.service.test.ts`
-- `apps/api/src/env.ts`
-- `apps/api/src/jobs/runtime-preflight.ts`
-- `apps/api/src/modules/health/readiness.service.ts`
-- `apps/api/src/modules/vaults/metadata-security.test.ts`
 - `docs/deployment/api-managed-database-runtime-plan.md`
 - `docs/deployment/api-preflight.md`
-- `docs/deployment/api-persistence-runtime.md`
-- `docs/plans/goal-vault-env-reference.md`
-- `docs/plans/goal-vault-universal-react-native-phase-39.md`
+- `docs/plans/goal-vault-universal-react-native-phase-40.md`
 - `docs/project-state.md`
 - `docs/_local/current-session.md`
 - `scripts/write-api-managed-database-runtime-plan.mjs`
 
 ## Durable Decisions Captured
-- API runtime env now includes a redacted `ApiPersistenceRuntimeCapabilities` model.
-- API preflight reports persistence capability gates without printing credentials.
-- `/ready` includes persistence capability checks.
-- Managed database runtime planning now requires capability-gate evidence before PostgreSQL activation.
+- Managed database runtime plans now inspect `API_DATABASE_RUNTIME_PREFLIGHT_REPORT` when it points to a local JSON file.
+- Cutover-mode runtime plans require local preflight evidence to show PostgreSQL driver, URL-configured, runtime-ready, driver adapter, factory wiring, and connection-check gates as accepted.
+- Remote URL or workflow artifact references remain allowed but are recorded as not locally inspected and require operator review.
 - PostgreSQL runtime mode remains blocked until driver adapter, factory wiring, PostgreSQL preflight connection checks, credentials, parity acceptance, and rollback procedures are accepted.
 
 ## Scope Boundaries
@@ -41,6 +32,7 @@ Added Phase 39 redacted API persistence capability reporting.
 - No SQLite schema changes were made.
 - No PostgreSQL driver adapter, pool construction, migration execution, import execution, parity execution, or runtime factory wiring was added.
 - No PostgreSQL connection preflight was added or executed.
+- No local runtime plan artifact was generated.
 - No provider-specific deployment integration was added.
 
 ## Verification Commands
@@ -48,4 +40,4 @@ Added Phase 39 redacted API persistence capability reporting.
 - `git diff --check`
 
 ## Handoff Note
-Keep `API_PERSISTENCE_DRIVER=sqlite` for current releases. Future PostgreSQL driver wiring should mark capability gates ready only after the driver adapter, store factory wiring, connection checks, lifecycle shutdown, runtime activation evidence, and rollback path are accepted.
+Keep `API_PERSISTENCE_DRIVER=sqlite` for current releases. Future cutover-mode runtime plans should pass a local preflight JSON only after PostgreSQL capability gates are truly ready; otherwise the script will block the plan.

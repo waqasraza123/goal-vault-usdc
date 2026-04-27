@@ -124,6 +124,7 @@ Use this gate before deploying or promoting a backend image:
 3. Download the preflight report artifact.
 4. Fix any validation errors before deploying the API image.
 5. Keep the passing report with the API image manifest, managed database plan when applicable, release manifest, and API traffic plan.
+6. For managed database runtime cutover planning, prefer passing the downloaded JSON file path to `API_DATABASE_RUNTIME_PREFLIGHT_REPORT` so the runtime plan script can inspect PostgreSQL capability evidence locally.
 
 ## Failure Handling
 If the workflow fails, download the uploaded report and inspect `validationErrors`.
