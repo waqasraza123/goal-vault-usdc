@@ -3,7 +3,7 @@
 ## Purpose
 This pass adds repository-owned GitHub Actions automation for the current production-shaped v1 codebase.
 
-The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API image publishing, and mobile distribution have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
+The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API image publishing, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
 
 ## Workflow Files
 - `.github/actions/setup-pnpm/action.yml`
@@ -38,6 +38,10 @@ The CI and release-candidate workflows intentionally stop at verification and re
   - starts remote EAS builds in build mode
   - submits only production builds and only after explicit confirmation
   - uploads a mobile distribution manifest artifact
+- `.github/workflows/release-manifest.yml`
+  - manual staging or production release manifest generation
+  - records the exact API image, factory address, app/API URLs, mobile build references, and rollback pointers
+  - uploads a release manifest artifact
 
 ## Required GitHub Environments
 Create two GitHub Environments before relying on release-candidate runs:
@@ -119,6 +123,15 @@ Use the manual mobile distribution workflow after app, API, and contract release
 4. Run `submit` only for production with `confirm_submit` set to `submit`.
 5. Review EAS build logs, store metadata, and rollout controls outside GitHub.
 
+## Release Manifest Gate
+Use the manual release manifest workflow before traffic movement:
+
+1. Choose `staging` or `production`.
+2. Provide a release label and exact API image tag.
+3. Add mobile build references when available.
+4. Add rollback API image and previous factory address when relevant.
+5. Save the manifest artifact with release notes.
+
 ## Operator Notes
 - Keep GitHub Environment values aligned with `docs/plans/goal-vault-env-reference.md`.
 - Keep production approval on the GitHub Environment instead of adding custom approval logic to workflow YAML.
@@ -126,6 +139,7 @@ Use the manual mobile distribution workflow after app, API, and contract release
 - Use `docs/deployment/contract-deployment.md` for contract simulation, broadcast, post-deploy config, and rollback handling.
 - Use `docs/deployment/api-image.md` for API image build, publish, runtime config, promotion, and rollback handling.
 - Use `docs/deployment/mobile-distribution.md` for EAS builds, store submission, and mobile rollback handling.
+- Use `docs/deployment/release-manifest.md` to record promotion and rollback pointers before manual traffic changes.
 - Add backend promotion jobs only after the staging backend and rollback policy are finalized.
 
 ## Deferred Automation

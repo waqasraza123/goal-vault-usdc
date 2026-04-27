@@ -17,6 +17,7 @@
     "deploy:contracts:manifest": "pnpm --filter @goal-vault/contracts deploy:manifest",
     "deploy:contracts:simulate": "pnpm --filter @goal-vault/contracts deploy:simulate",
     "image:api:build": "docker build -f apps/api/Dockerfile -t goal-vault-api:local .",
+    "release:manifest": "node scripts/write-release-manifest.mjs",
     "verify:ci": "pnpm typecheck && pnpm test:ts && pnpm test:contracts",
     "verify:mobile:web": "pnpm --filter @goal-vault/mobile exec expo export --platform web --output-dir ../../dist/web",
     "verify:mobile:ios": "pnpm --filter @goal-vault/mobile exec expo export --platform ios --output-dir ../../dist/ios",

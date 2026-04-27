@@ -1,0 +1,83 @@
+name: Release Manifest
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Release environment.
+        type: choice
+        required: true
+        options:
+          - staging
+          - production
+      release_label:
+        description: Human-readable release label, such as v0.1.0-rc.1.
+        type: string
+        required: true
+      api_image:
+        description: Exact API image reference with tag.
+        type: string
+        required: true
+      rollback_api_image:
+        description: Previous known-good API image reference with tag.
+        type: string
+        required: false
+      rollback_factory_address:
+        description: Previous known-good factory address, when different.
+        type: string
+        required: false
+      ios_build_reference:
+        description: EAS or store reference for the iOS build.
+        type: string
+        required: false
+      android_build_reference:
+        description: EAS or store reference for the Android build.
+        type: string
+        required: false
+      rollback_notes:
+        description: Operator notes for rollback handling.
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-manifest-${{ inputs.target }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  FORCE_COLOR: 1
+  RELEASE_TARGET: ${{ inputs.target }}
+  RELEASE_LABEL: ${{ inputs.release_label }}
+  RELEASE_APP_URL: ${{ vars.EXPO_PUBLIC_APP_URL }}
+  RELEASE_API_URL: ${{ vars.API_PUBLIC_BASE_URL }}
+  RELEASE_FACTORY_ADDRESS: ${{ inputs.target == 'production' && vars.EXPO_PUBLIC_BASE_FACTORY_ADDRESS || vars.EXPO_PUBLIC_BASE_SEPOLIA_FACTORY_ADDRESS }}
+  RELEASE_API_IMAGE: ${{ inputs.api_image }}
+  RELEASE_IOS_BUILD_REFERENCE: ${{ inputs.ios_build_reference }}
+  RELEASE_ANDROID_BUILD_REFERENCE: ${{ inputs.android_build_reference }}
+  ROLLBACK_API_IMAGE: ${{ inputs.rollback_api_image }}
+  ROLLBACK_FACTORY_ADDRESS: ${{ inputs.rollback_factory_address }}
+  ROLLBACK_NOTES: ${{ inputs.rollback_notes }}
+
+jobs:
+  release-manifest:
+    name: Write ${{ inputs.target }} release manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write release manifest
+        id: manifest
+        run: node scripts/write-release-manifest.mjs
+
+      - name: Upload release manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-vault-release-${{ inputs.target }}-${{ inputs.release_label }}
+          path: ${{ steps.manifest.outputs.manifest_path }}
+          if-no-files-found: error

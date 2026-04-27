@@ -78,6 +78,16 @@
 - `ANDROID_VERSION_CODE`
   - increment before production Android builds
 
+## Release Manifest Variables
+- `EXPO_PUBLIC_APP_URL`
+  - recorded in release manifests as the app URL
+- `API_PUBLIC_BASE_URL`
+  - recorded in release manifests as the API URL
+- `EXPO_PUBLIC_BASE_FACTORY_ADDRESS`
+  - production factory address recorded in production release manifests
+- `EXPO_PUBLIC_BASE_SEPOLIA_FACTORY_ADDRESS`
+  - staging factory address recorded in staging release manifests
+
 ## GitHub Actions Variables And Secrets
 - Use GitHub Environment variables for public release metadata, package identifiers, API URLs, factory addresses, build numbers, and feature toggles.
 - Use GitHub Environment secrets for RPC URLs and contract deployer credentials.
@@ -85,6 +95,7 @@
 - The release-candidate workflow expects `EXPO_PUBLIC_API_TIMEOUT_MS` to resolve to a positive integer and defaults to `8000` when unset.
 - The API image workflow publishes to GHCR through `GITHUB_TOKEN` and does not require provider deployment credentials.
 - The mobile distribution workflow uses `EXPO_TOKEN`; App Store Connect and Google Play credentials should stay in EAS.
+- The release manifest workflow records non-secret deployment pointers only and must not include private keys, RPC URLs, or internal API tokens.
 
 ## Environment Expectations
 - Development:

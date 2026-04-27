@@ -1,0 +1,85 @@
+# Goal Vault Release Manifest
+
+## Purpose
+The release manifest records the exact artifacts and configuration an operator intends to promote.
+
+It is not a deployment workflow. It does not move traffic, deploy the API image, submit store builds, or mutate contracts. It creates a reviewable artifact that connects the release candidate, deployed factory, API image, mobile build references, and rollback pointers.
+
+## Files
+- `scripts/write-release-manifest.mjs`
+  - validates release target, HTTPS app/API URLs, factory address, and API image tag
+  - writes a JSON release manifest
+  - emits the manifest path for GitHub artifact upload
+- `.github/workflows/release-manifest.yml`
+  - manual staging or production workflow
+  - binds to the matching GitHub Environment
+  - uploads the release manifest artifact
+
+## Required Inputs
+- `target`
+  - `staging` or `production`
+- `release_label`
+  - operator label such as `v0.1.0-rc.1`
+- `api_image`
+  - exact registry image reference with tag
+
+## Optional Inputs
+- `rollback_api_image`
+  - previous known-good API image tag
+- `rollback_factory_address`
+  - previous known-good factory address when different
+- `ios_build_reference`
+  - EAS build ID, App Store build number, or store release reference
+- `android_build_reference`
+  - EAS build ID, Play build reference, or track reference
+- `rollback_notes`
+  - short operator note for manual rollback context
+
+## GitHub Environment Values
+The workflow reads non-secret values from the selected GitHub Environment:
+
+- `EXPO_PUBLIC_APP_URL`
+- `API_PUBLIC_BASE_URL`
+- `EXPO_PUBLIC_BASE_FACTORY_ADDRESS`
+- `EXPO_PUBLIC_BASE_SEPOLIA_FACTORY_ADDRESS`
+
+RPC URLs, deployer keys, EAS tokens, and internal API tokens are intentionally not included.
+
+## Manifest Contents
+The manifest records:
+
+- target
+- release label
+- chain ID
+- app URL
+- API URL
+- factory address
+- API image
+- rollback image and factory pointers
+- iOS and Android build references
+- optional artifact references
+- commit SHA
+- GitHub workflow run ID
+- generation timestamp
+
+## Promotion Use
+Use this manifest before manual promotion:
+
+1. Confirm contract deployment manifest matches the factory address.
+2. Confirm API image manifest matches the API image tag.
+3. Confirm mobile distribution manifest or EAS dashboard matches the build references.
+4. Confirm `/ready` is acceptable on the target API.
+5. Save the release manifest artifact with the release notes.
+6. Promote traffic manually through the selected hosting provider.
+
+## Rollback Use
+Use this manifest during rollback:
+
+1. Stop or pause traffic promotion.
+2. Redeploy `rollback.previousApiImage` if it is present.
+3. Restore `rollback.previousFactoryAddress` if the new factory address caused the issue.
+4. Verify `/health` and `/ready`.
+5. Confirm app clients still point to a coherent API and factory combination.
+
+## Boundary
+This workflow creates a source-of-truth artifact for operators. Provider-specific promotion and rollback remain manual until a backend host and traffic policy are chosen.

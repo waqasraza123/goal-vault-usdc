@@ -60,6 +60,13 @@
 - Use `submit` mode only for production and only with `confirm_submit` set to `submit`.
 - Confirm store metadata, privacy details, screenshots, and support URLs are ready before submission.
 
+## Release Manifest
+- Run the `Release Manifest` workflow before manual traffic movement.
+- Confirm the manifest records the intended API image tag.
+- Confirm the manifest records the intended factory address.
+- Add rollback API image and previous factory address when applicable.
+- Store the manifest artifact with release notes.
+
 ## Product Smoke Checks
 - Connect wallet on the supported target network.
 - Create one vault.
@@ -85,3 +92,4 @@
 - If indexer background sync is disabled, do not claim indexed activity freshness until manual sync procedures are in place.
 - If a new factory deployment is wrong, restore the previous factory address in app/API configuration and stop promotion.
 - If a mobile build is wrong, stop store rollout and submit a fixed build through EAS.
+- Use the release manifest rollback pointers when restoring API image or factory configuration.
