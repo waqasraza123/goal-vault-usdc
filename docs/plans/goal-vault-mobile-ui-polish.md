@@ -38,6 +38,8 @@ Avoid decorative blobs, excessive glass effects, and speculative finance languag
 - consistent title and description spacing
 - room for action buttons or transaction details
 
+Operational notices for allowance, unsupported network, owner-only access, withdrawal locks, and loading should also use `FeedbackStatusCard`. Wallet connection status should use a semantic icon and accent: emerald for ready, orange for unsupported network, and blue for neutral, connecting, or disconnected states.
+
 `EmptyState` now follows the same icon-led pattern and should be used for empty authenticated surfaces such as empty dashboard and empty activity.
 
 ## Interaction Rules

@@ -2,6 +2,7 @@ import type { PropsWithChildren } from "react";
 import { View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import { useI18n } from "../../lib/i18n";
 import { colors, createShadowStyle, radii, spacing } from "../../theme";
 import { AppHeading, AppText, MotionView, SurfaceCard } from "../primitives";
 
@@ -21,16 +22,18 @@ export const GuidedStepsCard = ({
   eyebrow,
   icon = "compass-outline",
 }: PropsWithChildren<GuidedStepsCardProps>) => {
+  const { inlineDirection } = useI18n();
+
   return (
-    <SurfaceCard tone="muted" style={{ backgroundColor: colors.backgroundElevated }}>
+    <SurfaceCard tone="muted" style={{ backgroundColor: colors.backgroundElevated, padding: spacing[5] }}>
       <View style={{ gap: spacing[4] }}>
-        <View style={{ flexDirection: "row", alignItems: "flex-start", gap: spacing[3] }}>
+        <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
           <MotionView preset="scale" intensity="emphasis">
             <View
               style={{
-                width: 58,
-                height: 58,
-                borderRadius: 29,
+                width: 50,
+                height: 50,
+                borderRadius: radii.md,
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: colors.accentSoft,
@@ -46,7 +49,7 @@ export const GuidedStepsCard = ({
                 elevation: 3,
               }}
             >
-              <MaterialCommunityIcons color={colors.accentStrong} name={icon} size={24} />
+              <MaterialCommunityIcons color={colors.accentStrong} name={icon} size={25} />
             </View>
           </MotionView>
           <MotionView delay={70} style={{ flex: 1, gap: spacing[2] }}>
@@ -65,12 +68,12 @@ export const GuidedStepsCard = ({
               key={step}
               delay={120 + index * 55}
               style={{
-                flexDirection: "row",
+                flexDirection: inlineDirection(),
                 alignItems: "flex-start",
                 gap: spacing[3],
-                borderRadius: radii.md,
+                borderRadius: radii.lg,
                 borderWidth: 1,
-                borderColor: colors.border,
+                borderColor: colors.borderStrong,
                 backgroundColor: colors.surface,
                 padding: spacing[4],
               }}
@@ -79,15 +82,13 @@ export const GuidedStepsCard = ({
                 style={{
                   width: 28,
                   height: 28,
-                  borderRadius: 14,
+                  borderRadius: radii.pill,
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: colors.accentSoft,
                 }}
               >
-                <AppText size="sm" tone="accent" weight="semibold">
-                  {index + 1}
-                </AppText>
+                <MaterialCommunityIcons color={colors.accentStrong} name={index === 0 ? "play" : "check"} size={15} />
               </View>
               <AppText style={{ flex: 1 }} tone="secondary">
                 {step}

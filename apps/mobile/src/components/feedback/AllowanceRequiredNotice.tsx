@@ -1,5 +1,5 @@
 import { useI18n } from "../../lib/i18n";
-import { AppHeading, AppText, SurfaceCard } from "../primitives";
+import { FeedbackStatusCard } from "./FeedbackStatusCard";
 
 export const AllowanceRequiredNotice = ({
   title,
@@ -11,9 +11,11 @@ export const AllowanceRequiredNotice = ({
   const { messages } = useI18n();
 
   return (
-    <SurfaceCard tone="accent">
-      <AppHeading size="md">{title ?? messages.deposit.approvalRequiredTitle}</AppHeading>
-      <AppText tone="secondary">{description ?? messages.deposit.approvalRequiredDescription}</AppText>
-    </SurfaceCard>
+    <FeedbackStatusCard
+      description={description ?? messages.deposit.approvalRequiredDescription}
+      icon="shield-key-outline"
+      title={title ?? messages.deposit.approvalRequiredTitle}
+      tone="accent"
+    />
   );
 };

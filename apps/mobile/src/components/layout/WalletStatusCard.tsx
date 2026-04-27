@@ -1,8 +1,9 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 
 import { formatWalletAddress } from "../../lib/blockchain/wallet/helpers";
 import { interpolate, useI18n } from "../../lib/i18n";
-import { spacing } from "../../theme";
+import { colors, radii, spacing } from "../../theme";
 import { useAppReadiness } from "../../hooks/useAppReadiness";
 import { useWalletConnection } from "../../hooks/useWalletConnection";
 import { AppHeading, AppText, PrimaryButton, SecondaryButton, SurfaceCard } from "../primitives";
@@ -14,36 +15,71 @@ export const WalletStatusCard = () => {
   const { inlineDirection, messages } = useI18n();
 
   const chainLabel = connectionState.session?.chain?.shortName ?? messages.common.networkBase;
+  const isReady = connectionState.status === "ready";
+  const isUnsupported = connectionState.status === "unsupportedNetwork";
+  const accentColor = isReady ? colors.positive : isUnsupported ? colors.warning : colors.accentStrong;
+  const iconBackgroundColor = isReady ? colors.positiveSoft : isUnsupported ? colors.warningSoft : colors.accentSoft;
+  const iconName = isReady ? "wallet" : isUnsupported ? "swap-horizontal-circle-outline" : "wallet-outline";
+  const description =
+    primaryIssue?.description ??
+    (connectionState.status === "walletUnavailable"
+      ? messages.wallet.runtimeWaiting
+      : connectionState.status === "disconnected"
+        ? messages.wallet.disconnected
+        : connectionState.status === "unsupportedNetwork"
+          ? messages.wallet.unsupported
+          : connectionState.status === "connecting"
+            ? messages.wallet.connecting
+            : messages.wallet.ready);
 
   return (
-    <SurfaceCard tone={connectionState.status === "ready" ? "default" : "muted"}>
-      <View style={{ gap: spacing[2] }}>
-        <AppHeading size="md">{messages.common.labels.connectionStatus}</AppHeading>
-        <AppText tone="secondary">
-          {primaryIssue?.description ??
-            (connectionState.status === "walletUnavailable"
-            ? messages.wallet.runtimeWaiting
-            : connectionState.status === "disconnected"
-              ? messages.wallet.disconnected
-              : connectionState.status === "unsupportedNetwork"
-                ? messages.wallet.unsupported
-                : connectionState.status === "connecting"
-                  ? messages.wallet.connecting
-                  : messages.wallet.ready)}
-        </AppText>
+    <SurfaceCard
+      accentColor={accentColor}
+      tone={isReady ? "default" : "muted"}
+      style={{ backgroundColor: isReady ? colors.backgroundElevated : colors.surfaceMuted, padding: spacing[5] }}
+    >
+      <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
+        <View
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: radii.md,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: iconBackgroundColor,
+            borderWidth: 1,
+            borderColor: accentColor,
+          }}
+        >
+          <MaterialCommunityIcons color={accentColor} name={iconName} size={23} />
+        </View>
+        <View style={{ flex: 1, gap: spacing[2] }}>
+          <AppHeading size="md">{messages.common.labels.connectionStatus}</AppHeading>
+          <AppText tone="secondary">{description}</AppText>
+        </View>
       </View>
 
-      <View style={{ flexDirection: inlineDirection(), flexWrap: "wrap", alignItems: "center", gap: spacing[3] }}>
-        {connectionState.session?.address ? (
+      {connectionState.session?.address ? (
+        <View
+          style={{
+            flexDirection: inlineDirection(),
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: spacing[3],
+            borderRadius: radii.lg,
+            borderWidth: 1,
+            borderColor: colors.borderStrong,
+            backgroundColor: colors.surfaceGlass,
+            padding: spacing[4],
+          }}
+        >
           <NetworkBadge
             label={connectionState.session.chain?.shortName ?? messages.common.unsupported}
             tone={connectionState.status === "unsupportedNetwork" ? "unsupported" : "supported"}
           />
-        ) : null}
-        {connectionState.session?.address ? (
           <AppText weight="semibold">{formatWalletAddress(connectionState.session.address)}</AppText>
-        ) : null}
-      </View>
+        </View>
+      ) : null}
 
       <View style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[3] }}>
         {connectionState.status === "walletUnavailable" ? null : connectionState.status === "unsupportedNetwork" ? (

@@ -1,7 +1,4 @@
-import { View } from "react-native";
-
-import { spacing } from "../../theme";
-import { AppHeading, AppText, SurfaceCard } from "../primitives";
+import { FeedbackStatusCard } from "./FeedbackStatusCard";
 
 export const AppLoadingState = ({
   title,
@@ -11,11 +8,6 @@ export const AppLoadingState = ({
   description: string;
 }) => {
   return (
-    <SurfaceCard tone="muted">
-      <View style={{ gap: spacing[2] }}>
-        <AppHeading size="md">{title}</AppHeading>
-        <AppText tone="secondary">{description}</AppText>
-      </View>
-    </SurfaceCard>
+    <FeedbackStatusCard description={description} icon="sync" title={title} tone="neutral" />
   );
 };

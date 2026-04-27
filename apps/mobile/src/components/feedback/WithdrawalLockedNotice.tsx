@@ -1,13 +1,15 @@
 import { useI18n } from "../../lib/i18n";
-import { AppHeading, AppText, SurfaceCard } from "../primitives";
+import { FeedbackStatusCard } from "./FeedbackStatusCard";
 
 export const WithdrawalLockedNotice = ({ description }: { description?: string | null }) => {
   const { messages } = useI18n();
 
   return (
-    <SurfaceCard tone="muted">
-      <AppHeading size="md">{messages.withdraw.flow.lockedTitle}</AppHeading>
-      <AppText tone="secondary">{description ?? messages.withdraw.lockedDescription}</AppText>
-    </SurfaceCard>
+    <FeedbackStatusCard
+      description={description ?? messages.withdraw.lockedDescription}
+      icon="lock-clock"
+      title={messages.withdraw.flow.lockedTitle}
+      tone="warning"
+    />
   );
 };
