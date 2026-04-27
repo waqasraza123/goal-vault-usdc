@@ -36,6 +36,7 @@ The repository now has a real v1 foundation:
 - asynchronous API persistence read boundary for future external database adapters
 - inactive PostgreSQL persistence store core behind the same API ports
 - transaction-aware PostgreSQL query executor boundary for future driver wiring
+- driver-neutral pooled PostgreSQL executor boundary for future connection lifecycle wiring
 - provider-neutral API traffic plan tooling for promotion, rollback, and disablement records
 - provider-neutral managed database planning for future PostgreSQL migration
 - provider-neutral PostgreSQL schema bundle artifacts for the current API persistence contract
@@ -46,7 +47,7 @@ The repository now has a real v1 foundation:
 - root README with setup, scripts, architecture, and verification guidance
 
 Still not implemented:
-- hosting-provider backend promotion, provider-specific traffic rollback automation, and PostgreSQL runtime activation with a driver, connection pool, accepted schema/import/parity procedure, and rollback path
+- hosting-provider backend promotion, provider-specific traffic rollback automation, and PostgreSQL runtime activation with a driver adapter, accepted schema/import/parity procedure, and rollback path
 
 ## Confirmed Product Boundaries
 - Chain: Base
@@ -128,6 +129,7 @@ Still not implemented:
 - Phase 34: inactive PostgreSQL persistence store core behind the API ports
 - Phase 35: managed database runtime activation plan artifacts before PostgreSQL mode is enabled
 - Phase 36: transaction-aware PostgreSQL query executor boundary for future driver wiring
+- Phase 37: driver-neutral pooled PostgreSQL executor boundary for future connection lifecycle wiring
 
 ## Important Decisions
 - The product should feel like a premium savings tool, not a DeFi dashboard.
@@ -217,6 +219,7 @@ Still not implemented:
 - Phase 34 adds `PostgresqlIndexerStore` and `PostgresqlAnalyticsStore` around an injected query executor, but PostgreSQL runtime mode remains blocked until driver, credentials, schema/import/parity, and rollback procedures are accepted.
 - Phase 35 adds a provider-neutral managed database runtime activation plan workflow that validates schema/import/parity/preflight/release/traffic/image/snapshot evidence before PostgreSQL mode is enabled.
 - Phase 36 adds transaction-aware PostgreSQL query executor support to the inactive store core; future pooled runtime wiring must implement transactions with one checked-out client.
+- Phase 37 adds a driver-neutral pooled PostgreSQL executor boundary that delegates plain queries to a pool, runs transactions through one checked-out client, rolls back failures, releases clients, and exposes pool shutdown without enabling PostgreSQL runtime mode.
 - Product docs live in `docs/product/goal-vault/`:
   - `goal.md` for the concise product goal
   - `plan.md` for the detailed execution-oriented plan
@@ -264,6 +267,7 @@ Still not implemented:
 - The Phase 34 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-34.md`.
 - The Phase 35 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-35.md`.
 - The Phase 36 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-36.md`.
+- The Phase 37 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-37.md`.
 - The CI and release workflow note lives at `docs/plans/goal-vault-ci-release-workflows.md`.
 - The contract deployment runbook lives at `docs/deployment/contract-deployment.md`.
 - The API image runbook lives at `docs/deployment/api-image.md`.

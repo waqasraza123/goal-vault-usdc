@@ -81,6 +81,7 @@ The generated plan keeps public traffic on the known-good runtime and records ro
 Before PostgreSQL runtime activation, operators must confirm:
 
 - PostgreSQL driver package and lockfile changes are reviewed.
+- PostgreSQL driver adapter compatibility with the pooled executor boundary is reviewed.
 - PostgreSQL connection pooling and shutdown behavior are reviewed.
 - PostgreSQL transaction execution uses one checked-out client per transaction and releases it after commit or rollback.
 - Managed database schema execution is complete.
@@ -100,11 +101,12 @@ Use the runtime plan after the earlier managed-database artifacts:
 4. Generate the managed database export bundle.
 5. Generate the managed database import plan.
 6. Generate the managed database parity plan.
-7. Add the PostgreSQL driver and connection pool in code.
-8. Run API preflight with PostgreSQL runtime readiness checks.
-9. Generate the release manifest and API traffic plan.
-10. Generate the managed database runtime plan.
-11. Move traffic manually only after the selected hosting-provider operator approves the plan.
+7. Add the PostgreSQL driver adapter around the pooled executor boundary.
+8. Wire PostgreSQL stores through the persistence factory and API lifecycle.
+9. Run API preflight with PostgreSQL runtime readiness checks.
+10. Generate the release manifest and API traffic plan.
+11. Generate the managed database runtime plan.
+12. Move traffic manually only after the selected hosting-provider operator approves the plan.
 
 ## Boundary
-This workflow creates a reviewable runtime activation artifact. PostgreSQL driver installation, connection pooling, runtime factory wiring, schema execution, import execution, parity execution, API deployment, traffic movement, and rollback automation remain separate steps.
+This workflow creates a reviewable runtime activation artifact. PostgreSQL driver installation, driver adapter wiring, runtime factory wiring, schema execution, import execution, parity execution, API deployment, traffic movement, and rollback automation remain separate steps.

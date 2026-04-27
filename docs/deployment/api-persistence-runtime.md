@@ -3,7 +3,7 @@
 ## Purpose
 The API persistence runtime guard makes storage mode explicit before managed database runtime work begins.
 
-The API still runs on SQLite-backed persistence today. PostgreSQL is now a recognized configuration value, and an inactive PostgreSQL store core exists behind the same persistence ports, but PostgreSQL mode is intentionally blocked at env validation, API startup, `/ready`, and API preflight until a real driver, connection pool, credential model, schema/import execution path, parity process, and rollback path are accepted.
+The API still runs on SQLite-backed persistence today. PostgreSQL is now a recognized configuration value, and inactive PostgreSQL store plus pooled executor boundaries exist behind the same persistence ports, but PostgreSQL mode is intentionally blocked at env validation, API startup, `/ready`, and API preflight until a real driver adapter, credential model, schema/import execution path, parity process, and rollback path are accepted.
 
 This prevents an operator from setting `API_DATABASE_URL` and assuming the current API is using the managed database.
 
@@ -40,6 +40,7 @@ In SQLite mode:
 - API read paths await persistence port methods so future external database adapters can perform network I/O
 - an inactive PostgreSQL store core exists but is not constructed by the runtime factory
 - the inactive PostgreSQL store core accepts a transaction-aware query executor for future pooled runtime wiring
+- an inactive pooled PostgreSQL executor boundary defines future pool query, client checkout, transaction, release, and shutdown semantics
 - runtime activation must be planned with `pnpm api:database:runtime:plan` before PostgreSQL mode is enabled
 - the API keeps using `goal-vault-indexer.sqlite` and `goal-vault-analytics.sqlite`
 - managed database plan, schema, export, import plan, and parity artifacts remain handoff artifacts only
@@ -69,7 +70,9 @@ Route modules should consume stores from the API context instead of constructing
 
 `apps/api/src/modules/persistence/postgresql-store.ts` provides the inactive PostgreSQL store core. It depends only on an injected query executor and does not read secrets, open connections, run migrations, apply import SQL, or change runtime driver selection.
 
-Future pooled runtime wiring should provide a transaction-aware executor whose `transaction` method uses one checked-out database client for the full operation, rolls back on failure, and releases the client after commit or rollback.
+`apps/api/src/modules/persistence/postgresql-runtime.ts` provides the inactive pooled executor boundary. It depends on an injected pool-shaped object, delegates plain queries to the pool, checks out one client for `transaction`, commits on success, rolls back on operation or commit failure, releases the client in all transaction paths, and exposes `close` for future shutdown wiring.
+
+Future driver wiring should adapt the selected PostgreSQL package to the pool interface instead of importing driver-specific types into store modules. Store modules should continue to depend only on `PostgresqlQueryExecutor`.
 
 ## Blocked PostgreSQL Mode
 PostgreSQL mode is reserved for the future runtime adapter:
@@ -103,10 +106,11 @@ The current provider-neutral path remains:
 5. Generate the import plan and SQL artifact.
 6. Execute schema and import steps through approved provider-owned access.
 7. Generate and execute parity checks through approved operational access.
-8. Add the provider-approved PostgreSQL driver and connection pool.
+8. Add the provider-approved PostgreSQL driver adapter around the pooled executor boundary.
 9. Wire the PostgreSQL store core through `createApiPersistenceStores`.
-10. Generate the managed database runtime activation plan.
-11. Switch `API_PERSISTENCE_DRIVER` to `postgresql` only after the adapter, rollback path, runtime activation plan, and preflight checks are accepted.
+10. Add graceful shutdown for the PostgreSQL executor through the API lifecycle.
+11. Generate the managed database runtime activation plan.
+12. Switch `API_PERSISTENCE_DRIVER` to `postgresql` only after the adapter, rollback path, runtime activation plan, and preflight checks are accepted.
 
 ## Boundary
-Current runtime guardrails remain active. The inactive PostgreSQL store core does not add a PostgreSQL driver, connect to a managed database, change API persistence behavior, execute import SQL, run parity checks, deploy the API, or move traffic.
+Current runtime guardrails remain active. The inactive PostgreSQL store and pooled executor boundaries do not add a PostgreSQL driver, connect to a managed database, change API persistence behavior, execute import SQL, run parity checks, deploy the API, or move traffic.
