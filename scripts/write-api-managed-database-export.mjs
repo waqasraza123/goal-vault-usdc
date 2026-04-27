@@ -42,6 +42,12 @@ const tableConfigs = [
     orderBy: "id ASC",
     classification: "analytics-context",
   },
+  {
+    table: "support_requests",
+    sourceFile: "goal-vault-analytics.sqlite",
+    orderBy: "created_at ASC, id ASC",
+    classification: "support-private-context",
+  },
 ];
 
 const readText = (name, fallback = "") => (process.env[name] || fallback).trim();

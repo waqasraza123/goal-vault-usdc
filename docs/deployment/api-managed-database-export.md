@@ -45,6 +45,7 @@ The exporter writes JSONL files for tables present in the snapshot:
 - `vault_events.jsonl`
 - `sync_states.jsonl`
 - `analytics_events.jsonl`
+- `support_requests.jsonl`
 
 The current exporter reads:
 
@@ -109,6 +110,7 @@ They can contain:
 - private vault metadata
 - activity history
 - analytics context
+- support request text, contact details, wallet context, and route context
 
 Do not commit export bundles. Store them only in approved operational storage and keep retention short until a managed database backup and retention policy exists.
 

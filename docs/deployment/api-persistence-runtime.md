@@ -66,12 +66,13 @@ The factory returns:
 
 - indexer persistence for vaults, activity, and sync state
 - analytics persistence for product event batches
+- support persistence for beta support requests
 - the selected persistence driver
 - a `close` lifecycle method for releasing store resources
 
 Route modules should consume stores from the API context instead of constructing persistence adapters directly. They should also import persisted record types from the persistence port module rather than from SQLite implementation files, and they should await persistence reads even when the current SQLite implementation resolves immediately. This keeps the future PostgreSQL adapter isolated to the persistence boundary.
 
-`apps/api/src/modules/persistence/postgresql-driver.ts` adapts `pg` into the existing pooled executor boundary, checks connectivity with `SELECT 1`, and checks that the selected schema contains `vaults`, `vault_events`, `sync_states`, and `analytics_events`.
+`apps/api/src/modules/persistence/postgresql-driver.ts` adapts `pg` into the existing pooled executor boundary, checks connectivity with `SELECT 1`, and checks that the selected schema contains `vaults`, `vault_events`, `sync_states`, `analytics_events`, and `support_requests`.
 
 `apps/api/src/modules/persistence/postgresql-store.ts` provides the PostgreSQL store core. It depends only on an injected query executor and does not read secrets, run migrations, apply import SQL, or change runtime driver selection.
 

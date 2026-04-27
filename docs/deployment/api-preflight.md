@@ -142,7 +142,7 @@ Common failures:
 - malformed numeric or boolean env values
 - `API_DATABASE_URL` missing when `API_PERSISTENCE_DRIVER=postgresql`
 - PostgreSQL connection failure
-- PostgreSQL schema missing `vaults`, `vault_events`, `sync_states`, or `analytics_events`
+- PostgreSQL schema missing `vaults`, `vault_events`, `sync_states`, `analytics_events`, or `support_requests`
 
 ## Boundary
 This preflight closes a promotion-readiness gap without selecting a hosting provider. Provider-specific deploy, traffic shifting, rollback automation, and managed database infrastructure remain deferred.

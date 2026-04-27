@@ -59,6 +59,8 @@
   - `true` or `false`
 - `API_ENABLE_ANALYTICS`
   - `true` or `false`; stores app analytics batches to the API-side NDJSON file for post-launch review
+- `API_ENABLE_SUPPORT`
+  - `true` or `false`; enables `POST /support/requests` beta support intake, defaults to `true`
 - `API_INTERNAL_TOKEN`
   - internal sync and status token; required outside development and stored as a GitHub Environment secret
 - `API_SIGNED_REQUEST_MAX_AGE_SECONDS`

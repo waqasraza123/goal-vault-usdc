@@ -6,6 +6,7 @@ export * from "./domain/deployment";
 export * from "./domain/product";
 export * from "./domain/recovery";
 export * from "./domain/sync";
+export * from "./domain/support";
 export * from "./domain/transactions";
 export * from "./domain/vault";
 export * from "./domain/wallet";

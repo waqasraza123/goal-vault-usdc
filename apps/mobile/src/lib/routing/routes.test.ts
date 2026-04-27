@@ -10,5 +10,6 @@ test("public route targets stay explicit and non-conflicting", () => {
   assert.equal(routes.appHome, "/vaults");
   assert.equal(routes.createVault, "/vaults/new");
   assert.equal(routes.activity, "/activity");
+  assert.equal(routes.support, "/support");
   assert.equal(routes.vaultDetail("0xabc"), "/vaults/0xabc");
 });

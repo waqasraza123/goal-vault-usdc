@@ -58,6 +58,12 @@ export const TopNavigation = ({ area }: TopNavigationProps) => {
             icon: "history",
             isActive: isRouteActive(routes.activity),
           },
+          {
+            label: messages.navigation.appLinks.support,
+            href: routes.support,
+            icon: "lifebuoy",
+            isActive: isRouteActive(routes.support),
+          },
         ];
   const ctaHref = area === "marketing" ? routes.appHome : routes.createVault;
   const ctaLabel = area === "marketing" ? messages.navigation.marketingCta : messages.navigation.appCta;

@@ -106,6 +106,7 @@ Use GitHub Environment variables for public, non-secret release metadata:
 - `API_SYNC_INTERVAL_MS`
 - `API_ENABLE_INDEXER`
 - `API_ENABLE_ANALYTICS`
+- `API_ENABLE_SUPPORT`
 - `API_SIGNED_REQUEST_MAX_AGE_SECONDS`
 - `API_LOG_LEVEL`
 - `API_BASE_START_BLOCK`

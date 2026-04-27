@@ -53,6 +53,7 @@ When artifact references point to local JSON files, the script validates:
 - API preflight target, valid status, persistence driver, runtime readiness, and PostgreSQL connection/schema status when selected
 - traffic plan target, promote action, candidate URL, rollback URL, image alignment, release manifest reference, and preflight reference
 - managed database runtime plan target, cutover mode, PostgreSQL persistence target, release reference, preflight reference, and traffic plan reference
+- `/support` references require local API preflight evidence with support intake enabled
 
 Remote URLs and artifact names remain valid references but are recorded as not locally inspected. Operators must review them before launch.
 
@@ -68,6 +69,8 @@ The readiness plan records:
 - rollback steps
 
 These limits are operational controls, not smart contract limits. They should be communicated to invited beta users before they use real USDC.
+
+The preferred support reference for app users is `/support` when the deployed API has `API_ENABLE_SUPPORT=true`. If the API route is intentionally disabled, the readiness plan must point to another operator-owned support channel.
 
 ## Secret Boundary
 Do not place RPC URLs, `API_DATABASE_URL`, internal API tokens, wallet project secrets, private keys, EAS tokens, or provider credentials in the beta readiness inputs.

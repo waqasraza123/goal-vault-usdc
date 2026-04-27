@@ -18,6 +18,9 @@ const normalizedVaultEventTypeSchema = z.enum([
   "guardian_approved",
   "guardian_rejected",
 ]);
+const supportRequestCategorySchema = z.enum(["transaction", "vault_data", "wallet", "access", "security", "feedback", "other"]);
+const supportRequestPrioritySchema = z.enum(["normal", "urgent"]);
+const supportRequestStatusSchema = z.enum(["open", "triage", "closed"]);
 
 const TimeLockRuleSummarySchema = z.object({
   type: z.literal("timeLock"),
@@ -220,6 +223,7 @@ export const ServiceHealthResponseSchema = z.object({
   environment: appEnvironmentSchema,
   deploymentTarget: deploymentTargetSchema,
   indexerEnabled: z.boolean(),
+  supportEnabled: z.boolean().optional(),
   persistenceDriver: z.enum(["sqlite", "postgresql"]),
   version: z.string(),
   readyPath: z.string(),
@@ -233,6 +237,30 @@ export const VaultMetadataSaveResponseSchema = z.object({
   result: z.enum(["created", "updated"]),
 });
 
+export const SupportRequestInputSchema = z.object({
+  category: supportRequestCategorySchema,
+  priority: supportRequestPrioritySchema,
+  subject: z.string().trim().min(4).max(120),
+  message: z.string().trim().min(20).max(2_000),
+  reporterWallet: z.string().trim().nullable().optional(),
+  contactEmail: z.string().trim().nullable().optional(),
+  context: z.object({
+    route: z.string().trim().nullable(),
+    environment: appEnvironmentSchema,
+    deploymentTarget: deploymentTargetSchema,
+    chainId: supportedChainIdSchema.nullable().optional(),
+    walletStatus: z.enum(["walletUnavailable", "disconnected", "connecting", "unsupportedNetwork", "ready"]).nullable().optional(),
+    vaultAddress: z.string().trim().nullable().optional(),
+  }),
+});
+
+export const SupportRequestResponseSchema = z.object({
+  id: z.string(),
+  status: supportRequestStatusSchema,
+  receivedAt: z.string(),
+  message: z.string(),
+});
+
 export type SerializedSyncFreshnessSnapshot = z.infer<typeof SyncFreshnessSnapshotSchema>;
 export type ApiVaultSummaryItem = z.infer<typeof ApiVaultSummaryItemSchema>;
 export type ApiVaultActivityItem = z.infer<typeof ApiVaultActivityItemSchema>;
@@ -244,3 +272,5 @@ export type ActivityFeedResponse = z.infer<typeof ActivityFeedResponseSchema>;
 export type HealthResponse = z.infer<typeof HealthResponseSchema>;
 export type ServiceHealthResponse = z.infer<typeof ServiceHealthResponseSchema>;
 export type VaultMetadataSaveResponse = z.infer<typeof VaultMetadataSaveResponseSchema>;
+export type SupportRequestInput = z.infer<typeof SupportRequestInputSchema>;
+export type SupportRequestResponse = z.infer<typeof SupportRequestResponseSchema>;

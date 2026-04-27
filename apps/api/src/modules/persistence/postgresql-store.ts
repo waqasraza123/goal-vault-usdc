@@ -1,5 +1,6 @@
 import type {
   GuardianApprovalState,
+  SupportRequestRecord,
   SupportedChainId,
   VaultAccentTheme,
   VaultMetadataStatus,
@@ -13,6 +14,7 @@ import type { AnalyticsStoredEvent } from "../../lib/observability/analytics";
 import type {
   ApiAnalyticsStore,
   ApiIndexerStore,
+  ApiSupportStore,
   PersistedSyncStateRecord,
   PersistedVaultEventRecord,
   PersistedVaultRecord,
@@ -528,6 +530,62 @@ export class PostgresqlAnalyticsStore implements ApiAnalyticsStore {
           `INSERT INTO ${this.analyticsEventsTable} (${columnNames.join(", ")}) VALUES ${rows.join(", ")}`,
           values,
         ),
+    );
+  }
+}
+
+export class PostgresqlSupportStore implements ApiSupportStore {
+  private readonly queryExecutor: PostgresqlQueryExecutor;
+  private readonly supportRequestsTable: string;
+
+  constructor(options: PostgresqlStoreOptions) {
+    const schemaName = normalizeSchemaName(options.schemaName);
+    this.queryExecutor = options.queryExecutor;
+    this.supportRequestsTable = tableName(schemaName, "support_requests");
+  }
+
+  async create(record: SupportRequestRecord) {
+    const columnNames = [
+      "id",
+      "status",
+      "category",
+      "priority",
+      "subject",
+      "message",
+      "reporter_wallet",
+      "contact_email",
+      "route",
+      "environment",
+      "deployment_target",
+      "chain_id",
+      "wallet_status",
+      "vault_address",
+      "user_agent",
+      "requester_ip_hash",
+      "created_at",
+    ] as const;
+
+    await this.queryExecutor.query(
+      `INSERT INTO ${this.supportRequestsTable} (${columnNames.join(", ")}) VALUES (${buildPlaceholders(1, columnNames.length)})`,
+      [
+        record.id,
+        record.status,
+        record.category,
+        record.priority,
+        record.subject,
+        record.message,
+        record.reporterWallet ?? null,
+        record.contactEmail ?? null,
+        record.context.route,
+        record.context.environment,
+        record.context.deploymentTarget,
+        record.context.chainId ?? null,
+        record.context.walletStatus ?? null,
+        record.context.vaultAddress ?? null,
+        record.userAgent,
+        record.requesterIpHash,
+        record.createdAt,
+      ],
     );
   }
 }

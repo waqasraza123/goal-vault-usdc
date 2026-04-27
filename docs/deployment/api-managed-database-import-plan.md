@@ -92,6 +92,7 @@ The SQL expects these psql variables:
 - `vault_events_jsonl`
 - `sync_states_jsonl`
 - `analytics_events_jsonl`
+- `support_requests_jsonl`
 
 Example execution shape:
 
@@ -101,6 +102,7 @@ psql "$APPROVED_DATABASE_URL" \
   -v vault_events_jsonl=/approved/export/vault_events.jsonl \
   -v sync_states_jsonl=/approved/export/sync_states.jsonl \
   -v analytics_events_jsonl=/approved/export/analytics_events.jsonl \
+  -v support_requests_jsonl=/approved/export/support_requests.jsonl \
   -f goal-vault-api-database-import-staging-v0.1.0-db-import.sql
 ```
 

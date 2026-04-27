@@ -245,7 +245,7 @@ export interface PostLaunchMetricDefinition {
 }
 
 export interface ObservabilitySignal {
-  domain: "api" | "indexer" | "analytics" | "transaction" | "readiness";
+  domain: "api" | "indexer" | "analytics" | "transaction" | "readiness" | "support";
   action: string;
   status: "started" | "succeeded" | "failed" | "degraded";
   message: string;

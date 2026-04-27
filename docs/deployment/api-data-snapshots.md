@@ -1,7 +1,7 @@
 # Goal Vault API Data Snapshots
 
 ## Purpose
-The current backend stores indexed vault state and analytics in SQLite files under `API_DATA_DIR`.
+The current backend stores indexed vault state, analytics, and beta support intake records in SQLite files under `API_DATA_DIR`.
 
 This runbook covers repository-owned snapshot and restore scripts for that data. It is a bridge until external managed database infrastructure is chosen.
 
@@ -68,7 +68,7 @@ The restore script:
 
 ## Storage Guidance
 - Treat snapshots as sensitive operational artifacts.
-- Snapshots can include private vault metadata, wallet addresses, activity history, and analytics context.
+- Snapshots can include private vault metadata, wallet addresses, activity history, analytics context, and support request text or contact details.
 - Do not commit snapshots.
 - Store production snapshots only in the approved operational storage location.
 - Keep snapshot retention short until a managed database backup policy exists.

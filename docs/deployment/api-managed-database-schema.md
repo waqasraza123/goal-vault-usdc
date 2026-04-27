@@ -48,6 +48,7 @@ The SQL artifact contains:
 - `vault_events`
 - `sync_states`
 - `analytics_events`
+- `support_requests`
 - indexes matching the current query shape
 
 The JSON manifest records:
@@ -76,6 +77,8 @@ The schema mirrors the current API stores:
   - per-chain indexer lifecycle and latest block state
 - `analytics_events`
   - bounded product analytics context and payload JSON
+- `support_requests`
+  - beta support request subject, message, optional contact, wallet, route, and triage context
 
 Amounts remain text values because the current API persists atomic token amounts as strings. Timestamp-like fields also remain text values to match the current API serialization contract and avoid a silent migration transform in the schema artifact.
 

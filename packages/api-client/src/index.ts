@@ -3,3 +3,4 @@ export * from "./mappers";
 export * from "./vaults";
 export * from "./activity";
 export * from "./health";
+export * from "./support";

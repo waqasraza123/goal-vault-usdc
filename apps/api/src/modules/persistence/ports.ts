@@ -1,5 +1,6 @@
 import type {
   GuardianApprovalState,
+  SupportRequestRecord,
   SupportedChainId,
   VaultAccentTheme,
   VaultMetadataStatus,
@@ -96,4 +97,8 @@ export type ApiIndexerStore = ApiIndexerReadStore & ApiIndexerWriteStore;
 
 export interface ApiAnalyticsStore {
   append(events: AnalyticsStoredEvent[]): Promise<void>;
+}
+
+export interface ApiSupportStore {
+  create(record: SupportRequestRecord): Promise<void>;
 }

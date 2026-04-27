@@ -64,6 +64,7 @@ const buildPostgresqlSchema = (schemaName) => {
   const eventsTable = buildTableName(schemaName, "vault_events");
   const syncStatesTable = buildTableName(schemaName, "sync_states");
   const analyticsEventsTable = buildTableName(schemaName, "analytics_events");
+  const supportRequestsTable = buildTableName(schemaName, "support_requests");
 
   return [
     "BEGIN;",
@@ -150,6 +151,29 @@ const buildPostgresqlSchema = (schemaName) => {
     `CREATE INDEX IF NOT EXISTS analytics_events_name_idx ON ${analyticsEventsTable} (name, occurred_at);`,
     `CREATE INDEX IF NOT EXISTS analytics_events_route_idx ON ${analyticsEventsTable} (route, occurred_at);`,
     `CREATE INDEX IF NOT EXISTS analytics_events_vault_idx ON ${analyticsEventsTable} (lower(vault_address), occurred_at) WHERE vault_address IS NOT NULL;`,
+    `CREATE TABLE IF NOT EXISTS ${supportRequestsTable} (`,
+    "  id TEXT PRIMARY KEY,",
+    "  status TEXT NOT NULL,",
+    "  category TEXT NOT NULL,",
+    "  priority TEXT NOT NULL,",
+    "  subject TEXT NOT NULL,",
+    "  message TEXT NOT NULL,",
+    "  reporter_wallet TEXT,",
+    "  contact_email TEXT,",
+    "  route TEXT,",
+    "  environment TEXT NOT NULL,",
+    "  deployment_target TEXT NOT NULL,",
+    "  chain_id INTEGER,",
+    "  wallet_status TEXT,",
+    "  vault_address TEXT,",
+    "  user_agent TEXT,",
+    "  requester_ip_hash TEXT,",
+    "  created_at TEXT NOT NULL",
+    ");",
+    `CREATE INDEX IF NOT EXISTS support_requests_status_created_idx ON ${supportRequestsTable} (status, created_at);`,
+    `CREATE INDEX IF NOT EXISTS support_requests_priority_created_idx ON ${supportRequestsTable} (priority, created_at);`,
+    `CREATE INDEX IF NOT EXISTS support_requests_wallet_idx ON ${supportRequestsTable} (lower(reporter_wallet), created_at) WHERE reporter_wallet IS NOT NULL;`,
+    `CREATE INDEX IF NOT EXISTS support_requests_vault_idx ON ${supportRequestsTable} (lower(vault_address), created_at) WHERE vault_address IS NOT NULL;`,
     "COMMIT;",
     "",
   ].join("\n");
@@ -201,6 +225,18 @@ const manifest = {
       primaryKey: ["id"],
       indexes: ["analytics_events_name_idx", "analytics_events_route_idx", "analytics_events_vault_idx"],
       containsPrivateMetadata: false,
+    },
+    {
+      name: "support_requests",
+      sourceFile: "goal-vault-analytics.sqlite",
+      primaryKey: ["id"],
+      indexes: [
+        "support_requests_status_created_idx",
+        "support_requests_priority_created_idx",
+        "support_requests_wallet_idx",
+        "support_requests_vault_idx",
+      ],
+      containsPrivateMetadata: true,
     },
   ],
   git: {

@@ -111,6 +111,32 @@ const tableConfigs = [
       ["payload_json", "text"],
     ],
   },
+  {
+    table: "support_requests",
+    exportFileName: "support_requests.jsonl",
+    psqlVariable: "support_requests_jsonl",
+    rawTable: "goal_vault_import_support_requests_raw",
+    primaryKey: ["id"],
+    columns: [
+      ["id", "text"],
+      ["status", "text"],
+      ["category", "text"],
+      ["priority", "text"],
+      ["subject", "text"],
+      ["message", "text"],
+      ["reporter_wallet", "text"],
+      ["contact_email", "text"],
+      ["route", "text"],
+      ["environment", "text"],
+      ["deployment_target", "text"],
+      ["chain_id", "integer"],
+      ["wallet_status", "text"],
+      ["vault_address", "text"],
+      ["user_agent", "text"],
+      ["requester_ip_hash", "text"],
+      ["created_at", "text"],
+    ],
+  },
 ];
 
 const readText = (name, fallback = "") => (process.env[name] || fallback).trim();
@@ -438,6 +464,7 @@ const plan = {
     containsWalletAddresses: true,
     containsPrivateVaultMetadata: true,
     containsAnalyticsContext: true,
+    containsSupportContext: true,
     commitAllowed: false,
   },
   git: {

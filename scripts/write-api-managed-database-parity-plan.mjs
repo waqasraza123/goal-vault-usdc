@@ -150,6 +150,26 @@ const tableParityChecks = [
       "category row counts should match before traffic movement",
     ],
   },
+  {
+    table: "support_requests",
+    sourceFile: "goal-vault-analytics.sqlite",
+    classification: "support-private-context",
+    sqliteQueries: {
+      rowCount: "SELECT COUNT(*) AS row_count FROM support_requests;",
+      latestRequestByStatus: "SELECT status, MAX(created_at) AS latest_created_at FROM support_requests GROUP BY status ORDER BY status;",
+      requestCountByCategory: "SELECT category, COUNT(*) AS row_count FROM support_requests GROUP BY category ORDER BY category;",
+    },
+    postgresqlQueries: {
+      rowCount: "SELECT COUNT(*) AS row_count FROM goal_vault_api.support_requests;",
+      latestRequestByStatus: "SELECT status, MAX(created_at) AS latest_created_at FROM goal_vault_api.support_requests GROUP BY status ORDER BY status;",
+      requestCountByCategory: "SELECT category, COUNT(*) AS row_count FROM goal_vault_api.support_requests GROUP BY category ORDER BY category;",
+    },
+    acceptance: [
+      "row_count must match exactly unless support intake is intentionally reset",
+      "latest_created_at by status should match before traffic movement",
+      "category row counts should match before traffic movement",
+    ],
+  },
 ];
 
 const buildParityChecks = (schemaName) =>
@@ -185,6 +205,17 @@ const buildParityChecks = (schemaName) =>
         postgresqlQueries: {
           rowCount: `SELECT COUNT(*) AS row_count FROM ${tableName};`,
           latestStateByKey: `SELECT key, lifecycle, latest_indexed_block, latest_indexed_log_index, latest_chain_block, last_synced_at FROM ${tableName} ORDER BY key;`,
+        },
+      };
+    }
+
+    if (check.table === "support_requests") {
+      return {
+        ...check,
+        postgresqlQueries: {
+          rowCount: `SELECT COUNT(*) AS row_count FROM ${tableName};`,
+          latestRequestByStatus: `SELECT status, MAX(created_at) AS latest_created_at FROM ${tableName} GROUP BY status ORDER BY status;`,
+          requestCountByCategory: `SELECT category, COUNT(*) AS row_count FROM ${tableName} GROUP BY category ORDER BY category;`,
         },
       };
     }
@@ -238,6 +269,7 @@ const plan = {
     "Every table row count matches exactly unless the operator records an intentional reset or controlled sync advancement.",
     "Sync state latest indexed blocks and log indexes match before public traffic movement unless a controlled sync advancement is recorded.",
     "Private vault metadata parity is reviewed only through approved operational access.",
+    "Support request subject, message, contact, wallet, and route context parity is reviewed only through approved operational access.",
     "The managed-database-backed API is not promoted until parity, API preflight, and API traffic plan artifacts are all accepted.",
   ],
   rollbackTriggers: [
@@ -245,6 +277,7 @@ const plan = {
     "Row counts differ without an approved reset or sync advancement.",
     "Latest sync state regresses from the source snapshot.",
     "Private metadata rows are missing or malformed.",
+    "Support request rows are missing or malformed.",
     "API /ready reports blocked checks after the managed database target is configured.",
   ],
   git: {

@@ -69,6 +69,7 @@ The generated plan records the current SQLite-backed persistence contract:
   - `sync_states`
 - `goal-vault-analytics.sqlite`
   - `analytics_events`
+  - `support_requests`
 
 The plan includes table columns, primary keys, indexes, and whether the table can contain private vault metadata.
 
@@ -104,8 +105,10 @@ Before traffic movement, operators should compare:
 - row counts for `vault_events`
 - row counts for `sync_states`
 - row counts for `analytics_events`
+- row counts for `support_requests`
 - latest indexed block and latest indexed log index by chain and stream
 - latest analytics event timestamp by environment
+- latest support request timestamp by status
 - sample vault metadata rows where private display fields are expected
 
 The repository does not yet include a live parity checker because no managed database provider, credentials model, or driver dependency has been selected.

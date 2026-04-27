@@ -30,6 +30,7 @@
 - Confirm container hosting uses `API_HOST=0.0.0.0`.
 - Confirm `API_PERSISTENCE_DRIVER=sqlite`, or confirm PostgreSQL preflight passes connection and schema checks before any managed database cutover.
 - Confirm `API_DATABASE_URL` is treated as active runtime storage only when PostgreSQL mode is selected and the managed database runtime plan is accepted.
+- Confirm `API_ENABLE_SUPPORT=true` for beta environments, or record the alternate support channel in the beta readiness plan.
 - Confirm `API_DATA_DIR` points to durable mounted storage before relying on indexed history.
 - Create an API data snapshot before manual backend traffic movement.
 - Store API data snapshots only in approved operational storage.
@@ -38,6 +39,7 @@
 - Generate a beta readiness plan before inviting real users.
 - Confirm release manifest, API preflight, API traffic plan, persistence runtime plan when applicable, source snapshot, and rollback snapshot references are present.
 - Confirm participant limit, maximum recommended USDC per vault, support reference, and incident owner are recorded.
+- Confirm `/support` accepts structured support requests when it is the recorded support reference.
 - Confirm rollback steps are reviewed with the operator before sending invitations.
 - Treat beta limits as operational guidance, not protocol-enforced limits.
 

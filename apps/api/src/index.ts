@@ -69,6 +69,7 @@ const start = async () => {
       publicBaseUrl: env.publicBaseUrl,
       indexerEnabled: env.indexerEnabled,
       analyticsEnabled: env.analyticsEnabled,
+      supportEnabled: env.supportEnabled,
       persistenceDriver: env.persistence.driver,
       postgresPersistenceConfigured: env.persistence.postgresUrlConfigured,
       persistenceSchemaName: env.persistence.schemaName,

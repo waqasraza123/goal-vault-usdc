@@ -75,6 +75,10 @@ The generated plan includes comparison checks for:
   - row count
   - latest event timestamp by environment
   - event count by category
+- `support_requests`
+  - row count
+  - latest request timestamp by status
+  - request count by category
 
 Each check includes a SQLite source query, a PostgreSQL target query, and acceptance criteria.
 
@@ -88,6 +92,7 @@ Before traffic movement:
 3. Table row counts match exactly unless an intentional reset is recorded.
 4. Sync state latest indexed blocks and log indexes do not regress.
 5. Private vault metadata is reviewed only through approved operational access.
+6. Support request text, contact details, wallet context, and route context are reviewed only through approved operational access.
 6. API preflight passes with the managed database runtime configuration.
 7. API traffic plan is accepted by the hosting-provider operator.
 

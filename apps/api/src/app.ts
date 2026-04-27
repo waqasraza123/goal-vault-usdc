@@ -5,6 +5,7 @@ import { registerAnalyticsRoutes } from "./modules/analytics/analytics.routes";
 import type { IndexerContext } from "./modules/indexer/context";
 import { registerHealthRoutes } from "./modules/health/health.routes";
 import { registerIndexerRoutes } from "./modules/indexer/indexer.routes";
+import { registerSupportRoutes } from "./modules/support/support.routes";
 import { registerVaultEventRoutes } from "./modules/vault-events/vault-events.routes";
 import { registerVaultRoutes } from "./modules/vaults/vaults.routes";
 
@@ -29,6 +30,7 @@ export const buildApp = ({ context, env }: { context: IndexerContext; env: ApiRu
     deploymentTarget: env.deploymentTarget,
     publicBaseUrl: env.publicBaseUrl,
     indexerEnabled: env.indexerEnabled,
+    supportEnabled: env.supportEnabled,
     persistenceDriver: env.persistence.driver,
     readyPath: "/ready",
     validationErrors: env.validationErrors,
@@ -44,6 +46,7 @@ export const buildApp = ({ context, env }: { context: IndexerContext; env: ApiRu
 
   registerHealthRoutes(app, context, env);
   registerAnalyticsRoutes(app, context, env);
+  registerSupportRoutes(app, context, env);
   registerIndexerRoutes(app, context, env);
   registerVaultRoutes(app);
   registerVaultEventRoutes(app);

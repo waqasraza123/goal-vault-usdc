@@ -37,6 +37,7 @@ const createEnv = ({
   syncIntervalMs: 0,
   indexerEnabled: true,
   analyticsEnabled: false,
+  supportEnabled: true,
   internalToken,
   signedRequestMaxAgeSeconds: 900,
   logLevel: "info",
@@ -72,6 +73,9 @@ test("internal indexer routes require the configured token", async () => {
       env,
       store,
       analyticsStore: new AnalyticsStore(dataDir),
+      supportStore: {
+        create: async () => {},
+      },
       clients: {},
       logger: null,
       close: async () => {
@@ -128,6 +132,9 @@ test("vault metadata route rejects invalid and unsigned requests", async () => {
       env,
       store,
       analyticsStore: new AnalyticsStore(dataDir),
+      supportStore: {
+        create: async () => {},
+      },
       clients: {
         84532: {} as never,
       },

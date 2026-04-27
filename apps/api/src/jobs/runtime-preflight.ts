@@ -50,6 +50,7 @@ interface RuntimePreflightReport {
   syncIntervalMs: number;
   indexerEnabled: boolean;
   analyticsEnabled: boolean;
+  supportEnabled: boolean;
   internalTokenConfigured: boolean;
   signedRequestMaxAgeSeconds: number;
   logLevel: string;
@@ -180,6 +181,7 @@ const buildRuntimePreflightReport = async (): Promise<RuntimePreflightReport> =>
     syncIntervalMs: env.syncIntervalMs,
     indexerEnabled: env.indexerEnabled,
     analyticsEnabled: env.analyticsEnabled,
+    supportEnabled: env.supportEnabled,
     internalTokenConfigured: Boolean(env.internalToken),
     signedRequestMaxAgeSeconds: env.signedRequestMaxAgeSeconds,
     logLevel: env.logLevel,

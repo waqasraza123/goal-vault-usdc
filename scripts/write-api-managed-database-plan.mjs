@@ -113,6 +113,38 @@ const schemaInventory = [
     ],
     containsPrivateMetadata: false,
   },
+  {
+    store: "support",
+    sourceFile: "goal-vault-analytics.sqlite",
+    table: "support_requests",
+    primaryKey: ["id"],
+    indexes: [
+      "support_requests_status_created_idx",
+      "support_requests_priority_created_idx",
+      "support_requests_wallet_idx",
+      "support_requests_vault_idx",
+    ],
+    columns: [
+      "id",
+      "status",
+      "category",
+      "priority",
+      "subject",
+      "message",
+      "reporter_wallet",
+      "contact_email",
+      "route",
+      "environment",
+      "deployment_target",
+      "chain_id",
+      "wallet_status",
+      "vault_address",
+      "user_agent",
+      "requester_ip_hash",
+      "created_at",
+    ],
+    containsPrivateMetadata: true,
+  },
 ];
 
 const readText = (name, fallback = "") => (process.env[name] || fallback).trim();
@@ -189,7 +221,7 @@ const buildCutoverSteps = (strategy) => {
     return [
       "Create a fresh API data snapshot from the current SQLite data directory.",
       "Restore the snapshot into a non-public managed database target using an operator-owned migration procedure.",
-      "Run read-only parity checks against vaults, vault_events, sync_states, and analytics_events.",
+      "Run read-only parity checks against vaults, vault_events, sync_states, analytics_events, and support_requests.",
       "Run API preflight with the managed database target configured in the selected runtime environment.",
       "Deploy a candidate API host pointed at the managed database target.",
       "Generate an API traffic plan before any public traffic movement.",
@@ -244,6 +276,7 @@ const plan = {
     containsWalletAddresses: true,
     containsPrivateVaultMetadata: true,
     containsAnalyticsContext: true,
+    containsSupportContext: true,
     commitAllowed: false,
   },
   migrationRequirements: [

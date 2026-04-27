@@ -45,6 +45,7 @@ const createEnv = (dataDir: string): ApiRuntimeEnv => ({
   syncIntervalMs: 0,
   indexerEnabled: true,
   analyticsEnabled: false,
+  supportEnabled: true,
   internalToken: null,
   signedRequestMaxAgeSeconds: 900,
   logLevel: "info",
@@ -141,6 +142,9 @@ test("verifyVaultMetadataWriteRequest validates the signed owner and materialize
       env: createEnv(dataDir),
       store,
       analyticsStore: new AnalyticsStore(dataDir),
+      supportStore: {
+        create: async () => {},
+      },
       clients: {
         84532: {
           getTransactionReceipt: async () => ({

@@ -7,5 +7,6 @@ export const routes = {
   appHome: "/vaults" as Href,
   createVault: "/vaults/new" as Href,
   activity: "/activity" as Href,
+  support: "/support" as Href,
   vaultDetail: (vaultAddress: string) => `/vaults/${vaultAddress}` as Href,
 } as const;

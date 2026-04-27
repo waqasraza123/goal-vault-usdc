@@ -13,6 +13,7 @@ export const getServiceHealthStatus = ({ env }: { env: ApiRuntimeEnv }): Service
   environment: env.environment,
   deploymentTarget: env.deploymentTarget,
   indexerEnabled: env.indexerEnabled,
+  supportEnabled: env.supportEnabled,
   persistenceDriver: env.persistence.driver,
   version: env.version,
   readyPath: "/ready",

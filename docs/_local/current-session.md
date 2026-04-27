@@ -7,35 +7,44 @@
 Commit current work, then implement the next real-audience beta readiness step with code and documentation only.
 
 ## Last Completed Step
-Added limited beta readiness artifact generation, workflow automation, and operator documentation.
+Added beta support intake across the app and API, with durable persistence and managed database artifact coverage.
 
 ## Files Touched
-- `.github/workflows/beta-readiness-plan.yml`
-- `package.json`
-- `scripts/write-api-managed-database-runtime-plan.mjs`
-- `scripts/write-beta-readiness-plan.mjs`
-- `docs/deployment/beta-readiness.md`
-- `docs/deployment/release-manifest.md`
-- `docs/plans/goal-vault-ci-release-workflows.md`
-- `docs/plans/goal-vault-env-reference.md`
-- `docs/plans/goal-vault-launch-checklist.md`
-- `docs/plans/goal-vault-universal-react-native-phase-43.md`
-- `docs/project-state.md`
-- `docs/_local/current-session.md`
+- `.github/workflows/api-preflight.yml`
+- `apps/api/src/modules/support/support.routes.ts`
+- `apps/api/src/modules/support/support-store.ts`
+- `apps/api/src/modules/persistence/*`
+- `apps/api/src/app.ts`
+- `apps/api/src/env.ts`
+- `apps/api/src/jobs/runtime-preflight.ts`
+- `apps/mobile/src/app/(app)/support.tsx`
+- `apps/mobile/src/lib/api/support.ts`
+- `apps/mobile/src/lib/i18n/messages.ts`
+- `apps/mobile/src/lib/routing/routes.ts`
+- `packages/shared/src/domain/support.ts`
+- `packages/api-client/src/support.ts`
+- managed database scripts under `scripts/write-api-managed-database-*.mjs`
+- deployment and plan docs for beta support, preflight, persistence, schema, export, import, parity, launch, and project state
 
 ## Durable Decisions Captured
-- Real-user beta launch now has a provider-neutral readiness artifact before invitations are sent.
-- Beta readiness requires release, preflight, traffic, snapshot, support, incident owner, participant-limit, and maximum vault amount evidence.
-- PostgreSQL beta readiness additionally requires a managed database runtime plan reference.
+- Real-user beta now has an in-app `/support` route and `POST /support/requests` backend intake.
+- Support records are private operational data and must not be committed as artifacts.
+- Support requests persist through SQLite and PostgreSQL behind the API persistence boundary.
+- PostgreSQL runtime mode now requires `support_requests` in the managed database schema.
+- Beta readiness rejects `/support` as the support reference when local API preflight does not show support enabled.
 
 ## Scope Boundaries
 - No production build, Expo export, deployment, database provisioning, schema application, import, parity comparison, traffic movement, beta invitations, contract work, live chain interaction, or real test suite was run.
-- Existing runtime behavior was preserved; this step adds only operator artifact generation and documentation.
+- This step adds product/API code plus operator documentation only.
 
 ## Verification Commands
+- `node --check scripts/write-api-managed-database-schema.mjs`
+- `node --check scripts/write-api-managed-database-export.mjs`
+- `node --check scripts/write-api-managed-database-import-plan.mjs`
+- `node --check scripts/write-api-managed-database-plan.mjs`
+- `node --check scripts/write-api-managed-database-parity-plan.mjs`
 - `node --check scripts/write-beta-readiness-plan.mjs`
-- `node --check scripts/write-api-managed-database-runtime-plan.mjs`
 - `git diff --check`
 
 ## Handoff Note
-Next code-focused step can implement provider-specific backend promotion and rollback automation, or add a support/incident intake surface for beta users.
+Next code-focused step can add provider-specific backend promotion and rollback automation, or add an operator-only support review/export surface for triage.

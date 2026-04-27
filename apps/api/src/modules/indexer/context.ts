@@ -3,13 +3,14 @@ import { createPublicClient, http } from "viem";
 import { base, baseSepolia } from "viem/chains";
 
 import type { ApiRuntimeEnv } from "../../env";
-import type { ApiAnalyticsStore, ApiIndexerStore } from "../persistence/ports";
+import type { ApiAnalyticsStore, ApiIndexerStore, ApiSupportStore } from "../persistence/ports";
 import { createApiPersistenceStores } from "../persistence/stores";
 
 export interface IndexerContext {
   env: ApiRuntimeEnv;
   store: ApiIndexerStore;
   analyticsStore: ApiAnalyticsStore;
+  supportStore: ApiSupportStore;
   clients: Partial<Record<8453 | 84532, ReturnType<typeof createPublicClient> | null>>;
   logger: FastifyBaseLogger | null;
   close(): Promise<void>;
@@ -38,6 +39,7 @@ export const createIndexerContext = async (env: ApiRuntimeEnv): Promise<IndexerC
     env,
     store: stores.indexerStore,
     analyticsStore: stores.analyticsStore,
+    supportStore: stores.supportStore,
     clients,
     logger: null,
     close: stores.close,

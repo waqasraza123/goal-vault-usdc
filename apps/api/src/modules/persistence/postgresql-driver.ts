@@ -22,7 +22,7 @@ export interface PostgresqlSchemaCheckResult {
 
 const require = createRequire(import.meta.url);
 
-const requiredPostgresqlTables = ["vaults", "vault_events", "sync_states", "analytics_events"] as const;
+const requiredPostgresqlTables = ["vaults", "vault_events", "sync_states", "analytics_events", "support_requests"] as const;
 
 const loadPgModule = (): PgModule => {
   const module = require("pg") as Partial<PgModule>;

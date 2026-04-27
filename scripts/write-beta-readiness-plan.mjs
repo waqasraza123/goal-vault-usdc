@@ -217,6 +217,7 @@ const inspectPreflightReport = ({ reference, target, persistenceDriver }) => {
     deploymentTarget: report.deploymentTarget,
     publicBaseUrl: report.publicBaseUrl ?? null,
     primaryChainId: report.primaryChainId ?? null,
+    supportEnabled: report.supportEnabled ?? null,
     persistence: {
       driver: persistence.driver,
       runtimeReady: persistence.runtimeReady,
@@ -447,9 +448,15 @@ const databaseRuntimePlan = requireOptionalDatabaseRuntimeReference(persistenceD
 const sourceSnapshot = requireReference("BETA_READINESS_SOURCE_SNAPSHOT");
 const rollbackSnapshot = requireReference("BETA_READINESS_ROLLBACK_SNAPSHOT");
 const observeMinutes = requirePositiveInteger("BETA_READINESS_OBSERVE_MINUTES", "30");
+const supportReference = requireText("BETA_READINESS_SUPPORT_REFERENCE");
 
 const releaseEvidence = inspectReleaseManifest({ reference: releaseManifest, target });
 const preflightEvidence = inspectPreflightReport({ reference: preflightReport, target, persistenceDriver });
+
+if (supportReference.includes("/support") && preflightEvidence.inspected && preflightEvidence.supportEnabled !== true) {
+  throw new Error("BETA_READINESS_SUPPORT_REFERENCE points to /support but API preflight does not show support intake enabled.");
+}
+
 const trafficEvidence = inspectTrafficPlan({
   reference: trafficPlan,
   target,
@@ -491,7 +498,7 @@ const plan = {
   audience: {
     participantLimit: requirePositiveInteger("BETA_READINESS_PARTICIPANT_LIMIT", "10"),
     maxVaultUsdc: requirePositiveDecimal("BETA_READINESS_MAX_VAULT_USDC"),
-    supportReference: requireText("BETA_READINESS_SUPPORT_REFERENCE"),
+    supportReference,
     incidentOwner: requireText("BETA_READINESS_INCIDENT_OWNER"),
   },
   controls: {
