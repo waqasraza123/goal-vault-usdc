@@ -1,0 +1,103 @@
+name: Contract Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Contract deployment environment.
+        type: choice
+        required: true
+        options:
+          - staging
+          - production
+      mode:
+        description: Simulate or broadcast the deployment.
+        type: choice
+        required: true
+        default: simulate
+        options:
+          - simulate
+          - broadcast
+      confirm_broadcast:
+        description: Type deploy to allow broadcast mode.
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-deployment-${{ inputs.target }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  FORCE_COLOR: 1
+  APP_ENV: ${{ inputs.target }}
+  EXPO_PUBLIC_APP_ENV: ${{ inputs.target }}
+  DEPLOYMENT_TARGET: ${{ inputs.target }}
+  DEPLOYMENT_CHAIN_ID: ${{ inputs.target == 'production' && '8453' || '84532' }}
+  USDC_ADDRESS: ${{ vars.USDC_ADDRESS }}
+  CONTRACT_DEPLOYER_PRIVATE_KEY: ${{ secrets.CONTRACT_DEPLOYER_PRIVATE_KEY }}
+  CONTRACT_DEPLOY_RPC_URL: ${{ secrets.CONTRACT_DEPLOY_RPC_URL }}
+
+jobs:
+  deploy-contracts:
+    name: ${{ inputs.mode }} GoalVaultFactory on ${{ inputs.target }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Validate broadcast confirmation
+        if: ${{ inputs.mode == 'broadcast' && inputs.confirm_broadcast != 'deploy' }}
+        run: |
+          echo "Broadcast mode requires confirm_broadcast=deploy."
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Setup workspace
+        uses: ./.github/actions/setup-pnpm
+
+      - name: Validate deployment environment
+        run: |
+          test -n "$USDC_ADDRESS"
+          test -n "$CONTRACT_DEPLOYER_PRIVATE_KEY"
+          test -n "$CONTRACT_DEPLOY_RPC_URL"
+
+      - name: Validate target chain
+        run: |
+          actual_chain_id="$(cast chain-id --rpc-url "$CONTRACT_DEPLOY_RPC_URL")"
+          test "$actual_chain_id" = "$DEPLOYMENT_CHAIN_ID"
+
+      - name: Run contract tests
+        run: pnpm test:contracts
+
+      - name: Simulate deployment
+        if: ${{ inputs.mode == 'simulate' }}
+        run: pnpm deploy:contracts:simulate --rpc-url "$CONTRACT_DEPLOY_RPC_URL"
+
+      - name: Broadcast deployment
+        if: ${{ inputs.mode == 'broadcast' }}
+        run: pnpm deploy:contracts:broadcast --rpc-url "$CONTRACT_DEPLOY_RPC_URL"
+
+      - name: Write deployment manifest
+        if: ${{ inputs.mode == 'broadcast' }}
+        id: manifest
+        run: pnpm deploy:contracts:manifest
+
+      - name: Upload deployment manifest
+        if: ${{ inputs.mode == 'broadcast' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-vault-factory-${{ inputs.target }}-${{ env.DEPLOYMENT_CHAIN_ID }}
+          path: ${{ steps.manifest.outputs.manifest_path }}
+          if-no-files-found: error

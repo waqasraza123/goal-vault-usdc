@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
+    "deploy:broadcast": "forge script script/Deploy.s.sol:DeployGoalVaultFactoryScript --sig 'run()' --broadcast",
+    "deploy:manifest": "node scripts/write-deployment-manifest.mjs",
+    "deploy:simulate": "forge script script/Deploy.s.sol:DeployGoalVaultFactoryScript --sig 'run()'",
     "test": "forge test",
     "typecheck": "echo \"contracts package boundary ready\""
   },

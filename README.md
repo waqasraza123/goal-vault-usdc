@@ -1,6 +1,6 @@
 # Goal Vault
 
-![Status](https://img.shields.io/badge/status-phase%2017-b07d4f)
+![Status](https://img.shields.io/badge/status-phase%2018-b07d4f)
 ![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android%20%7C%20Web-456b66)
 ![Expo](https://img.shields.io/badge/expo-sdk%2055-111827?logo=expo&logoColor=white)
 ![React%20Native](https://img.shields.io/badge/react%20native-0.83.6-61dafb?logo=react&logoColor=111827)
@@ -24,11 +24,12 @@ This repository now contains a deployment-oriented universal Goal Vault v1:
 - Fastify API with health/readiness endpoints, indexer sync, metadata reconciliation, and enriched vault/activity reads
 - deployment-aware Expo config, EAS profiles, env reference, and launch checklist docs
 - GitHub Actions CI and manual release-candidate verification workflows
+- guarded manual contract deployment workflow for `GoalVaultFactory`
 
 Still deferred:
 
 - external database-backed backend persistence
-- automatic contract deployment, backend promotion, and store submission workflows
+- backend promotion, traffic rollback, and store submission workflows
 
 ## Product Scope
 
@@ -127,9 +128,10 @@ Phase 9 focuses on launch packaging, environment safety, and repeatable verifica
 Included:
 
 - centralized public env parsing in `packages/config`
-- environment-aware Expo package config in `apps/mobile/app.config.ts`
+- environment-aware Expo package config in `apps/mobile/app.config.js`
 - EAS build profiles in `eas.json`
 - API startup validation plus separated `/health` and `/ready`
+- guarded Foundry deployment script and GitHub Actions contract deployment workflow
 - launch checklist and env reference docs in `docs/plans/`
 - repeatable release verification scripts at the repo root
 
@@ -188,6 +190,12 @@ Root scripts:
   - runs Foundry contract tests
 - `pnpm verify:ci`
   - runs workspace typecheck, TypeScript unit tests, and contract tests
+- `pnpm deploy:contracts:simulate`
+  - simulates `GoalVaultFactory` deployment with Foundry
+- `pnpm deploy:contracts:broadcast`
+  - broadcasts `GoalVaultFactory` deployment with Foundry
+- `pnpm deploy:contracts:manifest`
+  - writes a deployment manifest from Foundry broadcast output
 - `pnpm verify:mobile:web`
   - exports the Expo web target
 - `pnpm verify:mobile:ios`
@@ -242,6 +250,10 @@ Key documentation files:
   - operator-facing launch checklist
 - `docs/plans/goal-vault-ci-release-workflows.md`
   - CI and release-candidate workflow setup
+- `docs/deployment/contract-deployment.md`
+  - guarded contract deployment runbook
+- `docs/plans/goal-vault-universal-react-native-phase-18.md`
+  - Phase 18 implementation note
 - `docs/plans/goal-vault-universal-react-native-phase-9.md`
   - Phase 9 implementation note
 - `docs/product/goal-vault/goal.md`
@@ -255,12 +267,13 @@ Key documentation files:
 
 The next major implementation steps are:
 
-1. Complete Base Sepolia and Base mainnet deployment configuration with real RPC and factory values.
-2. Run full create, deposit, and withdraw smoke checks against staging.
-3. Decide whether deployment promotion, contract deployment, or store submission should be automated next.
+1. Configure GitHub Environment values and secrets for staging contract deployment.
+2. Run staging contract deployment simulation, then broadcast only after review.
+3. Feed the staged factory address into app/API env and run release-candidate verification.
+4. Decide whether backend promotion or store submission should be automated next.
 
 ## Notes
 
-- This repository now has CI and release-candidate verification, but deployment promotion remains manual.
+- This repository now has CI, release-candidate verification, and guarded contract deployment, but backend and app-store promotion remain manual.
 - `.env.example` provides the expected variable names without secrets.
 - Use the launch checklist and env reference docs before staging or production deployment.

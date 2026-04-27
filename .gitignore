@@ -24,6 +24,8 @@ apps/mobile/android/
 apps/mobile/ios/
 packages/contracts/cache/
 packages/contracts/out/
+packages/contracts/broadcast/
+packages/contracts/deployments/
 
 .env
 .env.*

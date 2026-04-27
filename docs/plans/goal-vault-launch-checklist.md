@@ -12,6 +12,13 @@
 - Confirm Base Sepolia RPC and factory address are set for staging.
 - Confirm the expected launch chain has both reads and writes configured.
 
+## Contract Deployment
+- Confirm `USDC_ADDRESS`, `CONTRACT_DEPLOY_RPC_URL`, and `CONTRACT_DEPLOYER_PRIVATE_KEY` are set on the target GitHub Environment.
+- Run the `Contract Deployment` workflow in `simulate` mode before any broadcast.
+- Broadcast only after reviewing the target chain ID and setting `confirm_broadcast` to `deploy`.
+- Download the deployment manifest artifact after broadcast.
+- Copy the deployed factory address into the matching app/API environment variables.
+
 ## Backend
 - Start the API with launch env values.
 - Check `GET /health` for service liveness.
@@ -59,3 +66,4 @@
 ## Rollback / Disable
 - If the API is unhealthy, disable public launch traffic or point the app back to a known-good API base URL.
 - If indexer background sync is disabled, do not claim indexed activity freshness until manual sync procedures are in place.
+- If a new factory deployment is wrong, restore the previous factory address in app/API configuration and stop promotion.

@@ -3,7 +3,7 @@
 ## Purpose
 This pass adds repository-owned GitHub Actions automation for the current production-shaped v1 codebase.
 
-The workflows intentionally stop at verification and release-candidate artifact creation. They do not deploy contracts, publish mobile store builds, mutate production infrastructure, or promote traffic automatically.
+The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment has a separate guarded manual workflow. No workflow publishes mobile store builds, mutates backend production infrastructure, or promotes traffic automatically.
 
 ## Workflow Files
 - `.github/actions/setup-pnpm/action.yml`
@@ -22,6 +22,12 @@ The workflows intentionally stop at verification and release-candidate artifact 
   - typechecks the workspace
   - checks deployed API readiness when `API_PUBLIC_BASE_URL` is configured
   - creates selected Expo export artifacts for web, iOS, and Android
+- `.github/workflows/contracts-deploy.yml`
+  - manual staging or production contract deployment
+  - simulates by default
+  - broadcasts only after explicit confirmation
+  - validates the RPC chain ID before running Foundry deployment
+  - uploads a deployment manifest after broadcast
 
 ## Required GitHub Environments
 Create two GitHub Environments before relying on release-candidate runs:
@@ -50,8 +56,12 @@ Use GitHub Environment secrets for RPC URLs:
 
 - `EXPO_PUBLIC_BASE_RPC_URL`
 - `EXPO_PUBLIC_BASE_SEPOLIA_RPC_URL`
+- `CONTRACT_DEPLOY_RPC_URL`
+- `CONTRACT_DEPLOYER_PRIVATE_KEY`
 
-The current workflows do not require private deploy keys, EAS tokens, app-store credentials, contract deployer keys, or backend internal sync tokens.
+Contract deployment also requires `USDC_ADDRESS` as a GitHub Environment variable.
+
+The current workflows do not require EAS tokens, app-store credentials, backend deploy keys, or backend internal sync tokens.
 
 ## Pull Request Gate
 The CI workflow is the default repository quality gate:
@@ -71,14 +81,23 @@ Use the manual release-candidate workflow before staging or production handoff:
 4. Review `/ready` output from the deployed API when `API_PUBLIC_BASE_URL` is configured.
 5. Download and inspect artifacts from the completed run.
 
+## Contract Deployment Gate
+Use the manual contract deployment workflow only after the relevant environment is configured:
+
+1. Choose `staging` or `production`.
+2. Run `simulate` first.
+3. Review chain ID, USDC address, and expected deployer account.
+4. Run `broadcast` only with `confirm_broadcast` set to `deploy`.
+5. Download the deployment manifest artifact and copy the factory address into app/API environment configuration.
+
 ## Operator Notes
 - Keep GitHub Environment values aligned with `docs/plans/goal-vault-env-reference.md`.
 - Keep production approval on the GitHub Environment instead of adding custom approval logic to workflow YAML.
 - Treat release-candidate artifacts as verification outputs, not deployable store releases.
-- Add deployment and promotion jobs only after the staging backend, contract deployment process, and mobile distribution channel are finalized.
+- Use `docs/deployment/contract-deployment.md` for contract simulation, broadcast, post-deploy config, and rollback handling.
+- Add backend promotion jobs only after the staging backend and rollback policy are finalized.
 
 ## Deferred Automation
-- Automatic contract deployment
 - EAS cloud builds and app-store submission
 - Production backend deployment
 - Database migration orchestration

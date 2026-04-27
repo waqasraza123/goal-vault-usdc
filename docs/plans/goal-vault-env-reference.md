@@ -28,6 +28,14 @@
 - `EXPO_PUBLIC_BASE_SEPOLIA_FACTORY_ADDRESS`
   - Base Sepolia Goal Vault factory address
 
+## Contract Deployment Variables
+- `USDC_ADDRESS`
+  - USDC contract address used by the `GoalVaultFactory` deployment script for the selected GitHub Environment
+- `CONTRACT_DEPLOY_RPC_URL`
+  - secret RPC URL used by the guarded contract deployment workflow
+- `CONTRACT_DEPLOYER_PRIVATE_KEY`
+  - secret deployer private key used by Foundry only inside the guarded contract deployment workflow
+
 ## API Variables
 - `API_HOST`
   - bind host, defaults to `127.0.0.1`
@@ -58,7 +66,7 @@
 
 ## GitHub Actions Variables And Secrets
 - Use GitHub Environment variables for public release metadata, package identifiers, API URLs, factory addresses, build numbers, and feature toggles.
-- Use GitHub Environment secrets for RPC URLs.
+- Use GitHub Environment secrets for RPC URLs and contract deployer credentials.
 - Keep `staging` and `production` values separate through GitHub Environments instead of branching inside workflow YAML.
 - The release-candidate workflow expects `EXPO_PUBLIC_API_TIMEOUT_MS` to resolve to a positive integer and defaults to `8000` when unset.
 
