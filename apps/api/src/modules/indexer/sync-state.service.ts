@@ -78,9 +78,8 @@ export const serializeSyncState = (state: PersistedSyncStateRecord): ChainSyncSt
   errorMessage: state.errorMessage,
 });
 
-export const getChainSyncStatuses = (context: IndexerContext, chainId?: SupportedChainId) =>
-  context.store
-    .listSyncStates()
+export const getChainSyncStatuses = async (context: IndexerContext, chainId?: SupportedChainId) =>
+  (await context.store.listSyncStates())
     .filter((state) => (chainId ? state.chainId === chainId : true))
     .map(serializeSyncState)
     .sort((left, right) => left.key.localeCompare(right.key));

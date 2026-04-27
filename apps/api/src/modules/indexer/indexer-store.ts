@@ -228,7 +228,7 @@ export class IndexerStore implements ApiIndexerStore {
     this.database = database;
   }
 
-  listVaults() {
+  async listVaults() {
     return (
       this.getDatabase()
         .prepare(
@@ -269,7 +269,7 @@ export class IndexerStore implements ApiIndexerStore {
     ).map((row) => mapVaultRow(row as unknown as VaultRow));
   }
 
-  getVault(chainId: SupportedChainId, contractAddress: Address) {
+  async getVault(chainId: SupportedChainId, contractAddress: Address) {
     const row = this.getDatabase()
       .prepare(
         `SELECT
@@ -410,7 +410,7 @@ export class IndexerStore implements ApiIndexerStore {
       } as unknown as Record<string, string | number | null>);
   }
 
-  listEvents() {
+  async listEvents() {
     return (
       this.getDatabase()
         .prepare(
@@ -480,7 +480,7 @@ export class IndexerStore implements ApiIndexerStore {
       .run(record as unknown as Record<string, string | number | null>);
   }
 
-  getSyncState(key: string) {
+  async getSyncState(key: string) {
     const row = this.getDatabase()
       .prepare(
         `SELECT
@@ -502,7 +502,7 @@ export class IndexerStore implements ApiIndexerStore {
     return row ? mapSyncStateRow(row) : null;
   }
 
-  listSyncStates() {
+  async listSyncStates() {
     return (
       this.getDatabase()
         .prepare(

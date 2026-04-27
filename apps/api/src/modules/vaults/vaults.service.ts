@@ -5,7 +5,7 @@ import type { IndexerContext } from "../indexer/context";
 import { getChainFreshnessSnapshot } from "../indexer/freshness";
 import { saveVaultMetadata } from "../indexer/reconciliation.service";
 
-export const getVaultsByOwner = ({
+export const getVaultsByOwner = async ({
   context,
   chainId,
   ownerWallet,
@@ -14,8 +14,9 @@ export const getVaultsByOwner = ({
   chainId: SupportedChainId;
   ownerWallet: Address;
 }) => {
-  const vaults = context.store
-    .listVaults()
+  const [storedVaults, storedEvents] = await Promise.all([context.store.listVaults(), context.store.listEvents()]);
+  const freshness = await getChainFreshnessSnapshot(context, chainId);
+  const vaults = storedVaults
     .filter(
       (vault) => vault.chainId === chainId && vault.ownerWallet?.toLowerCase() === ownerWallet.toLowerCase(),
     )
@@ -28,15 +29,14 @@ export const getVaultsByOwner = ({
   return {
     items: vaults.map((vault) => ({
       vault,
-      events: context.store
-        .listEvents()
+      events: storedEvents
         .filter((event) => event.chainId === chainId && event.vaultAddress.toLowerCase() === vault.contractAddress.toLowerCase()),
-      freshness: getChainFreshnessSnapshot(context, chainId),
+      freshness,
     })),
   };
 };
 
-export const getVaultDetailByAddress = ({
+export const getVaultDetailByAddress = async ({
   context,
   chainId,
   vaultAddress,
@@ -45,16 +45,18 @@ export const getVaultDetailByAddress = ({
   chainId: SupportedChainId;
   vaultAddress: Address;
 }) => {
-  const vault = context.store.getVault(chainId, vaultAddress);
+  const vault = await context.store.getVault(chainId, vaultAddress);
 
   if (!vault) {
     return null;
   }
 
+  const storedEvents = await context.store.listEvents();
+  const freshness = await getChainFreshnessSnapshot(context, chainId);
+
   return {
     vault,
-    events: context.store
-      .listEvents()
+    events: storedEvents
       .filter((event) => event.chainId === chainId && event.vaultAddress.toLowerCase() === vaultAddress.toLowerCase())
       .sort((left, right) => {
         if (left.blockNumber === right.blockNumber) {
@@ -63,7 +65,7 @@ export const getVaultDetailByAddress = ({
 
         return right.blockNumber - left.blockNumber;
       }),
-    freshness: getChainFreshnessSnapshot(context, chainId),
+    freshness,
   };
 };
 

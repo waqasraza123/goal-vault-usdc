@@ -30,16 +30,18 @@ export const registerVaultEventRoutes = (app: FastifyInstance) => {
 
     try {
       const context = app.goalVaultContext;
-      const activity = getOwnerActivity({
+      const activity = await getOwnerActivity({
         context,
         chainId: parsed.data.chainId,
         ownerWallet: parsed.data.ownerWallet as `0x${string}` | undefined,
       });
-      const items = activity.items.map((event) =>
-        serializeVaultActivityItem({
-          event,
-          vault: context.store.getVault(event.chainId, event.vaultAddress),
-        }),
+      const items = await Promise.all(
+        activity.items.map(async (event) =>
+          serializeVaultActivityItem({
+            event,
+            vault: await context.store.getVault(event.chainId, event.vaultAddress),
+          }),
+        ),
       );
       logObservabilitySignal(app.log, {
         domain: "api",
@@ -89,7 +91,7 @@ export const registerVaultEventRoutes = (app: FastifyInstance) => {
 
     try {
       const context = app.goalVaultContext;
-      const activity = getVaultActivity({
+      const activity = await getVaultActivity({
         context,
         chainId: parsed.data.chainId,
         vaultAddress: params.vaultAddress as `0x${string}`,
@@ -110,11 +112,13 @@ export const registerVaultEventRoutes = (app: FastifyInstance) => {
         chainId: parsed.data.chainId,
         vaultAddress: params.vaultAddress as `0x${string}`,
         freshness: activity.freshness,
-        items: activity.items.map((event) =>
-          serializeVaultActivityItem({
-            event,
-            vault: context.store.getVault(event.chainId, event.vaultAddress),
-          }),
+        items: await Promise.all(
+          activity.items.map(async (event) =>
+            serializeVaultActivityItem({
+              event,
+              vault: await context.store.getVault(event.chainId, event.vaultAddress),
+            }),
+          ),
         ),
       });
     } catch (error) {

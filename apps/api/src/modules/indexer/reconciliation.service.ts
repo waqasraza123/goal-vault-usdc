@@ -117,7 +117,7 @@ export const mergeVaultRecord = ({
 
 export const reconcileVaultMetadata = async (context: IndexerContext) => {
   let updatedCount = 0;
-  for (const vault of context.store.listVaults()) {
+  for (const vault of await context.store.listVaults()) {
     const nextRecord = mergeVaultRecord({
       current: vault,
       patch: {
@@ -147,7 +147,7 @@ export const reconcileVaultMetadata = async (context: IndexerContext) => {
 };
 
 export const saveVaultMetadata = async (context: IndexerContext, payload: VaultMetadataPayload) => {
-  const current = context.store.getVault(payload.chainId, payload.contractAddress);
+  const current = await context.store.getVault(payload.chainId, payload.contractAddress);
   const targetAmountAtomic = parseUnits(payload.targetAmount.replaceAll(",", "").trim(), 6).toString();
 
   const nextRecord = mergeVaultRecord({

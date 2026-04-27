@@ -49,7 +49,7 @@ export const registerVaultRoutes = (app: FastifyInstance) => {
     }
 
     try {
-      const result = getVaultsByOwner({
+      const result = await getVaultsByOwner({
         context: app.goalVaultContext,
         chainId: parsed.data.chainId,
         ownerWallet: parsed.data.ownerWallet as `0x${string}`,
@@ -106,7 +106,7 @@ export const registerVaultRoutes = (app: FastifyInstance) => {
     }
 
     try {
-      const detail = getVaultDetailByAddress({
+      const detail = await getVaultDetailByAddress({
         context: app.goalVaultContext,
         chainId: parsed.data.chainId,
         vaultAddress: params.vaultAddress as `0x${string}`,

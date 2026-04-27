@@ -18,14 +18,14 @@ export const getServiceHealthStatus = ({ env }: { env: ApiRuntimeEnv }): Service
   readyPath: "/ready",
 });
 
-export const getReadinessStatus = ({
+export const getReadinessStatus = async ({
   context,
   env,
 }: {
   context: IndexerContext;
   env: ApiRuntimeEnv;
-}): HealthStatus => {
-  const chainSync = getChainSyncStatuses(context);
+}): Promise<HealthStatus> => {
+  const chainSync = await getChainSyncStatuses(context);
   const syncHasErrors = chainSync.some((item) => item.lifecycle === "error");
   const syncIsLagging = chainSync.some((item) => item.freshness === "lagging");
   const baseApiHealth = buildApiHealthSummary(env);

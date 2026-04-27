@@ -39,8 +39,8 @@ export const syncVaultAddressForChain = async ({
   ownerAddress: Address | null;
 }) => {
   const client = context.clients[chainId];
-  const previousState = context.store.getSyncState(createVaultSyncStateKey(chainId, vaultAddress));
   const stateKey = createVaultSyncStateKey(chainId, vaultAddress);
+  const previousState = await context.store.getSyncState(stateKey);
   const chainConfig = context.env.chains[chainId];
 
   if (!client) {
@@ -140,7 +140,7 @@ export const syncVaultAddressForChain = async ({
       vaultAddress,
     });
     if (summary) {
-      const currentVault = context.store.getVault(chainId, vaultAddress);
+      const currentVault = await context.store.getVault(chainId, vaultAddress);
       const nextVault = mergeVaultRecord({
         current: currentVault,
         patch: {
@@ -233,8 +233,7 @@ export const syncVaultEventsForChain = async (context: IndexerContext, chainId: 
   }
 
   const latestChainBlock = Number(await client.getBlockNumber());
-  const vaults = context.store
-    .listVaults()
+  const vaults = (await context.store.listVaults())
     .filter((vault) => vault.chainId === chainId && vault.onchainFound)
     .sort((left, right) => left.contractAddress.localeCompare(right.contractAddress));
 

@@ -37,6 +37,7 @@ In SQLite mode:
 - API preflight records the SQLite data directory
 - API store construction flows through `createApiPersistenceStores`
 - API route and service modules consume `ApiIndexerStore` and `ApiAnalyticsStore` ports
+- API read paths await persistence port methods so future external database adapters can perform network I/O
 - the API keeps using `goal-vault-indexer.sqlite` and `goal-vault-analytics.sqlite`
 - managed database plan, schema, export, import plan, and parity artifacts remain handoff artifacts only
 
@@ -49,6 +50,7 @@ The current port types are:
   - vault records
   - vault event records
   - factory and vault sync-state records
+  - asynchronous read and write methods
 - `ApiAnalyticsStore`
   - analytics event batch writes
 
@@ -60,7 +62,7 @@ The factory returns:
 - analytics persistence for product event batches
 - the selected persistence driver
 
-Route modules should consume stores from the API context instead of constructing persistence adapters directly. They should also import persisted record types from the persistence port module rather than from SQLite implementation files. This keeps the future PostgreSQL adapter isolated to the persistence boundary.
+Route modules should consume stores from the API context instead of constructing persistence adapters directly. They should also import persisted record types from the persistence port module rather than from SQLite implementation files, and they should await persistence reads even when the current SQLite implementation resolves immediately. This keeps the future PostgreSQL adapter isolated to the persistence boundary.
 
 ## Blocked PostgreSQL Mode
 PostgreSQL mode is reserved for the future runtime adapter:

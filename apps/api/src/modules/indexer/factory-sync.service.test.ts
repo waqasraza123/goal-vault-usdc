@@ -157,8 +157,8 @@ test("syncFactoryEventsForChain ingests legacy and V2 creation events without du
 
     await syncFactoryEventsForChain(context, 84532);
 
-    const firstPassVaults = store.listVaults().sort((left, right) => left.contractAddress.localeCompare(right.contractAddress));
-    const firstPassEvents = store.listEvents();
+    const firstPassVaults = (await store.listVaults()).sort((left, right) => left.contractAddress.localeCompare(right.contractAddress));
+    const firstPassEvents = await store.listEvents();
 
     assert.equal(firstPassVaults.length, 3);
     assert.equal(firstPassEvents.length, 3);
@@ -175,12 +175,12 @@ test("syncFactoryEventsForChain ingests legacy and V2 creation events without du
 
     await syncFactoryEventsForChain(context, 84532);
 
-    const secondPassVaults = store.listVaults();
-    const secondPassEvents = store.listEvents();
+    const secondPassVaults = await store.listVaults();
+    const secondPassEvents = await store.listEvents();
 
     assert.equal(secondPassVaults.length, 3);
     assert.equal(secondPassEvents.length, 3);
-    assert.equal(store.getSyncState("factory:84532")?.latestIndexedBlock, 12);
+    assert.equal((await store.getSyncState("factory:84532"))?.latestIndexedBlock, 12);
   } finally {
     await rm(dataDir, {
       force: true,

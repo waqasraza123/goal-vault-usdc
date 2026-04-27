@@ -196,10 +196,10 @@ test("verifyVaultMetadataWriteRequest validates the signed owner and materialize
     assert.equal(result.record.ruleType, "cooldownUnlock");
     assert.equal(result.record.cooldownDurationSeconds, 604800);
 
-    const storedVault = store.getVault(84532, vaultAddress);
+    const storedVault = await store.getVault(84532, vaultAddress);
     assert.ok(storedVault);
     assert.equal(storedVault?.displayName, null);
-    assert.equal(store.listEvents().length, 1);
+    assert.equal((await store.listEvents()).length, 1);
   } finally {
     await rm(dataDir, {
       force: true,

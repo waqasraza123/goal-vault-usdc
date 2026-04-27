@@ -198,7 +198,7 @@ export const verifyVaultMetadataWriteRequest = async ({
     };
   }
 
-  const currentVault = context.store.getVault(metadata.chainId, metadata.contractAddress);
+  const currentVault = await context.store.getVault(metadata.chainId, metadata.contractAddress);
   const normalized = normalizeVaultCreatedLogs({
     chainId: metadata.chainId,
     logs: receipt.logs as Log[],

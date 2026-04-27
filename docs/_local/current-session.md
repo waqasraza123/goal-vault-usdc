@@ -7,33 +7,36 @@
 Commit and push current work, then implement the next production-grade step focused on code and detailed documentation without running full tests or builds.
 
 ## Last Completed Step
-Added Phase 32 API persistence port interfaces for store adapter isolation.
+Added Phase 33 asynchronous API persistence read boundary for external database readiness.
 
 ## Files Touched
 - `README.md`
-- `apps/api/src/lib/observability/analytics.ts`
-- `apps/api/src/modules/indexer/context.ts`
-- `apps/api/src/modules/indexer/event-normalizer.ts`
+- `apps/api/src/modules/health/health.service.ts`
+- `apps/api/src/modules/indexer/factory-sync.service.ts`
+- `apps/api/src/modules/indexer/factory-sync.service.test.ts`
+- `apps/api/src/modules/indexer/freshness.ts`
 - `apps/api/src/modules/indexer/indexer-store.ts`
 - `apps/api/src/modules/indexer/reconciliation.service.ts`
+- `apps/api/src/modules/indexer/indexer.routes.ts`
 - `apps/api/src/modules/indexer/sync-state.service.ts`
 - `apps/api/src/modules/indexer/vault-sync.service.ts`
 - `apps/api/src/modules/persistence/ports.ts`
-- `apps/api/src/modules/persistence/stores.ts`
-- `apps/api/src/modules/vault-events/vault-events.serializers.ts`
+- `apps/api/src/modules/vault-events/vault-events.routes.ts`
+- `apps/api/src/modules/vault-events/vault-events.service.ts`
+- `apps/api/src/modules/vaults/metadata-security.test.ts`
 - `apps/api/src/modules/vaults/metadata-security.ts`
-- `apps/api/src/modules/vaults/vaults.serializers.ts`
-- `apps/api/src/modules/vaults/vaults.serializers.test.ts`
+- `apps/api/src/modules/vaults/vaults.routes.ts`
+- `apps/api/src/modules/vaults/vaults.service.ts`
 - `docs/deployment/api-persistence-runtime.md`
-- `docs/plans/goal-vault-universal-react-native-phase-32.md`
+- `docs/plans/goal-vault-universal-react-native-phase-33.md`
 - `docs/project-state.md`
 - `docs/_local/current-session.md`
 
 ## Durable Decisions Captured
-- `apps/api/src/modules/persistence/ports.ts` now owns persisted API record contracts and store interface types.
-- `IndexerContext` is typed against `ApiIndexerStore` and `ApiAnalyticsStore` instead of concrete SQLite classes.
+- `ApiIndexerReadStore` read methods now return promises.
+- API routes, sync services, metadata verification, metadata reconciliation, freshness, and readiness paths now await persistence reads.
+- SQLite remains the only runtime-ready API persistence store implementation behind the asynchronous ports.
 - `createApiPersistenceStores` still owns current API persistence store construction.
-- SQLite remains the only runtime-ready API persistence store implementation behind the ports.
 - PostgreSQL remains blocked until a real adapter, credentials model, rollback path, and parity procedures are accepted.
 
 ## Scope Boundaries
@@ -42,6 +45,7 @@ Added Phase 32 API persistence port interfaces for store adapter isolation.
 - No managed database runtime implementation was added.
 - No database driver or provider dependency was added.
 - No SQLite schema changes were made.
+- No PostgreSQL connection layer was added.
 - No provider-specific deployment integration was added.
 
 ## Verification Commands
@@ -49,4 +53,4 @@ Added Phase 32 API persistence port interfaces for store adapter isolation.
 - `git diff --check`
 
 ## Handoff Note
-Keep `API_PERSISTENCE_DRIVER=sqlite` for current releases. Future PostgreSQL work should implement `ApiIndexerStore` and `ApiAnalyticsStore`, wire through `createApiPersistenceStores`, and keep route modules independent of concrete database classes.
+Keep `API_PERSISTENCE_DRIVER=sqlite` for current releases. Future PostgreSQL work can now implement the asynchronous `ApiIndexerStore` and `ApiAnalyticsStore` ports, wire through `createApiPersistenceStores`, and keep route modules independent of concrete database classes.

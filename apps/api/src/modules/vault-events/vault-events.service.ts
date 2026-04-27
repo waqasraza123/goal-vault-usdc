@@ -4,7 +4,7 @@ import type { Address } from "viem";
 import type { IndexerContext } from "../indexer/context";
 import { getChainFreshnessSnapshot } from "../indexer/freshness";
 
-export const getVaultActivity = ({
+export const getVaultActivity = async ({
   context,
   chainId,
   vaultAddress,
@@ -13,8 +13,8 @@ export const getVaultActivity = ({
   chainId: SupportedChainId;
   vaultAddress: Address;
 }) => {
-  const items = context.store
-    .listEvents()
+  const storedEvents = await context.store.listEvents();
+  const items = storedEvents
     .filter((event) => event.chainId === chainId && event.vaultAddress.toLowerCase() === vaultAddress.toLowerCase())
     .sort((left, right) => {
       if (left.blockNumber === right.blockNumber) {
@@ -26,11 +26,11 @@ export const getVaultActivity = ({
 
   return {
     items,
-    freshness: getChainFreshnessSnapshot(context, chainId),
+    freshness: await getChainFreshnessSnapshot(context, chainId),
   };
 };
 
-export const getOwnerActivity = ({
+export const getOwnerActivity = async ({
   context,
   chainId,
   ownerWallet,
@@ -39,11 +39,11 @@ export const getOwnerActivity = ({
   chainId?: SupportedChainId;
   ownerWallet?: Address;
 }) => {
+  const [storedVaults, storedEvents] = await Promise.all([context.store.listVaults(), context.store.listEvents()]);
   const vaultsByKey = new Map(
-    context.store.listVaults().map((vault) => [`${vault.chainId}:${vault.contractAddress.toLowerCase()}`, vault] as const),
+    storedVaults.map((vault) => [`${vault.chainId}:${vault.contractAddress.toLowerCase()}`, vault] as const),
   );
-  const items = context.store
-    .listEvents()
+  const items = storedEvents
     .filter((event) => {
       if (chainId && event.chainId !== chainId) {
         return false;
@@ -67,7 +67,7 @@ export const getOwnerActivity = ({
   return {
     items,
     freshness: chainId
-      ? getChainFreshnessSnapshot(context, chainId)
+      ? await getChainFreshnessSnapshot(context, chainId)
       : ({
           freshness: "unavailable",
           lastSyncedAt: null,

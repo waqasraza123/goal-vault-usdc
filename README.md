@@ -1,6 +1,6 @@
 # Goal Vault
 
-![Status](https://img.shields.io/badge/status-phase%2032-b07d4f)
+![Status](https://img.shields.io/badge/status-phase%2033-b07d4f)
 ![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android%20%7C%20Web-456b66)
 ![Expo](https://img.shields.io/badge/expo-sdk%2055-111827?logo=expo&logoColor=white)
 ![React%20Native](https://img.shields.io/badge/react%20native-0.83.6-61dafb?logo=react&logoColor=111827)
@@ -33,6 +33,7 @@ This repository now contains a deployment-oriented universal Goal Vault v1:
 - API persistence runtime guardrails that block PostgreSQL mode until the adapter exists
 - centralized API persistence store factory for current SQLite indexer and analytics stores
 - typed API persistence ports for indexer records, sync state, and analytics batches
+- asynchronous API persistence read boundary for future external database adapters
 - provider-neutral API traffic plan workflow for promotion, rollback, and disablement records
 - provider-neutral managed database planning workflow for future PostgreSQL migration
 - provider-neutral PostgreSQL schema bundle workflow for the current API persistence contract
@@ -151,6 +152,7 @@ Included:
 - API persistence driver validation with explicit SQLite runtime readiness and blocked PostgreSQL mode
 - centralized API persistence store construction behind the runtime persistence config
 - typed API persistence interfaces that keep routes and services independent of SQLite classes
+- asynchronous persistence reads across API routes, sync services, metadata verification, and readiness checks
 - API traffic plan generation before provider-specific promotion or rollback
 - managed database migration planning and schema inventory artifacts
 - managed database schema bundle artifacts for PostgreSQL review
@@ -356,6 +358,8 @@ Key documentation files:
   - Phase 31 implementation note
 - `docs/plans/goal-vault-universal-react-native-phase-32.md`
   - Phase 32 implementation note
+- `docs/plans/goal-vault-universal-react-native-phase-33.md`
+  - Phase 33 implementation note
 - `docs/plans/goal-vault-universal-react-native-phase-9.md`
   - Phase 9 implementation note
 - `docs/product/goal-vault/goal.md`
@@ -389,6 +393,6 @@ The next major implementation steps are:
 
 ## Notes
 
-- This repository now has CI, release-candidate verification, guarded contract deployment, API image packaging, API runtime preflight, API persistence runtime guardrails, centralized API persistence store construction, typed API persistence ports, API traffic planning, managed database planning, managed database schema artifacts, managed database export artifacts, managed database import plan artifacts, managed database parity planning, mobile EAS distribution automation, release manifests, and API data snapshot tooling, but backend traffic promotion remains manual.
+- This repository now has CI, release-candidate verification, guarded contract deployment, API image packaging, API runtime preflight, API persistence runtime guardrails, centralized API persistence store construction, typed asynchronous API persistence ports, API traffic planning, managed database planning, managed database schema artifacts, managed database export artifacts, managed database import plan artifacts, managed database parity planning, mobile EAS distribution automation, release manifests, and API data snapshot tooling, but backend traffic promotion remains manual.
 - `.env.example` provides the expected variable names without secrets.
 - Use the launch checklist and env reference docs before staging or production deployment.

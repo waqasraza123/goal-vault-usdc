@@ -34,7 +34,7 @@ export const registerIndexerRoutes = (app: FastifyInstance, context: IndexerCont
     }
 
     return {
-      items: getChainSyncStatuses(context),
+      items: await getChainSyncStatuses(context),
     };
   });
 
@@ -73,7 +73,7 @@ export const registerIndexerRoutes = (app: FastifyInstance, context: IndexerCont
     return {
       ok: true,
       checkedAt: new Date().toISOString(),
-      chainSync: getChainSyncStatuses(context, chainId),
+      chainSync: await getChainSyncStatuses(context, chainId),
     };
   });
 };

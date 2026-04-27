@@ -10,7 +10,7 @@ export const syncFactoryEventsForChain = async (context: IndexerContext, chainId
   const client = context.clients[chainId];
   const chainConfig = context.env.chains[chainId];
   const stateKey = createFactorySyncStateKey(chainId);
-  const previousState = context.store.getSyncState(stateKey);
+  const previousState = await context.store.getSyncState(stateKey);
 
   if (!client || !chainConfig.factoryAddress) {
     await context.store.upsertSyncState({
@@ -66,8 +66,7 @@ export const syncFactoryEventsForChain = async (context: IndexerContext, chainId
       toBlock: BigInt(latestChainBlock),
     });
     const currentVaults = new Map(
-      context.store
-        .listVaults()
+      (await context.store.listVaults())
         .filter((vault) => vault.chainId === chainId)
         .map((vault) => [vault.contractAddress.toLowerCase(), vault] as const),
     );

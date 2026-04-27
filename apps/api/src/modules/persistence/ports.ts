@@ -79,11 +79,11 @@ export interface PersistedSyncStateRecord {
 }
 
 export interface ApiIndexerReadStore {
-  listVaults(): PersistedVaultRecord[];
-  getVault(chainId: SupportedChainId, contractAddress: Address): PersistedVaultRecord | null;
-  listEvents(): PersistedVaultEventRecord[];
-  getSyncState(key: string): PersistedSyncStateRecord | null;
-  listSyncStates(): PersistedSyncStateRecord[];
+  listVaults(): Promise<PersistedVaultRecord[]>;
+  getVault(chainId: SupportedChainId, contractAddress: Address): Promise<PersistedVaultRecord | null>;
+  listEvents(): Promise<PersistedVaultEventRecord[]>;
+  getSyncState(key: string): Promise<PersistedSyncStateRecord | null>;
+  listSyncStates(): Promise<PersistedSyncStateRecord[]>;
 }
 
 export interface ApiIndexerWriteStore {
