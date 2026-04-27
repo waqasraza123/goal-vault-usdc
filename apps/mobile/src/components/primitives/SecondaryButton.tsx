@@ -31,22 +31,39 @@ export const SecondaryButton = ({ label, onPress, icon, disabled }: SecondaryBut
         onPressIn={motion.onPressIn}
         onPressOut={motion.onPressOut}
         style={({ pressed }) => ({
+          minHeight: 54,
+          alignItems: "center",
+          justifyContent: "center",
           backgroundColor: disabled ? colors.surfaceMuted : pressed ? colors.surfaceStrong : colors.surfaceGlass,
           borderRadius: radii.md,
           borderWidth: 1,
           borderColor: disabled ? colors.borderStrong : pressed ? colors.accentStrong : colors.borderStrong,
           paddingHorizontal: spacing[5],
           paddingVertical: spacing[4],
+          overflow: "hidden",
           ...createShadowStyle({
             color: colors.overlayStrong,
-            opacity: disabled ? 0 : 0.1,
-            radius: 18,
-            offsetY: 10,
+            opacity: disabled ? 0 : pressed ? 0.08 : 0.12,
+            radius: pressed ? 14 : 20,
+            offsetY: pressed ? 7 : 11,
             elevation: disabled ? 0 : 3,
           }),
           elevation: disabled ? 0 : 3,
         })}
       >
+        <View
+          pointerEvents="none"
+          style={{
+            position: "absolute",
+            top: 1,
+            left: 1,
+            right: 1,
+            height: "48%",
+            borderRadius: radii.md,
+            backgroundColor: colors.white,
+            opacity: disabled ? 0 : 0.72,
+          }}
+        />
         <View style={{ flexDirection: inlineDirection(), alignItems: "center", justifyContent: "center", gap: spacing[2] }}>
           {icon ? (
             <MaterialCommunityIcons

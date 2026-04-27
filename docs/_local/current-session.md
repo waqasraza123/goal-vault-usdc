@@ -4,43 +4,36 @@
 2026-04-27
 
 ## Current Objective
-Commit and push current work, then implement the next production-grade step focused on code and detailed documentation without running full tests or builds.
+Improve the mobile UI/UX with smoother, more modern shared primitives and high-impact product surfaces.
 
 ## Last Completed Step
-Added Phase 41 local release and traffic artifact evidence validation for managed database runtime cutover planning.
+Polished the mobile visual system across cards, buttons, progress bars, dashboard metrics, hero preview, screen background treatment, and vault cards.
 
 ## Files Touched
-- `README.md`
-- `docs/deployment/api-traffic-plan.md`
-- `docs/deployment/api-managed-database-runtime-plan.md`
-- `docs/deployment/release-manifest.md`
-- `docs/plans/goal-vault-universal-react-native-phase-41.md`
-- `docs/project-state.md`
+- `apps/mobile/src/app/(app)/vaults/index.tsx`
+- `apps/mobile/src/components/marketing/HeroVaultPreviewCard.tsx`
+- `apps/mobile/src/components/primitives/PrimaryButton.tsx`
+- `apps/mobile/src/components/primitives/ProgressBar.tsx`
+- `apps/mobile/src/components/primitives/Screen.tsx`
+- `apps/mobile/src/components/primitives/SecondaryButton.tsx`
+- `apps/mobile/src/components/primitives/SurfaceCard.tsx`
+- `apps/mobile/src/components/vaults/VaultCard.tsx`
 - `docs/_local/current-session.md`
-- `scripts/write-api-managed-database-runtime-plan.mjs`
 
 ## Durable Decisions Captured
-- Managed database runtime plans now inspect local release manifest and API traffic plan JSON files when provided.
-- Cutover-mode runtime plans require local release evidence to match runtime target, candidate image, and rollback image when a release rollback image exists.
-- Cutover-mode runtime plans require local traffic evidence to match runtime target, promote action, candidate image, rollback image, release manifest reference, and preflight report reference.
-- Remote URL or workflow artifact references remain allowed but are recorded as not locally inspected and require operator review.
-- PostgreSQL runtime mode remains blocked until driver adapter, factory wiring, PostgreSQL preflight connection checks, credentials, parity acceptance, and rollback procedures are accepted.
+- Kept the existing Goal Vault palette and NativeWind/React Native component architecture.
+- Improved polish through reusable primitives instead of one-off screen styling.
+- Preserved reduced-motion-aware entrance and press feedback behavior.
 
 ## Scope Boundaries
-- No tests, builds, Docker builds, EAS builds, Expo exports, live data exports, import plan execution, snapshots, restores, deployments, database connections, live parity queries, data comparisons, migrations, provider changes, or traffic changes were run by request.
-- No hosting provider was selected.
-- No managed database runtime implementation was added.
-- No database driver or provider dependency was added.
-- No SQLite schema changes were made.
-- No PostgreSQL driver adapter, pool construction, migration execution, import execution, parity execution, or runtime factory wiring was added.
-- No PostgreSQL connection preflight was added or executed.
-- No local runtime plan artifact was generated.
-- No release manifest, traffic plan, or preflight artifacts were generated.
-- No provider-specific deployment integration was added.
+- No production build, Expo export, deployment, database work, contract work, or live chain interactions were run.
+- No durable architecture or roadmap change was made, so `docs/project-state.md` was not updated.
+- No real test suite was run by request; only lightweight static validation was used.
+- Expo web dev server was attempted on ports `8082` and `8099`, but Expo reported those ports as unavailable and skipped startup.
 
 ## Verification Commands
-- `pnpm --filter @goal-vault/api typecheck`
+- `pnpm --filter @goal-vault/mobile typecheck`
 - `git diff --check`
 
 ## Handoff Note
-Keep `API_PERSISTENCE_DRIVER=sqlite` for current releases. Future cutover-mode runtime plans should pass local release manifest, preflight, and traffic plan JSON files only after their target, image, and capability evidence truly align; otherwise the script will block the plan.
+Next UI pass should focus on create-vault and vault-detail flows so the post-click experience matches the improved dashboard and landing preview polish.

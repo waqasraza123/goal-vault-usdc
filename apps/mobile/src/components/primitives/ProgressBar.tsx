@@ -36,11 +36,12 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
     () =>
       progressValue.interpolate({
         inputRange: [0, 1],
-        outputRange: ["4%", "100%"],
+        outputRange: ["0%", "100%"],
       }),
     [progressValue],
   );
   const fillColor = tone === "positive" ? colors.positive : colors.accentStrong;
+  const glowColor = tone === "positive" ? colors.positive : colors.accentStrong;
 
   return (
     <View
@@ -51,12 +52,26 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
           borderRadius: radii.pill,
           borderWidth: 1,
           borderColor: colors.borderStrong,
-          backgroundColor: colors.surfaceStrong,
+          backgroundColor: colors.surfaceMuted,
           overflow: "hidden",
+          padding: 2,
         },
         style,
       ]}
     >
+      <View
+        pointerEvents="none"
+        style={{
+          position: "absolute",
+          top: 1,
+          left: 1,
+          right: 1,
+          height: "44%",
+          borderRadius: radii.pill,
+          backgroundColor: colors.white,
+          opacity: 0.64,
+        }}
+      />
       <Animated.View
         style={{
           width: fillWidth,
@@ -64,10 +79,10 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
           borderRadius: radii.pill,
           backgroundColor: fillColor,
           ...createShadowStyle({
-            color: tone === "positive" ? colors.positiveGlow : colors.accentGlow,
-            opacity: 0.36,
-            radius: 18,
-            offsetY: 7,
+            color: glowColor,
+            opacity: 0.42,
+            radius: 20,
+            offsetY: 8,
             elevation: 2,
           }),
           elevation: 2,
@@ -80,10 +95,10 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
             top: 0,
             bottom: 0,
             right: 0,
-            width: "48%",
+            width: "42%",
             borderRadius: radii.pill,
             backgroundColor: colors.white,
-            opacity: 0.24,
+            opacity: 0.3,
           }}
         />
       </Animated.View>

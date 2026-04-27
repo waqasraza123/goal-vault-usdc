@@ -1,11 +1,12 @@
+import type { ComponentProps } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import type { VaultSummary } from "../../types";
 import { useI18n } from "../../lib/i18n";
 import { routes } from "../../lib/routing";
-import { colors, radii, spacing } from "../../theme";
+import { colors, createShadowStyle, radii, spacing } from "../../theme";
+import type { VaultSummary } from "../../types";
 import { AppHeading, AppText, MotionView, SecondaryButton, SurfaceCard } from "../primitives";
 import { VaultCardAmount } from "./VaultCardAmount";
 import { VaultCardProgress } from "./VaultCardProgress";
@@ -18,26 +19,37 @@ export interface VaultCardProps {
 
 export const VaultCard = ({ vault }: VaultCardProps) => {
   const router = useRouter();
-  const { messages } = useI18n();
+  const { inlineDirection, messages } = useI18n();
+  const isFunded = vault.progressRatio >= 1;
   const ruleLabel =
     vault.ruleType === "guardianApproval"
       ? "Guardian approval"
       : vault.ruleType === "cooldownUnlock"
         ? "Cooldown unlock"
         : messages.common.labels.timeLock;
+  const ruleIcon = (
+    vault.ruleType === "guardianApproval"
+      ? "account-supervisor-circle-outline"
+      : vault.ruleType === "cooldownUnlock"
+        ? "timer-sand"
+        : "calendar-lock-outline"
+  ) satisfies ComponentProps<typeof MaterialCommunityIcons>["name"];
 
   return (
     <SurfaceCard
+      accent={isFunded ? "top" : "left"}
+      accentColor={isFunded ? colors.positive : colors.accent}
       level="floating"
       style={{
         flex: 1,
         minWidth: 280,
-        backgroundColor: vault.savedAmount > 0 ? colors.backgroundElevated : colors.surfaceGlass,
-        borderColor: vault.progressRatio >= 1 ? colors.positive : colors.borderStrong,
+        backgroundColor: colors.backgroundElevated,
+        borderColor: isFunded ? colors.positive : colors.borderStrong,
+        padding: spacing[5],
       }}
     >
       <MotionView style={{ gap: spacing[3] }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: spacing[3] }}>
+        <View style={{ flexDirection: inlineDirection(), justifyContent: "space-between", alignItems: "flex-start", gap: spacing[3] }}>
           <VaultCardStatus status={vault.status} />
           <View
             style={{
@@ -54,41 +66,74 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
             </AppText>
           </View>
         </View>
-        <View style={{ gap: spacing[1] }}>
-          <AppHeading size="md">{vault.goalName}</AppHeading>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: spacing[2] }}>
-            <MaterialCommunityIcons
-              color={vault.ruleType === "guardianApproval" ? colors.warning : colors.accentStrong}
-              name={
-                vault.ruleType === "guardianApproval"
-                  ? "account-supervisor-circle-outline"
-                  : vault.ruleType === "cooldownUnlock"
-                    ? "timer-sand"
-                    : "calendar-lock-outline"
-              }
-              size={18}
-            />
-            <AppText size="sm" tone="accent" weight="semibold">
-              {ruleLabel}
-            </AppText>
+
+        <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
+          <View
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: radii.md,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: isFunded ? colors.positiveSoft : colors.accentSoft,
+              borderWidth: 1,
+              borderColor: isFunded ? colors.positive : colors.borderStrong,
+            }}
+          >
+            <MaterialCommunityIcons color={isFunded ? colors.positive : colors.accentStrong} name="bullseye-arrow" size={23} />
           </View>
-          {vault.note ? (
-            <View
-              style={{
-                borderRadius: radii.md,
-                borderWidth: 1,
-                borderColor: colors.borderStrong,
-                backgroundColor: colors.surfaceMuted,
-                padding: spacing[4],
-              }}
-            >
-              <AppText tone="secondary">{vault.note}</AppText>
+          <View style={{ flex: 1, gap: spacing[1] }}>
+            <AppHeading size="md">{vault.goalName}</AppHeading>
+            <View style={{ flexDirection: inlineDirection(), alignItems: "center", gap: spacing[2] }}>
+              <MaterialCommunityIcons
+                color={vault.ruleType === "guardianApproval" ? colors.warning : colors.accentStrong}
+                name={ruleIcon}
+                size={18}
+              />
+              <AppText size="sm" tone="accent" weight="semibold">
+                {ruleLabel}
+              </AppText>
             </View>
-          ) : null}
+          </View>
         </View>
+
+        {vault.note ? (
+          <View
+            style={{
+              borderRadius: radii.md,
+              borderWidth: 1,
+              borderColor: colors.borderStrong,
+              backgroundColor: colors.surfaceMuted,
+              padding: spacing[4],
+            }}
+          >
+            <AppText tone="secondary">{vault.note}</AppText>
+          </View>
+        ) : null}
       </MotionView>
-      <VaultCardAmount savedAmount={vault.savedAmount} targetAmount={vault.targetAmount} />
-      <VaultCardProgress progressRatio={vault.progressRatio} />
+
+      <View
+        style={{
+          borderRadius: radii.lg,
+          borderWidth: 1,
+          borderColor: colors.borderStrong,
+          backgroundColor: colors.surface,
+          padding: spacing[4],
+          gap: spacing[4],
+          ...createShadowStyle({
+            color: colors.overlayStrong,
+            opacity: 0.08,
+            radius: 18,
+            offsetY: 10,
+            elevation: 2,
+          }),
+          elevation: 2,
+        }}
+      >
+        <VaultCardAmount savedAmount={vault.savedAmount} targetAmount={vault.targetAmount} />
+        <VaultCardProgress progressRatio={vault.progressRatio} />
+      </View>
+
       <VaultCardRule
         description={
           vault.ruleType === "cooldownUnlock"
@@ -102,17 +147,24 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
         ruleType={vault.ruleType}
         unlockDate={vault.unlockDate}
       />
+
       <View
         style={{
           borderRadius: radii.md,
           borderWidth: 1,
           borderColor: colors.borderStrong,
-          backgroundColor: colors.surfaceMuted,
+          backgroundColor: colors.accentSoft,
           padding: spacing[4],
         }}
       >
-        <AppText tone="secondary">{messages.vaults.ruleTruthDescription}</AppText>
+        <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[2] }}>
+          <MaterialCommunityIcons color={colors.accentStrong} name="shield-check-outline" size={18} />
+          <AppText style={{ flex: 1 }} tone="secondary">
+            {messages.vaults.ruleTruthDescription}
+          </AppText>
+        </View>
       </View>
+
       <SecondaryButton
         icon="arrow-right"
         label={messages.common.buttons.openVault}

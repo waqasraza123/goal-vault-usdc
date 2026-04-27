@@ -1,4 +1,6 @@
 import { Stack, useRouter } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import type { ComponentProps } from "react";
 import { useMemo } from "react";
 import { View } from "react-native";
 
@@ -35,6 +37,51 @@ export default function MyVaultsScreen() {
     () => createConnectionAnalyticsContext(connectionState),
     [connectionState],
   );
+  const dashboardMetrics = [
+    {
+      label: messages.common.labels.totalSaved,
+      value: totalSaved,
+      formatValue: formatUsdc,
+      icon: "wallet-outline",
+      tone: "accent" as const,
+      iconColor: colors.accentStrong,
+      iconBackgroundColor: colors.accentSoft,
+      cardBackgroundColor: colors.backgroundElevated,
+      borderColor: colors.borderStrong,
+    },
+    {
+      label: messages.common.labels.vaultCount,
+      value: vaults.length,
+      icon: "shield-lock-outline",
+      tone: "default" as const,
+      iconColor: colors.positive,
+      iconBackgroundColor: colors.positiveSoft,
+      cardBackgroundColor: colors.surfaceGlass,
+      borderColor: colors.borderStrong,
+    },
+    {
+      label: messages.common.labels.eligibleSoon,
+      value: unlockedCount,
+      icon: "timer-check-outline",
+      tone: "muted" as const,
+      iconColor: colors.warning,
+      iconBackgroundColor: colors.warningSoft,
+      cardBackgroundColor: colors.warningSoft,
+      borderColor: colors.warning,
+      helper: messages.common.labels.withdrawWhenEligible,
+    },
+  ] satisfies Array<{
+    label: string;
+    value: number;
+    formatValue?: (value: number) => string;
+    icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
+    tone: "default" | "muted" | "accent";
+    iconColor: string;
+    iconBackgroundColor: string;
+    cardBackgroundColor: string;
+    borderColor: string;
+    helper?: string;
+  }>;
 
   const showVaultGrid = connectionState.status === "ready" && !isLoading && queryStatus === "success";
 
@@ -123,37 +170,55 @@ export default function MyVaultsScreen() {
         ) : null}
 
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing[4] }}>
-          <MotionView style={{ flex: 1, minWidth: 220 }}>
-            <SurfaceCard tone="accent" style={{ flex: 1, minWidth: 220 }}>
-              <AppText tone="secondary">{messages.common.labels.totalSaved}</AppText>
-              <AnimatedNumberText formatValue={formatUsdc} size="xl" value={totalSaved} weight="semibold" />
-            </SurfaceCard>
-          </MotionView>
-          <MotionView delay={70} style={{ flex: 1, minWidth: 220 }}>
-            <SurfaceCard style={{ flex: 1, minWidth: 220, backgroundColor: colors.surfaceGlass, borderColor: colors.borderStrong }}>
-              <AppText tone="secondary">{messages.common.labels.vaultCount}</AppText>
-              <AnimatedNumberText size="xl" value={vaults.length} weight="semibold" />
-            </SurfaceCard>
-          </MotionView>
-          <MotionView delay={140} style={{ flex: 1, minWidth: 220 }}>
-            <SurfaceCard tone="muted" style={{ flex: 1, minWidth: 220, backgroundColor: colors.warningSoft, borderColor: colors.warning }}>
-              <AppText tone="secondary">{messages.common.labels.eligibleSoon}</AppText>
-              <AnimatedNumberText size="xl" value={unlockedCount} weight="semibold" />
-              <View
+          {dashboardMetrics.map((metric, index) => (
+            <MotionView key={metric.label} delay={index * 70} style={{ flex: 1, minWidth: 220 }}>
+              <SurfaceCard
+                accentColor={metric.iconColor}
+                tone={metric.tone}
                 style={{
-                  alignSelf: "flex-start",
-                  borderRadius: radii.pill,
-                  backgroundColor: colors.surface,
-                  paddingHorizontal: spacing[3],
-                  paddingVertical: spacing[2],
+                  flex: 1,
+                  minWidth: 220,
+                  backgroundColor: metric.cardBackgroundColor,
+                  borderColor: metric.borderColor,
+                  padding: spacing[5],
                 }}
               >
-                <AppText size="sm" tone="secondary">
-                  {messages.common.labels.withdrawWhenEligible}
-                </AppText>
-              </View>
-            </SurfaceCard>
-          </MotionView>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: spacing[3] }}>
+                  <View style={{ gap: spacing[1] }}>
+                    <AppText tone="secondary">{metric.label}</AppText>
+                    <AnimatedNumberText formatValue={metric.formatValue} size="xl" value={metric.value} weight="semibold" />
+                  </View>
+                  <View
+                    style={{
+                      width: 38,
+                      height: 38,
+                      borderRadius: radii.md,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: metric.iconBackgroundColor,
+                    }}
+                  >
+                    <MaterialCommunityIcons color={metric.iconColor} name={metric.icon} size={20} />
+                  </View>
+                </View>
+                {metric.helper ? (
+                  <View
+                    style={{
+                      alignSelf: "flex-start",
+                      borderRadius: radii.pill,
+                      backgroundColor: colors.surface,
+                      paddingHorizontal: spacing[3],
+                      paddingVertical: spacing[2],
+                    }}
+                  >
+                    <AppText size="sm" tone="secondary">
+                      {metric.helper}
+                    </AppText>
+                  </View>
+                ) : null}
+              </SurfaceCard>
+            </MotionView>
+          ))}
         </View>
 
         {connectionState.status === "ready" && !isLoading && queryStatus === "empty" ? (

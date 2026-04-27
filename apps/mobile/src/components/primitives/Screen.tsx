@@ -52,49 +52,57 @@ export const Screen = ({
               <View
                 style={{
                   position: "absolute",
-                  top: -112,
-                  right: -64,
-                  width: 320,
+                  top: 0,
+                  left: 0,
+                  right: 0,
                   height: 320,
-                  borderRadius: 160,
-                  backgroundColor: colors.heroGlowPrimary,
-                  opacity: 0.34,
+                  backgroundColor: colors.surfaceMuted,
+                  opacity: 0.58,
                 }}
               />
               <View
                 style={{
                   position: "absolute",
-                  top: 180,
-                  left: -96,
-                  width: 220,
-                  height: 220,
-                  borderRadius: 110,
-                  backgroundColor: colors.heroGlowSecondary,
-                  opacity: 0.26,
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 1,
+                  backgroundColor: colors.white,
+                  opacity: 0.86,
                 }}
               />
               <View
                 style={{
                   position: "absolute",
-                  top: "42%",
-                  right: "10%",
-                  width: 168,
-                  height: 168,
-                  borderRadius: 84,
-                  backgroundColor: colors.accentGlow,
+                  top: 92,
+                  left: 0,
+                  right: 0,
+                  height: 1,
+                  backgroundColor: colors.border,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: 96,
+                  left: "8%",
+                  width: 260,
+                  height: 3,
+                  borderRadius: 999,
+                  backgroundColor: colors.accent,
                   opacity: 0.2,
                 }}
               />
               <View
                 style={{
                   position: "absolute",
-                  bottom: -64,
-                  right: 8,
-                  width: 260,
-                  height: 260,
-                  borderRadius: 130,
-                  backgroundColor: colors.canvasGlow,
-                  opacity: 0.48,
+                  top: 96,
+                  left: "32%",
+                  width: 92,
+                  height: 3,
+                  borderRadius: 999,
+                  backgroundColor: colors.positive,
+                  opacity: 0.22,
                 }}
               />
             </>

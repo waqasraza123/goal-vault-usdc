@@ -31,22 +31,39 @@ export const PrimaryButton = ({ label, onPress, disabled, icon }: PrimaryButtonP
         onPressIn={motion.onPressIn}
         onPressOut={motion.onPressOut}
         style={({ pressed }) => ({
+          minHeight: 54,
+          alignItems: "center",
+          justifyContent: "center",
           backgroundColor: disabled ? colors.border : pressed ? colors.accentStrong : colors.accent,
           borderRadius: radii.md,
           paddingHorizontal: spacing[5],
           paddingVertical: spacing[4],
           borderWidth: 1,
-          borderColor: disabled ? colors.borderStrong : colors.white,
+          borderColor: disabled ? colors.borderStrong : pressed ? colors.accentStrong : colors.borderStrong,
+          overflow: "hidden",
           ...createShadowStyle({
             color: colors.accentStrong,
-            opacity: disabled ? 0 : 0.24,
-            radius: 24,
-            offsetY: 14,
+            opacity: disabled ? 0 : pressed ? 0.18 : 0.28,
+            radius: pressed ? 18 : 26,
+            offsetY: pressed ? 9 : 15,
             elevation: disabled ? 0 : 8,
           }),
           elevation: disabled ? 0 : 8,
         })}
       >
+        <View
+          pointerEvents="none"
+          style={{
+            position: "absolute",
+            top: 1,
+            left: 1,
+            right: 1,
+            height: "48%",
+            borderRadius: radii.md,
+            backgroundColor: colors.white,
+            opacity: disabled ? 0 : 0.14,
+          }}
+        />
         <View style={{ flexDirection: inlineDirection(), alignItems: "center", justifyContent: "center", gap: spacing[2] }}>
           {icon ? <MaterialCommunityIcons color={colors.white} name={getDirectionalIcon(icon)} size={18} /> : null}
           <AppText align="center" style={{ color: colors.white }} weight="semibold">
