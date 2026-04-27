@@ -20,6 +20,8 @@ It is not a migration workflow. It does not connect to a database, create schema
   - exposes `pnpm api:database:plan`
 - `docs/deployment/api-managed-database-schema.md`
   - turns this plan into reviewable PostgreSQL SQL and schema manifest artifacts
+- `docs/deployment/api-managed-database-export.md`
+  - converts a reviewed API data snapshot into table-level JSONL files for provider-owned import
 - `docs/deployment/api-managed-database-parity.md`
   - records the table-level comparison checks operators should run after restore
 
@@ -120,15 +122,16 @@ Use the managed database plan before adding provider-specific database infrastru
 1. Create an API data snapshot.
 2. Generate the managed database plan.
 3. Generate the managed database schema bundle.
-4. Review schema inventory, SQL, and data classification.
-5. Provision the managed database outside this repository.
-6. Apply DDL through the selected provider or future migration tool.
-7. Run an operator-owned restore procedure.
-8. Generate the managed database parity plan.
-9. Run parity checks through approved operational access.
-10. Run API preflight with the managed database runtime configuration.
-11. Generate the release manifest and API traffic plan.
-12. Move traffic manually only after the selected hosting-provider operator approves the plan.
+4. Generate the managed database export bundle from the reviewed snapshot.
+5. Review schema inventory, SQL, export row counts, checksums, and data classification.
+6. Provision the managed database outside this repository.
+7. Apply DDL through the selected provider or future migration tool.
+8. Import the JSONL export through an operator-owned procedure.
+9. Generate the managed database parity plan.
+10. Run parity checks through approved operational access.
+11. Run API preflight with the managed database runtime configuration.
+12. Generate the release manifest and API traffic plan.
+13. Move traffic manually only after the selected hosting-provider operator approves the plan.
 
 ## Boundary
 This phase creates a reviewable migration plan and schema inventory. Database provisioning, schema application, data copy, parity automation, runtime adapter changes, traffic movement, and rollback automation remain deferred until the managed database provider and credential model are selected.

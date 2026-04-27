@@ -1,0 +1,102 @@
+name: API Managed Database Export
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Backend environment.
+        type: choice
+        required: true
+        options:
+          - staging
+          - production
+      export_label:
+        description: Stable export label.
+        type: string
+        required: true
+      snapshot_artifact:
+        description: Optional API data snapshot artifact name to download.
+        type: string
+        required: false
+      snapshot_run_id:
+        description: Workflow run ID that produced snapshot_artifact.
+        type: string
+        required: false
+      snapshot_source:
+        description: Runner-local snapshot directory when no artifact is downloaded.
+        type: string
+        required: false
+      database_plan:
+        description: Managed database plan artifact name or URL.
+        type: string
+        required: false
+      schema_manifest:
+        description: Managed database schema manifest artifact name or URL.
+        type: string
+        required: false
+      parity_plan:
+        description: Managed database parity plan artifact name or URL.
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: api-managed-database-export-${{ inputs.target }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  FORCE_COLOR: 1
+  API_DATABASE_EXPORT_TARGET: ${{ inputs.target }}
+  API_DATABASE_EXPORT_LABEL: ${{ inputs.export_label }}
+  API_DATABASE_EXPORT_FORMAT: jsonl
+  API_DATABASE_EXPORT_SNAPSHOT_SOURCE: ${{ inputs.snapshot_artifact != '' && 'artifacts/source-snapshot' || inputs.snapshot_source }}
+  API_DATABASE_EXPORT_DATABASE_PLAN: ${{ inputs.database_plan }}
+  API_DATABASE_EXPORT_SCHEMA_MANIFEST: ${{ inputs.schema_manifest }}
+  API_DATABASE_EXPORT_PARITY_PLAN: ${{ inputs.parity_plan }}
+  API_DATABASE_EXPORT_DIR: artifacts/api-managed-database-exports
+
+jobs:
+  api-managed-database-export:
+    name: Write ${{ inputs.target }} API managed database export
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Validate snapshot source
+        if: ${{ inputs.snapshot_artifact == '' && inputs.snapshot_source == '' }}
+        run: |
+          echo "Provide snapshot_artifact or snapshot_source."
+          exit 1
+
+      - name: Validate snapshot artifact run
+        if: ${{ inputs.snapshot_artifact != '' && inputs.snapshot_run_id == '' }}
+        run: |
+          echo "snapshot_run_id is required when snapshot_artifact is provided."
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download API data snapshot artifact
+        if: ${{ inputs.snapshot_artifact != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.snapshot_artifact }}
+          run-id: ${{ inputs.snapshot_run_id }}
+          github-token: ${{ github.token }}
+          path: artifacts/source-snapshot
+
+      - name: Write API managed database export
+        id: export
+        run: node scripts/write-api-managed-database-export.mjs
+
+      - name: Upload API managed database export
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-vault-api-managed-database-export-${{ inputs.target }}
+          path: ${{ steps.export.outputs.export_dir }}
+          if-no-files-found: error

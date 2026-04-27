@@ -87,9 +87,10 @@ Use the schema bundle after the managed database plan:
 3. Generate the managed database schema bundle.
 4. Review the SQL and manifest.
 5. Apply the SQL manually through the selected provider or future migration tool.
-6. Restore data through an operator-owned migration procedure.
-7. Generate the managed database parity plan.
-8. Run parity checks before API traffic movement.
+6. Generate the managed database export bundle from the reviewed API data snapshot.
+7. Import the JSONL files through an operator-owned migration procedure.
+8. Generate the managed database parity plan.
+9. Run parity checks before API traffic movement.
 
 ## Boundary
 This phase creates a portable PostgreSQL schema artifact. Provider-specific provisioning, credentials, schema application, data copy, live parity automation, runtime adapter changes, migrations, and traffic movement remain deferred.

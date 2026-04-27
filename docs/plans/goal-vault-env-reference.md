@@ -156,6 +156,24 @@
 - `API_DATABASE_PLAN_DIR`
   - output directory for local managed database plan artifacts
 
+## API Managed Database Export Variables
+- `API_DATABASE_EXPORT_TARGET`
+  - `staging` or `production`
+- `API_DATABASE_EXPORT_LABEL`
+  - stable label used in export directory and artifact naming
+- `API_DATABASE_EXPORT_FORMAT`
+  - currently `jsonl`
+- `API_DATABASE_EXPORT_SNAPSHOT_SOURCE`
+  - local snapshot directory containing a snapshot `manifest.json`
+- `API_DATABASE_EXPORT_DATABASE_PLAN`
+  - optional managed database plan artifact name or URL
+- `API_DATABASE_EXPORT_SCHEMA_MANIFEST`
+  - optional managed database schema manifest artifact name or URL
+- `API_DATABASE_EXPORT_PARITY_PLAN`
+  - optional managed database parity plan artifact name or URL
+- `API_DATABASE_EXPORT_DIR`
+  - output root for local export bundle artifacts
+
 ## API Managed Database Parity Variables
 - `API_DATABASE_PARITY_TARGET`
   - `staging` or `production`
@@ -170,7 +188,7 @@
 - `API_DATABASE_PARITY_SCHEMA_NAME`
   - PostgreSQL schema name used in target query generation
 - `API_DATABASE_PARITY_SOURCE_SNAPSHOT`
-  - API data snapshot artifact name or approved storage reference
+  - API data snapshot or managed database export artifact name or approved storage reference
 - `API_DATABASE_PARITY_SCHEMA_MANIFEST`
   - managed database schema manifest artifact name or URL
 - `API_DATABASE_PARITY_DATABASE_PLAN`
@@ -235,6 +253,7 @@
 - The API preflight workflow requires `API_INTERNAL_TOKEN` and target-chain RPC secrets but writes only redacted configured or missing status.
 - The API traffic plan workflow uses only non-secret operator inputs and does not require hosting-provider credentials.
 - The API managed database plan workflow uses only non-secret operator inputs and rejects target references that look like connection strings or credentials.
+- The API managed database export workflow reads a snapshot directory, verifies snapshot checksums, and writes JSONL files only; export bundles are sensitive and should not be committed.
 - The API managed database parity workflow emits query pairs and acceptance gates only; it does not connect to SQLite or PostgreSQL.
 - The API managed database schema workflow emits SQL and JSON artifacts only; it does not connect to or mutate a database.
 - The mobile distribution workflow uses `EXPO_TOKEN`; App Store Connect and Google Play credentials should stay in EAS.

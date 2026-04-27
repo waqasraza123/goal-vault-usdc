@@ -3,7 +3,7 @@
 ## Purpose
 This pass adds repository-owned GitHub Actions automation for the current production-shaped v1 codebase.
 
-The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, managed database planning, managed database schema generation, managed database parity planning, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
+The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, managed database planning, managed database schema generation, managed database export generation, managed database parity planning, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
 
 ## Workflow Files
 - `.github/actions/setup-pnpm/action.yml`
@@ -52,6 +52,10 @@ The CI and release-candidate workflows intentionally stop at verification and re
   - manual staging or production PostgreSQL schema artifact generation
   - writes SQL DDL and a JSON manifest for the current API persistence contract
   - uploads schema artifacts without connecting to a database
+- `.github/workflows/api-managed-database-export.yml`
+  - manual staging or production managed database export generation
+  - converts a prior API data snapshot artifact or runner-local snapshot directory into JSONL table files
+  - uploads an export bundle without connecting to or importing into a managed database
 - `.github/workflows/api-managed-database-parity.yml`
   - manual staging or production parity plan generation
   - writes SQLite and PostgreSQL comparison query pairs plus acceptance gates
@@ -139,6 +143,14 @@ Use GitHub Environment variables for public, non-secret release metadata:
 - `API_DATABASE_PARITY_OPERATOR`
 - `API_DATABASE_PARITY_NOTES`
 - `API_DATABASE_PARITY_DIR`
+- `API_DATABASE_EXPORT_TARGET`
+- `API_DATABASE_EXPORT_LABEL`
+- `API_DATABASE_EXPORT_FORMAT`
+- `API_DATABASE_EXPORT_SNAPSHOT_SOURCE`
+- `API_DATABASE_EXPORT_DATABASE_PLAN`
+- `API_DATABASE_EXPORT_SCHEMA_MANIFEST`
+- `API_DATABASE_EXPORT_PARITY_PLAN`
+- `API_DATABASE_EXPORT_DIR`
 - `API_DATABASE_SCHEMA_TARGET`
 - `API_DATABASE_SCHEMA_LABEL`
 - `API_DATABASE_SCHEMA_ENGINE`
@@ -234,6 +246,15 @@ Use the manual API managed database schema workflow before applying provider-spe
 4. Optionally reference the managed database plan artifact.
 5. Download the SQL and JSON manifest artifacts for review.
 
+## API Managed Database Export Gate
+Use the manual API managed database export workflow after a data snapshot and schema review exist:
+
+1. Choose `staging` or `production`.
+2. Provide a stable export label.
+3. Provide either `snapshot_artifact` with `snapshot_run_id` or a runner-local `snapshot_source`.
+4. Optionally reference the managed database plan, schema manifest, and parity plan artifacts.
+5. Download the export bundle and review its manifest, row counts, checksums, and data classification before any import.
+
 ## API Managed Database Parity Gate
 Use the manual API managed database parity workflow before promoting a managed-database-backed API:
 
@@ -241,7 +262,7 @@ Use the manual API managed database parity workflow before promoting a managed-d
 2. Provide a stable parity label.
 3. Choose `restore-validation`, `pre-traffic`, or `post-rollback`.
 4. Provide the PostgreSQL schema name used by the schema bundle.
-5. Provide source snapshot and schema manifest references.
+5. Provide source snapshot or export bundle and schema manifest references.
 6. Download the parity plan artifact and run the emitted query pairs through approved operational access.
 
 ## Mobile Distribution Gate
@@ -271,6 +292,7 @@ Use the manual release manifest workflow before traffic movement:
 - Use `docs/deployment/api-managed-database-plan.md` for external database migration planning before provider-specific work.
 - Use `docs/deployment/api-managed-database-parity.md` for SQLite/PostgreSQL parity planning before traffic movement.
 - Use `docs/deployment/api-managed-database-schema.md` for provider-neutral PostgreSQL DDL artifacts.
+- Use `docs/deployment/api-managed-database-export.md` for SQLite snapshot to JSONL export bundles before provider-owned import.
 - Use `docs/deployment/api-preflight.md` for API runtime env validation before backend deployment.
 - Use `docs/deployment/api-traffic-plan.md` for provider-neutral traffic movement, rollback, and disablement planning.
 - Use `docs/deployment/mobile-distribution.md` for EAS builds, store submission, and mobile rollback handling.
@@ -279,5 +301,5 @@ Use the manual release manifest workflow before traffic movement:
 
 ## Deferred Automation
 - Hosting-provider backend deployment
-- Database provisioning, schema creation, migration orchestration, and parity checks
+- Database provisioning, schema application, import orchestration, and live parity checks
 - Traffic promotion and rollback automation

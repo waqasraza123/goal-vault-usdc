@@ -18,6 +18,8 @@ It is not a live parity checker. It does not connect to SQLite, PostgreSQL, or a
   - uploads the parity plan artifact
 - `package.json`
   - exposes `pnpm api:database:parity`
+- `docs/deployment/api-managed-database-export.md`
+  - creates the JSONL handoff bundle that operators import before running parity checks
 
 ## Required Inputs
 - `API_DATABASE_PARITY_TARGET`
@@ -33,7 +35,7 @@ It is not a live parity checker. It does not connect to SQLite, PostgreSQL, or a
 - `API_DATABASE_PARITY_SCHEMA_NAME`
   - PostgreSQL schema name used in target query generation
 - `API_DATABASE_PARITY_SOURCE_SNAPSHOT`
-  - API data snapshot artifact name or approved storage reference
+  - API data snapshot or managed database export artifact name or approved storage reference
 - `API_DATABASE_PARITY_SCHEMA_MANIFEST`
   - managed database schema manifest artifact name or URL
 
@@ -79,7 +81,7 @@ PostgreSQL query pairs use `API_DATABASE_PARITY_SCHEMA_NAME`, which should match
 ## Acceptance Gate
 Before traffic movement:
 
-1. Source snapshot, schema manifest, and schema SQL artifacts are reviewed.
+1. Source snapshot or export bundle, schema manifest, and schema SQL artifacts are reviewed.
 2. Table row counts match exactly unless an intentional reset is recorded.
 3. Sync state latest indexed blocks and log indexes do not regress.
 4. Private vault metadata is reviewed only through approved operational access.
@@ -96,4 +98,4 @@ Rollback is required when:
 - `/ready` reports blocked checks after managed database configuration
 
 ## Boundary
-This phase writes a parity review plan. Live query execution, credential handling, data migration, parity automation, runtime adapter changes, and traffic movement remain deferred until a managed database provider and driver are selected.
+This phase writes a parity review plan. Live query execution, credential handling, data import, parity automation, runtime adapter changes, and traffic movement remain deferred until a managed database provider and driver are selected.
