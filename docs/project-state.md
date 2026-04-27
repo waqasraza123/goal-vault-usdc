@@ -41,6 +41,7 @@ The repository now has a real v1 foundation:
 - provider-neutral managed database export bundles that convert API data snapshots into JSONL handoff files
 - provider-neutral managed database import plan artifacts that turn export bundles into PostgreSQL import SQL handoffs
 - provider-neutral managed database parity plan artifacts for restore and pre-traffic comparison review
+- provider-neutral managed database runtime activation plan artifacts before PostgreSQL mode is enabled
 - root README with setup, scripts, architecture, and verification guidance
 
 Still not implemented:
@@ -124,6 +125,7 @@ Still not implemented:
 - Phase 32: API persistence port interfaces for store adapter isolation
 - Phase 33: asynchronous API persistence read boundary for external database readiness
 - Phase 34: inactive PostgreSQL persistence store core behind the API ports
+- Phase 35: managed database runtime activation plan artifacts before PostgreSQL mode is enabled
 
 ## Important Decisions
 - The product should feel like a premium savings tool, not a DeFi dashboard.
@@ -211,6 +213,7 @@ Still not implemented:
 - Future persistence adapters must implement the port interfaces and be wired through `createApiPersistenceStores`; routes and services should not import database-specific store classes.
 - Phase 33 makes persistence reads asynchronous across API routes, sync services, metadata verification, metadata reconciliation, and readiness checks so a network-backed store can satisfy the same ports.
 - Phase 34 adds `PostgresqlIndexerStore` and `PostgresqlAnalyticsStore` around an injected query executor, but PostgreSQL runtime mode remains blocked until driver, credentials, schema/import/parity, and rollback procedures are accepted.
+- Phase 35 adds a provider-neutral managed database runtime activation plan workflow that validates schema/import/parity/preflight/release/traffic/image/snapshot evidence before PostgreSQL mode is enabled.
 - Product docs live in `docs/product/goal-vault/`:
   - `goal.md` for the concise product goal
   - `plan.md` for the detailed execution-oriented plan
@@ -256,6 +259,7 @@ Still not implemented:
 - The Phase 32 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-32.md`.
 - The Phase 33 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-33.md`.
 - The Phase 34 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-34.md`.
+- The Phase 35 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-35.md`.
 - The CI and release workflow note lives at `docs/plans/goal-vault-ci-release-workflows.md`.
 - The contract deployment runbook lives at `docs/deployment/contract-deployment.md`.
 - The API image runbook lives at `docs/deployment/api-image.md`.
@@ -264,6 +268,7 @@ Still not implemented:
 - The API managed database schema runbook lives at `docs/deployment/api-managed-database-schema.md`.
 - The API managed database export runbook lives at `docs/deployment/api-managed-database-export.md`.
 - The API managed database import plan runbook lives at `docs/deployment/api-managed-database-import-plan.md`.
+- The API managed database runtime activation plan runbook lives at `docs/deployment/api-managed-database-runtime-plan.md`.
 - The API persistence runtime runbook lives at `docs/deployment/api-persistence-runtime.md`.
 - The API preflight runbook lives at `docs/deployment/api-preflight.md`.
 - The API traffic plan runbook lives at `docs/deployment/api-traffic-plan.md`.

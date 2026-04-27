@@ -39,6 +39,7 @@ In SQLite mode:
 - API route and service modules consume `ApiIndexerStore` and `ApiAnalyticsStore` ports
 - API read paths await persistence port methods so future external database adapters can perform network I/O
 - an inactive PostgreSQL store core exists but is not constructed by the runtime factory
+- runtime activation must be planned with `pnpm api:database:runtime:plan` before PostgreSQL mode is enabled
 - the API keeps using `goal-vault-indexer.sqlite` and `goal-vault-analytics.sqlite`
 - managed database plan, schema, export, import plan, and parity artifacts remain handoff artifacts only
 
@@ -101,7 +102,8 @@ The current provider-neutral path remains:
 7. Generate and execute parity checks through approved operational access.
 8. Add the provider-approved PostgreSQL driver and connection pool.
 9. Wire the PostgreSQL store core through `createApiPersistenceStores`.
-10. Switch `API_PERSISTENCE_DRIVER` to `postgresql` only after the adapter, rollback path, and preflight checks are accepted.
+10. Generate the managed database runtime activation plan.
+11. Switch `API_PERSISTENCE_DRIVER` to `postgresql` only after the adapter, rollback path, runtime activation plan, and preflight checks are accepted.
 
 ## Boundary
 Current runtime guardrails remain active. The inactive PostgreSQL store core does not add a PostgreSQL driver, connect to a managed database, change API persistence behavior, execute import SQL, run parity checks, deploy the API, or move traffic.

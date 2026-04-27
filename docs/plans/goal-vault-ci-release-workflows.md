@@ -3,7 +3,7 @@
 ## Purpose
 This pass adds repository-owned GitHub Actions automation for the current production-shaped v1 codebase.
 
-The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, managed database planning, managed database schema generation, managed database export generation, managed database import planning, managed database parity planning, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
+The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, managed database planning, managed database schema generation, managed database export generation, managed database import planning, managed database parity planning, managed database runtime activation planning, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
 
 ## Workflow Files
 - `.github/actions/setup-pnpm/action.yml`
@@ -64,6 +64,10 @@ The CI and release-candidate workflows intentionally stop at verification and re
   - manual staging or production parity plan generation
   - writes SQLite and PostgreSQL comparison query pairs plus acceptance gates
   - uploads a parity plan artifact without connecting to a database
+- `.github/workflows/api-managed-database-runtime-plan.yml`
+  - manual staging or production runtime activation plan generation
+  - validates required schema, import, parity, preflight, traffic, release, image, and snapshot evidence
+  - uploads a runtime plan artifact without enabling PostgreSQL mode
 - `.github/workflows/mobile-distribution.yml`
   - manual staging or production EAS mobile build and submit operations
   - starts remote EAS builds in build mode
@@ -172,6 +176,31 @@ Use GitHub Environment variables for public, non-secret release metadata:
 - `API_DATABASE_IMPORT_OPERATOR`
 - `API_DATABASE_IMPORT_NOTES`
 - `API_DATABASE_IMPORT_DIR`
+- `API_DATABASE_RUNTIME_TARGET`
+- `API_DATABASE_RUNTIME_LABEL`
+- `API_DATABASE_RUNTIME_ENGINE`
+- `API_DATABASE_RUNTIME_MODE`
+- `API_DATABASE_RUNTIME_TARGET_REFERENCE`
+- `API_DATABASE_RUNTIME_SCHEMA_NAME`
+- `API_DATABASE_RUNTIME_DRIVER_PACKAGE`
+- `API_DATABASE_RUNTIME_DATABASE_PLAN`
+- `API_DATABASE_RUNTIME_SCHEMA_MANIFEST`
+- `API_DATABASE_RUNTIME_SCHEMA_SQL`
+- `API_DATABASE_RUNTIME_EXPORT_BUNDLE`
+- `API_DATABASE_RUNTIME_IMPORT_PLAN`
+- `API_DATABASE_RUNTIME_PARITY_PLAN`
+- `API_DATABASE_RUNTIME_PREFLIGHT_REPORT`
+- `API_DATABASE_RUNTIME_RELEASE_MANIFEST`
+- `API_DATABASE_RUNTIME_TRAFFIC_PLAN`
+- `API_DATABASE_RUNTIME_SOURCE_SNAPSHOT`
+- `API_DATABASE_RUNTIME_ROLLBACK_SNAPSHOT`
+- `API_DATABASE_RUNTIME_API_IMAGE`
+- `API_DATABASE_RUNTIME_ROLLBACK_API_IMAGE`
+- `API_DATABASE_RUNTIME_CHANGE_WINDOW`
+- `API_DATABASE_RUNTIME_OBSERVE_MINUTES`
+- `API_DATABASE_RUNTIME_OPERATOR`
+- `API_DATABASE_RUNTIME_NOTES`
+- `API_DATABASE_RUNTIME_DIR`
 - `API_DATABASE_SCHEMA_TARGET`
 - `API_DATABASE_SCHEMA_LABEL`
 - `API_DATABASE_SCHEMA_ENGINE`
@@ -297,6 +326,15 @@ Use the manual API managed database parity workflow before promoting a managed-d
 4. Provide the PostgreSQL schema name used by the schema bundle.
 5. Provide source snapshot or export bundle and schema manifest references.
 6. Download the parity plan artifact and run the emitted query pairs through approved operational access.
+
+## API Managed Database Runtime Plan Gate
+Use the manual API managed database runtime plan workflow before enabling PostgreSQL as the API runtime persistence mode:
+
+1. Choose `staging` or `production`.
+2. Provide a stable runtime label.
+3. Choose `shadow`, `cutover`, or `rollback-drill`.
+4. Provide the non-secret managed database target reference, PostgreSQL schema name, planned driver package label, candidate and rollback API images, source and rollback snapshots, and all managed database artifact references.
+5. Download the runtime plan artifact and review acceptance gates before adding runtime factory wiring or moving traffic.
 
 ## Mobile Distribution Gate
 Use the manual mobile distribution workflow after app, API, and contract release candidates are coherent:

@@ -26,6 +26,8 @@ It is not a migration workflow. It does not connect to a database, create schema
   - writes psql-compatible import SQL and execution boundaries from a reviewed export bundle
 - `docs/deployment/api-managed-database-parity.md`
   - records the table-level comparison checks operators should run after restore
+- `docs/deployment/api-managed-database-runtime-plan.md`
+  - records the final runtime activation evidence before PostgreSQL mode is enabled
 
 ## Required Inputs
 - `API_DATABASE_PLAN_TARGET`
@@ -134,7 +136,8 @@ Use the managed database plan before adding provider-specific database infrastru
 11. Run parity checks through approved operational access.
 12. Run API preflight with the selected persistence driver and keep `API_PERSISTENCE_DRIVER=sqlite` until the PostgreSQL adapter is implemented.
 13. Generate the release manifest and API traffic plan.
-14. Move traffic manually only after the selected hosting-provider operator approves the plan.
+14. Generate the managed database runtime activation plan before enabling PostgreSQL mode.
+15. Move traffic manually only after the selected hosting-provider operator approves the plan.
 
 ## Boundary
 This phase creates a reviewable migration plan and schema inventory. Database provisioning, schema application, data copy, parity automation, runtime adapter changes, traffic movement, and rollback automation remain deferred until the managed database provider and credential model are selected.

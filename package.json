@@ -15,6 +15,7 @@
     "api:database:import:plan": "node scripts/write-api-managed-database-import-plan.mjs",
     "api:database:parity": "node scripts/write-api-managed-database-parity-plan.mjs",
     "api:database:plan": "node scripts/write-api-managed-database-plan.mjs",
+    "api:database:runtime:plan": "node scripts/write-api-managed-database-runtime-plan.mjs",
     "api:database:schema": "node scripts/write-api-managed-database-schema.mjs",
     "api:preflight": "pnpm --filter @goal-vault/api preflight",
     "api:traffic:plan": "node scripts/write-api-traffic-plan.mjs",

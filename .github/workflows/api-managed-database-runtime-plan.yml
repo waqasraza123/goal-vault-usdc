@@ -1,0 +1,164 @@
+name: API Managed Database Runtime Plan
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Backend environment.
+        type: choice
+        required: true
+        options:
+          - staging
+          - production
+      runtime_label:
+        description: Stable runtime activation label.
+        type: string
+        required: true
+      mode:
+        description: Runtime activation mode.
+        type: choice
+        required: true
+        default: shadow
+        options:
+          - shadow
+          - cutover
+          - rollback-drill
+      target_reference:
+        description: Non-secret managed database target reference.
+        type: string
+        required: true
+      schema_name:
+        description: PostgreSQL schema name.
+        type: string
+        required: false
+        default: goal_vault_api
+      driver_package:
+        description: Planned Node PostgreSQL driver package.
+        type: string
+        required: true
+      database_plan:
+        description: Managed database plan artifact name or URL.
+        type: string
+        required: true
+      schema_manifest:
+        description: Managed database schema manifest artifact name or URL.
+        type: string
+        required: true
+      schema_sql:
+        description: Managed database schema SQL artifact name or URL.
+        type: string
+        required: true
+      export_bundle:
+        description: Managed database export bundle artifact name or URL.
+        type: string
+        required: true
+      import_plan:
+        description: Managed database import plan artifact name or URL.
+        type: string
+        required: true
+      parity_plan:
+        description: Managed database parity plan artifact name or URL.
+        type: string
+        required: true
+      preflight_report:
+        description: API preflight report artifact name or URL.
+        type: string
+        required: true
+      release_manifest:
+        description: Release manifest artifact name or URL.
+        type: string
+        required: true
+      traffic_plan:
+        description: API traffic plan artifact name or URL.
+        type: string
+        required: true
+      source_snapshot:
+        description: Source API data snapshot artifact name or approved storage reference.
+        type: string
+        required: true
+      rollback_snapshot:
+        description: Rollback API data snapshot artifact name or approved storage reference.
+        type: string
+        required: true
+      api_image:
+        description: Candidate API image with explicit tag.
+        type: string
+        required: true
+      rollback_api_image:
+        description: Rollback API image with explicit tag.
+        type: string
+        required: true
+      change_window:
+        description: Approved change window.
+        type: string
+        required: false
+      observe_minutes:
+        description: Minimum observation window for runtime activation.
+        type: string
+        required: false
+        default: "30"
+      operator:
+        description: Operator or team responsible for runtime activation.
+        type: string
+        required: false
+      notes:
+        description: Optional non-secret operator notes.
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: api-managed-database-runtime-plan-${{ inputs.target }}-${{ inputs.mode }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  FORCE_COLOR: 1
+  API_DATABASE_RUNTIME_TARGET: ${{ inputs.target }}
+  API_DATABASE_RUNTIME_LABEL: ${{ inputs.runtime_label }}
+  API_DATABASE_RUNTIME_ENGINE: postgresql
+  API_DATABASE_RUNTIME_MODE: ${{ inputs.mode }}
+  API_DATABASE_RUNTIME_TARGET_REFERENCE: ${{ inputs.target_reference }}
+  API_DATABASE_RUNTIME_SCHEMA_NAME: ${{ inputs.schema_name }}
+  API_DATABASE_RUNTIME_DRIVER_PACKAGE: ${{ inputs.driver_package }}
+  API_DATABASE_RUNTIME_DATABASE_PLAN: ${{ inputs.database_plan }}
+  API_DATABASE_RUNTIME_SCHEMA_MANIFEST: ${{ inputs.schema_manifest }}
+  API_DATABASE_RUNTIME_SCHEMA_SQL: ${{ inputs.schema_sql }}
+  API_DATABASE_RUNTIME_EXPORT_BUNDLE: ${{ inputs.export_bundle }}
+  API_DATABASE_RUNTIME_IMPORT_PLAN: ${{ inputs.import_plan }}
+  API_DATABASE_RUNTIME_PARITY_PLAN: ${{ inputs.parity_plan }}
+  API_DATABASE_RUNTIME_PREFLIGHT_REPORT: ${{ inputs.preflight_report }}
+  API_DATABASE_RUNTIME_RELEASE_MANIFEST: ${{ inputs.release_manifest }}
+  API_DATABASE_RUNTIME_TRAFFIC_PLAN: ${{ inputs.traffic_plan }}
+  API_DATABASE_RUNTIME_SOURCE_SNAPSHOT: ${{ inputs.source_snapshot }}
+  API_DATABASE_RUNTIME_ROLLBACK_SNAPSHOT: ${{ inputs.rollback_snapshot }}
+  API_DATABASE_RUNTIME_API_IMAGE: ${{ inputs.api_image }}
+  API_DATABASE_RUNTIME_ROLLBACK_API_IMAGE: ${{ inputs.rollback_api_image }}
+  API_DATABASE_RUNTIME_CHANGE_WINDOW: ${{ inputs.change_window }}
+  API_DATABASE_RUNTIME_OBSERVE_MINUTES: ${{ inputs.observe_minutes }}
+  API_DATABASE_RUNTIME_OPERATOR: ${{ inputs.operator }}
+  API_DATABASE_RUNTIME_NOTES: ${{ inputs.notes }}
+  API_DATABASE_RUNTIME_DIR: artifacts
+
+jobs:
+  api-managed-database-runtime-plan:
+    name: Write ${{ inputs.target }} API managed database runtime plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write API managed database runtime plan
+        id: runtime
+        run: node scripts/write-api-managed-database-runtime-plan.mjs
+
+      - name: Upload API managed database runtime plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-vault-api-managed-database-runtime-${{ inputs.target }}-${{ inputs.mode }}
+          path: ${{ steps.runtime.outputs.plan_path }}
+          if-no-files-found: error
