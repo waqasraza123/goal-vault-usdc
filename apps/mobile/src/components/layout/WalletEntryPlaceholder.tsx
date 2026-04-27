@@ -1,6 +1,5 @@
 import type { ComponentProps } from "react";
-import { View } from "react-native";
-import { Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useWalletConnection } from "../../hooks/useWalletConnection";
@@ -35,8 +34,23 @@ export const WalletEntryPlaceholder = ({ compact = false }: WalletEntryPlacehold
       accessibilityRole="button"
       disabled={disabled}
       onPress={onPress}
-      className="max-w-[154px] rounded-2xl border border-slate-200 bg-white px-3 py-2 active:bg-slate-100"
-      style={{ opacity: disabled ? 0.72 : 1 }}
+      style={({ pressed }) => ({
+        maxWidth: 154,
+        borderRadius: radii.md,
+        borderWidth: 1,
+        borderColor: tone === "warning" ? colors.warning : tone === "positive" ? colors.positive : colors.borderStrong,
+        backgroundColor:
+          tone === "warning"
+            ? colors.warningSoft
+            : tone === "positive"
+              ? colors.positiveSoft
+              : pressed
+                ? colors.surfaceStrong
+                : colors.surface,
+        paddingHorizontal: spacing[3],
+        paddingVertical: spacing[2],
+        opacity: disabled ? 0.72 : 1,
+      })}
     >
       <View style={{ flexDirection: inlineDirection(), alignItems: "center", gap: spacing[2] }}>
         <MaterialCommunityIcons

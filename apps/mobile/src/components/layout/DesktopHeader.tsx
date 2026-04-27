@@ -1,3 +1,5 @@
+import type { ComponentProps } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Link, type Href, useRouter } from "expo-router";
 import { Pressable, View } from "react-native";
 
@@ -13,6 +15,8 @@ import { WalletEntryPlaceholder } from "./WalletEntryPlaceholder";
 export interface HeaderLink {
   label: string;
   href: Href;
+  icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
+  isActive?: boolean;
 }
 
 export interface DesktopHeaderProps {
@@ -38,7 +42,7 @@ export const DesktopHeader = ({ links, ctaLabel, ctaHref }: DesktopHeaderProps) 
           }}
         >
           <Link href={routes.landing} asChild>
-            <Pressable>
+            <Pressable accessibilityRole="link">
               <View style={{ gap: spacing[1] }}>
                 <AppHeading size="sm" style={{ color: colors.accentStrong }}>{productConfig.shortName}</AppHeading>
                 <AppText size="sm" tone="muted">
@@ -51,16 +55,26 @@ export const DesktopHeader = ({ links, ctaLabel, ctaHref }: DesktopHeaderProps) 
             {links.map((link) => (
               <Link key={link.label} href={link.href} asChild>
                 <Pressable
+                  accessibilityRole="link"
+                  accessibilityState={{ selected: link.isActive }}
                   style={({ pressed }) => ({
                     paddingHorizontal: spacing[3],
                     paddingVertical: spacing[2],
                     borderRadius: radii.pill,
                     borderWidth: 1,
-                    borderColor: pressed ? colors.borderStrong : colors.border,
-                    backgroundColor: pressed ? colors.surfaceStrong : colors.surfaceGlass,
+                    borderColor: link.isActive || pressed ? colors.accentStrong : colors.border,
+                    backgroundColor: link.isActive ? colors.accentSoft : pressed ? colors.surfaceStrong : colors.surfaceGlass,
+                    flexDirection: inlineDirection(),
+                    alignItems: "center",
+                    gap: spacing[2],
                   })}
                 >
-                  <AppText tone="secondary" weight="medium">
+                  <MaterialCommunityIcons
+                    color={link.isActive ? colors.accentStrong : colors.textSecondary}
+                    name={link.icon}
+                    size={17}
+                  />
+                  <AppText style={link.isActive ? { color: colors.accentStrong } : undefined} tone="secondary" weight="medium">
                     {link.label}
                   </AppText>
                 </Pressable>

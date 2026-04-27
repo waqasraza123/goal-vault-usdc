@@ -24,12 +24,12 @@ export const MobileHeader = ({ links, ctaHref, ctaLabel }: MobileHeaderProps) =>
 
   return (
     <SafeAreaView edges={["top"]} style={{ backgroundColor: colors.backgroundElevated }}>
-      <View className="border-b border-slate-200 bg-white">
+      <View style={{ borderBottomWidth: 1, borderBottomColor: colors.borderStrong, backgroundColor: colors.backgroundElevated }}>
         <PageContainer>
           <View style={{ gap: spacing[3], paddingBottom: spacing[3], paddingTop: spacing[2] }}>
             <View style={{ flexDirection: inlineDirection(), alignItems: "center" }}>
               <Link href={routes.landing} asChild>
-                <Pressable>
+                <Pressable accessibilityRole="link">
                   <View style={{ gap: spacing[1] }}>
                     <AppHeading size="sm" style={{ color: colors.textPrimary }}>
                       {productConfig.shortName}
@@ -49,17 +49,30 @@ export const MobileHeader = ({ links, ctaHref, ctaLabel }: MobileHeaderProps) =>
               {links.map((link) => (
                 <Link key={link.label} href={link.href} asChild>
                   <Pressable
-                    className="rounded-2xl border border-slate-200 bg-white px-3 py-2 active:bg-slate-100"
+                    accessibilityRole="link"
+                    accessibilityState={{ selected: link.isActive }}
                     style={({ pressed }) => ({
                       flexDirection: inlineDirection(),
                       alignItems: "center",
                       gap: spacing[2],
                       borderRadius: radii.md,
-                      backgroundColor: pressed ? colors.surfaceStrong : undefined,
+                      borderWidth: 1,
+                      borderColor: link.isActive || pressed ? colors.accentStrong : colors.borderStrong,
+                      backgroundColor: link.isActive ? colors.accentSoft : pressed ? colors.surfaceStrong : colors.surface,
+                      paddingHorizontal: spacing[3],
+                      paddingVertical: spacing[2],
                     })}
                   >
-                    <MaterialCommunityIcons color={colors.textPrimary} name={getDirectionalIcon("arrow-top-right")} size={16} />
-                    <AppText size="sm" weight="semibold">
+                    <MaterialCommunityIcons
+                      color={link.isActive ? colors.accentStrong : colors.textPrimary}
+                      name={link.icon}
+                      size={16}
+                    />
+                    <AppText
+                      size="sm"
+                      style={link.isActive ? { color: colors.accentStrong } : undefined}
+                      weight="semibold"
+                    >
                       {link.label}
                     </AppText>
                   </Pressable>
@@ -67,12 +80,18 @@ export const MobileHeader = ({ links, ctaHref, ctaLabel }: MobileHeaderProps) =>
               ))}
               <Link href={ctaHref} asChild>
                 <Pressable
-                  className="rounded-2xl bg-blue-600 px-4 py-2 active:bg-blue-700"
+                  accessibilityRole="link"
                   style={({ pressed }) => ({
+                    flexDirection: inlineDirection(),
+                    alignItems: "center",
+                    gap: spacing[2],
                     borderRadius: radii.md,
                     backgroundColor: pressed ? colors.accentStrong : colors.accent,
+                    paddingHorizontal: spacing[4],
+                    paddingVertical: spacing[2],
                   })}
                 >
+                  <MaterialCommunityIcons color={colors.white} name={getDirectionalIcon("arrow-right")} size={16} />
                   <AppText numberOfLines={1} size="sm" style={{ color: colors.white }} weight="semibold">
                     {ctaLabel}
                   </AppText>

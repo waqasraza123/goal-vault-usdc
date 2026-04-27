@@ -35,7 +35,7 @@ export const StepPills = ({ currentStep, steps }: StepPillsProps) => {
               backgroundColor: pillBackground,
               borderWidth: 1,
               borderColor: pillBorder,
-              flexDirection: "row",
+              flexDirection: inlineDirection(),
               alignItems: "center",
               gap: spacing[2],
             }}

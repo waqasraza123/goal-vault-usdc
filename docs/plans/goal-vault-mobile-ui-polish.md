@@ -47,10 +47,14 @@ Primary actions should remain obvious and singular where possible. Secondary act
 
 Form fields use focus-aware borders and shadows. Keep helper and error text close to the field so validation stays local and predictable.
 
+Top navigation should make the current route visible with semantic active styling instead of relying on page titles alone. Header links should remain icon-led on both compact and desktop layouts, and compact header controls should use the same tokenized borders, radii, and status colors as the rest of the product UI.
+
 ## Layout Rules
 Use `inlineDirection()` for row layouts that contain icons, labels, steps, or action groups. This keeps Arabic RTL layout correct. Keep repeated metric cards at stable minimum widths and use wrapping rows for dashboard, review, and detail panels.
 
 Avoid nested card stacks unless the inner surface is a metric, activity row, or status detail. Page-level sections should remain direct layouts inside `PageContainer` or `SectionContainer`.
+
+Form sections and step indicators should use `inlineDirection()` for icon and label rows. Step indicators should preserve completion, active, and upcoming states through color and icon treatment while staying compact enough for mobile wrapping.
 
 ## Documentation Expectations
 Future UI work should update this note when adding a reusable visual pattern, changing semantic color usage, or changing how transaction, recovery, or empty states are presented. Routine component-only polish should update only `docs/_local/current-session.md`.

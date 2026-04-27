@@ -3,6 +3,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 
 import { colors, radii, spacing } from "../../theme";
+import { useI18n } from "../../lib/i18n";
 import { AppHeading, AppText } from "../primitives";
 
 export interface FormSectionProps {
@@ -21,6 +22,7 @@ export const FormSection = ({
   tone = "accent",
   children,
 }: PropsWithChildren<FormSectionProps>) => {
+  const { inlineDirection } = useI18n();
   const iconColor = tone === "positive" ? colors.positive : tone === "warning" ? colors.warning : colors.accentStrong;
   const iconBackgroundColor = tone === "positive" ? colors.positiveSoft : tone === "warning" ? colors.warningSoft : colors.accentSoft;
 
@@ -28,7 +30,7 @@ export const FormSection = ({
     <View style={{ gap: spacing[4] }}>
       <View
         style={{
-          flexDirection: "row",
+          flexDirection: inlineDirection(),
           alignItems: "flex-start",
           gap: spacing[3],
           borderRadius: radii.md,

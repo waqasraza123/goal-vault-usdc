@@ -7,24 +7,24 @@
 Commit current work, then continue production-grade mobile UI/UX polish with code and documentation only.
 
 ## Last Completed Step
-Polished wallet, network, loading, allowance, owner-only, withdrawal lock, and guided-step surfaces with shared status patterns.
+Polished shared navigation, compact header controls, form sections, and step indicators with active states, icon affordances, and RTL-aware rows.
 
 ## Files Touched
-- `apps/mobile/src/components/feedback/AllowanceRequiredNotice.tsx`
-- `apps/mobile/src/components/feedback/AppLoadingState.tsx`
-- `apps/mobile/src/components/feedback/GuidedStepsCard.tsx`
-- `apps/mobile/src/components/feedback/OwnerOnlyNotice.tsx`
-- `apps/mobile/src/components/feedback/UnsupportedNetworkNotice.tsx`
-- `apps/mobile/src/components/feedback/WithdrawalLockedNotice.tsx`
-- `apps/mobile/src/components/layout/WalletStatusCard.tsx`
+- `apps/mobile/src/components/forms/FormSection.tsx`
+- `apps/mobile/src/components/forms/StepPills.tsx`
+- `apps/mobile/src/components/layout/DesktopHeader.tsx`
+- `apps/mobile/src/components/layout/LanguageSwitcher.tsx`
+- `apps/mobile/src/components/layout/MobileHeader.tsx`
+- `apps/mobile/src/components/layout/TopNavigation.tsx`
+- `apps/mobile/src/components/layout/WalletEntryPlaceholder.tsx`
 - `docs/plans/goal-vault-mobile-ui-polish.md`
 - `docs/_local/current-session.md`
 
 ## Durable Decisions Captured
 - `docs/plans/goal-vault-mobile-ui-polish.md` is now the implementation-facing reference for current mobile visual polish.
-- Operational notices for allowance, unsupported network, owner-only access, withdrawal locks, and loading now reuse `FeedbackStatusCard`.
-- Wallet connection state now follows semantic status accents: emerald for ready, orange for unsupported network, and blue for neutral states.
-- Guided steps now use the shared elevated card language with RTL-aware rows and icon-led step markers.
+- Header navigation now carries active route state and icon-led links on compact and desktop layouts.
+- Compact language and wallet controls now use tokenized borders, radii, and semantic status colors instead of one-off utility styling.
+- Form sections and step pills now use RTL-aware row direction for icon and label layouts.
 
 ## Scope Boundaries
 - No production build, Expo export, deployment, database work, contract work, live chain interaction, or real test suite was run.
@@ -35,4 +35,4 @@ Polished wallet, network, loading, allowance, owner-only, withdrawal lock, and g
 - `git diff --check`
 
 ## Handoff Note
-Next code-focused step can continue production launch readiness, or finish any remaining small UI consistency pass outside wallet and notice surfaces.
+Next code-focused step can continue production launch readiness or finish another focused UI consistency pass in vault action panels.

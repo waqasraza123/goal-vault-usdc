@@ -15,23 +15,23 @@ export const LanguageSwitcher = ({ compact = false }: LanguageSwitcherProps) => 
 
   return (
     <View
-      className={compact ? "self-start rounded-2xl bg-slate-100 p-1" : undefined}
       style={{
         flexDirection: inlineDirection(),
         alignItems: "center",
         gap: compact ? spacing[1] : spacing[2],
         borderRadius: compact ? radii.md : radii.pill,
-        backgroundColor: compact ? undefined : colors.surfaceMuted,
-        padding: compact ? undefined : 4,
+        borderWidth: 1,
+        borderColor: compact ? colors.borderStrong : colors.border,
+        backgroundColor: colors.surfaceMuted,
+        padding: 4,
       }}
     >
       <View
-        className={compact ? "px-2" : undefined}
         style={{
           flexDirection: inlineDirection(),
           alignItems: "center",
           gap: compact ? spacing[1] : spacing[2],
-          paddingHorizontal: compact ? undefined : spacing[2],
+          paddingHorizontal: spacing[2],
         }}
       >
         <MaterialCommunityIcons color={colors.accentStrong} name="translate" size={18} />
@@ -54,13 +54,13 @@ export const LanguageSwitcher = ({ compact = false }: LanguageSwitcherProps) => 
             <Pressable
               key={option.locale}
               accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}
               onPress={() => setLocale(option.locale as AppLocale)}
-              className={compact ? "rounded-xl px-3 py-2 active:bg-white" : undefined}
               style={({ pressed }) => ({
                 borderRadius: compact ? radii.sm : radii.pill,
                 backgroundColor: isActive ? colors.accent : pressed ? colors.surfaceStrong : compact ? "transparent" : colors.surface,
-                paddingHorizontal: compact ? undefined : spacing[3],
-                paddingVertical: compact ? undefined : spacing[2],
+                paddingHorizontal: spacing[3],
+                paddingVertical: spacing[2],
               })}
             >
               <AppText size={compact ? "xs" : "sm"} style={{ color: isActive ? colors.white : colors.textPrimary }} weight="semibold">
