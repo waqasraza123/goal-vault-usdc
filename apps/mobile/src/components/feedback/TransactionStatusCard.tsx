@@ -1,8 +1,10 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 
 import { useI18n } from "../../lib/i18n";
-import { colors, spacing } from "../../theme";
-import { AppHeading, AppText, MotionView, SurfaceCard } from "../primitives";
+import { colors, radii, spacing } from "../../theme";
+import { AppText, MotionView } from "../primitives";
+import { FeedbackStatusCard } from "./FeedbackStatusCard";
 
 export interface TransactionStatusDetail {
   label: string;
@@ -22,38 +24,53 @@ export const TransactionStatusCard = ({
   tone?: "accent" | "muted" | "default";
   details?: TransactionStatusDetail[];
 }) => {
-  const { messages } = useI18n();
-  const eyebrowTone = tone === "muted" ? "danger" : "accent";
+  const { inlineDirection, messages } = useI18n();
+  const statusTone = tone === "muted" ? "danger" : tone === "default" ? "neutral" : "accent";
+  const statusIcon = tone === "muted" ? "alert-circle-outline" : "progress-clock";
 
   return (
-    <SurfaceCard level="floating" tone={tone}>
-      <MotionView style={{ gap: spacing[2] }}>
-        <AppText size="sm" tone={eyebrowTone} weight="semibold">
-          {eyebrow ?? messages.common.labels.transactionStatus}
-        </AppText>
-        <AppHeading size="md">{title}</AppHeading>
-        <AppText tone="secondary">{description}</AppText>
-      </MotionView>
-
+    <FeedbackStatusCard
+      description={description}
+      eyebrow={eyebrow ?? messages.common.labels.transactionStatus}
+      icon={statusIcon}
+      title={title}
+      tone={statusTone}
+    >
       {details.map((detail, index) => (
         <MotionView
           key={detail.label}
           delay={80 + index * 45}
           style={{
-            borderRadius: 20,
+            flexDirection: inlineDirection(),
+            alignItems: "flex-start",
+            borderRadius: radii.lg,
             borderWidth: 1,
-            borderColor: colors.border,
+            borderColor: colors.borderStrong,
             backgroundColor: colors.backgroundElevated,
             padding: spacing[4],
-            gap: spacing[2],
+            gap: spacing[3],
           }}
         >
-          <AppText size="sm" tone="secondary">
-            {detail.label}
-          </AppText>
-          <AppText weight="semibold">{detail.value}</AppText>
+          <View
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: radii.sm,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: colors.accentSoft,
+            }}
+          >
+            <MaterialCommunityIcons color={colors.accentStrong} name="identifier" size={18} />
+          </View>
+          <View style={{ flex: 1, gap: spacing[1] }}>
+            <AppText size="sm" tone="secondary">
+              {detail.label}
+            </AppText>
+            <AppText weight="semibold">{detail.value}</AppText>
+          </View>
         </MotionView>
       ))}
-    </SurfaceCard>
+    </FeedbackStatusCard>
   );
 };

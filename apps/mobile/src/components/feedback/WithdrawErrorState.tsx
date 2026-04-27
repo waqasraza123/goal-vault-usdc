@@ -1,6 +1,7 @@
 import type { WithdrawFlowState } from "../../types";
 import { useI18n } from "../../lib/i18n";
-import { AppHeading, AppText, PrimaryButton, SecondaryButton, SurfaceCard } from "../primitives";
+import { PrimaryButton, SecondaryButton } from "../primitives";
+import { FeedbackStatusCard } from "./FeedbackStatusCard";
 
 export const WithdrawErrorState = ({
   state,
@@ -14,11 +15,14 @@ export const WithdrawErrorState = ({
   const { messages } = useI18n();
 
   return (
-    <SurfaceCard tone="muted">
-      <AppHeading size="md">{messages.withdraw.flow.failedTitle}</AppHeading>
-      <AppText tone="secondary">{state.errorMessage ?? messages.withdraw.flow.failedDescription}</AppText>
-      <PrimaryButton label={messages.withdraw.actions.retry} onPress={onRetry} />
-      <SecondaryButton label={messages.common.buttons.reset} onPress={onReset} />
-    </SurfaceCard>
+    <FeedbackStatusCard
+      description={state.errorMessage ?? messages.withdraw.flow.failedDescription}
+      icon="alert-circle-outline"
+      title={messages.withdraw.flow.failedTitle}
+      tone="danger"
+    >
+      <PrimaryButton icon="refresh" label={messages.withdraw.actions.retry} onPress={onRetry} />
+      <SecondaryButton icon="restart" label={messages.common.buttons.reset} onPress={onReset} />
+    </FeedbackStatusCard>
   );
 };

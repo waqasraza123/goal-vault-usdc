@@ -1,6 +1,7 @@
 import type { DepositFlowState } from "../../types";
 import { useI18n } from "../../lib/i18n";
-import { AppHeading, AppText, PrimaryButton, SecondaryButton, SurfaceCard } from "../primitives";
+import { PrimaryButton, SecondaryButton } from "../primitives";
+import { FeedbackStatusCard } from "./FeedbackStatusCard";
 
 export const DepositErrorState = ({
   state,
@@ -13,20 +14,19 @@ export const DepositErrorState = ({
 }) => {
   const { messages } = useI18n();
 
+  const title = state.approvalCompleted ? messages.deposit.approvalErrorReadyTitle : messages.deposit.approvalErrorTitle;
+  const description =
+    state.errorMessage ??
+    (state.approvalCompleted ? messages.deposit.approvalErrorDescription : messages.deposit.errorDescription);
+
   return (
-    <SurfaceCard tone="muted">
-      <AppHeading size="md">
-        {state.approvalCompleted ? messages.deposit.approvalErrorReadyTitle : messages.deposit.approvalErrorTitle}
-      </AppHeading>
-      <AppText tone="secondary">
-        {state.errorMessage ??
-          (state.approvalCompleted ? messages.deposit.approvalErrorDescription : messages.deposit.errorDescription)}
-      </AppText>
+    <FeedbackStatusCard description={description} icon="alert-circle-outline" title={title} tone="danger">
       <PrimaryButton
+        icon="refresh"
         label={state.approvalCompleted ? messages.common.buttons.retryDeposit : messages.common.buttons.tryAgain}
         onPress={onRetry}
       />
-      <SecondaryButton label={messages.common.buttons.reset} onPress={onReset} />
-    </SurfaceCard>
+      <SecondaryButton icon="restart" label={messages.common.buttons.reset} onPress={onReset} />
+    </FeedbackStatusCard>
   );
 };

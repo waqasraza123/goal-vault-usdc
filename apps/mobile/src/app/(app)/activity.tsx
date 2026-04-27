@@ -1,3 +1,5 @@
+import type { ComponentProps } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import { useMemo } from "react";
 import { View } from "react-native";
@@ -9,10 +11,52 @@ import { formatLongDate } from "../../lib/format";
 import { useI18n } from "../../lib/i18n";
 import { getStaggerDelay } from "../../lib/motion/list-motion";
 import { colors, radii, spacing } from "../../theme";
+import type { VaultActivityEvent } from "../../types";
 import { AppErrorState, AppLoadingState, DisconnectedState, GuidedStepsCard, StateBanner } from "../../components/feedback";
 import { NetworkStatusBanner, ScreenHeader } from "../../components/layout";
-import { AppText, EmptyState, MotionView, PageContainer, PrimaryButton, Screen, SurfaceCard } from "../../components/primitives";
+import { AppHeading, AppText, EmptyState, MotionView, PageContainer, PrimaryButton, Screen, SurfaceCard } from "../../components/primitives";
 import { routes } from "../../lib/routing";
+
+const getActivityIcon = (type: VaultActivityEvent["type"]): ComponentProps<typeof MaterialCommunityIcons>["name"] => {
+  if (type === "deposit") {
+    return "plus-circle-outline";
+  }
+
+  if (type === "withdrawal") {
+    return "arrow-up-right";
+  }
+
+  if (type === "created") {
+    return "shield-lock-outline";
+  }
+
+  if (type === "milestone") {
+    return "flag-checkered";
+  }
+
+  return "timeline-check-outline";
+};
+
+const getActivityTone = (type: VaultActivityEvent["type"]) => {
+  if (type === "deposit" || type === "milestone") {
+    return {
+      backgroundColor: colors.positiveSoft,
+      iconColor: colors.positive,
+    };
+  }
+
+  if (type === "withdrawal") {
+    return {
+      backgroundColor: colors.warningSoft,
+      iconColor: colors.warning,
+    };
+  }
+
+  return {
+    backgroundColor: colors.accentSoft,
+    iconColor: colors.accentStrong,
+  };
+};
 
 export default function ActivityScreen() {
   const router = useRouter();
@@ -115,31 +159,119 @@ export default function ActivityScreen() {
             title={messages.feedback.partialStateTitle}
           />
         ) : null}
-        <View style={{ gap: spacing[4] }}>
-          {events.map((event, index) => (
-            <MotionView key={event.id} delay={getStaggerDelay(index)} style={{ gap: 0 }}>
-              <SurfaceCard>
-                <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[4] }}>
-                  <View
-                    style={{
-                      width: 12,
-                      height: 12,
-                      borderRadius: radii.pill,
-                      backgroundColor: colors.accent,
-                      marginTop: 8,
-                    }}
-                  />
-                  <View style={{ flex: 1, gap: spacing[1] }}>
-                    <AppText weight="semibold">{event.title}</AppText>
-                    <AppText tone="secondary">{event.subtitle}</AppText>
-                    <AppText size="sm" tone="muted">
-                      {formatLongDate(event.occurredAt)}
-                    </AppText>
+        {events.length > 0 ? (
+          <SurfaceCard tone="accent" style={{ padding: spacing[5] }}>
+            <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
+              <View
+                style={{
+                  width: 46,
+                  height: 46,
+                  borderRadius: radii.md,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: colors.accentSoft,
+                  borderWidth: 1,
+                  borderColor: colors.borderStrong,
+                }}
+              >
+                <MaterialCommunityIcons color={colors.accentStrong} name="timeline-clock-outline" size={24} />
+              </View>
+              <View style={{ flex: 1, gap: spacing[1] }}>
+                <AppText size="sm" tone="accent" weight="semibold">
+                  {messages.common.labels.recentActivity}
+                </AppText>
+                <AppHeading size="md">{messages.pages.activity.title}</AppHeading>
+                <AppText tone="secondary">{messages.pages.activity.description}</AppText>
+              </View>
+            </View>
+            <View style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[3] }}>
+              <View
+                style={{
+                  flex: 1,
+                  minWidth: 160,
+                  borderRadius: radii.lg,
+                  borderWidth: 1,
+                  borderColor: colors.borderStrong,
+                  backgroundColor: colors.surfaceGlass,
+                  padding: spacing[4],
+                  gap: spacing[1],
+                }}
+              >
+                <AppText size="sm" tone="secondary">
+                  {messages.common.labels.recentActivity}
+                </AppText>
+                <AppText weight="semibold">{events.length}</AppText>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  minWidth: 160,
+                  borderRadius: radii.lg,
+                  borderWidth: 1,
+                  borderColor: colors.borderStrong,
+                  backgroundColor: dataSource === "fallback" ? colors.warningSoft : colors.positiveSoft,
+                  padding: spacing[4],
+                  gap: spacing[1],
+                }}
+              >
+                <AppText size="sm" tone="secondary">
+                  {messages.common.labels.dataSource}
+                </AppText>
+                <AppText weight="semibold">
+                  {dataSource === "fallback" ? messages.common.labels.fallback : messages.common.labels.synced}
+                </AppText>
+              </View>
+            </View>
+          </SurfaceCard>
+        ) : null}
+        <View style={{ gap: spacing[3] }}>
+          {events.map((event, index) => {
+            const tone = getActivityTone(event.type);
+
+            return (
+              <MotionView key={event.id} delay={getStaggerDelay(index)} style={{ gap: 0 }}>
+                <SurfaceCard accentColor={tone.iconColor} style={{ padding: spacing[5] }}>
+                  <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[4] }}>
+                    <View
+                      style={{
+                        width: 42,
+                        height: 42,
+                        borderRadius: radii.md,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: tone.backgroundColor,
+                        borderWidth: 1,
+                        borderColor: tone.iconColor,
+                      }}
+                    >
+                      <MaterialCommunityIcons color={tone.iconColor} name={getActivityIcon(event.type)} size={22} />
+                    </View>
+                    <View style={{ flex: 1, gap: spacing[2] }}>
+                      <View style={{ gap: spacing[1] }}>
+                        <AppText weight="semibold">{event.title}</AppText>
+                        <AppText tone="secondary">{event.subtitle}</AppText>
+                      </View>
+                      <View
+                        style={{
+                          alignSelf: "flex-start",
+                          borderRadius: radii.pill,
+                          borderWidth: 1,
+                          borderColor: colors.borderStrong,
+                          backgroundColor: colors.surfaceMuted,
+                          paddingHorizontal: spacing[3],
+                          paddingVertical: spacing[2],
+                        }}
+                      >
+                        <AppText size="sm" tone="muted">
+                          {formatLongDate(event.occurredAt)}
+                        </AppText>
+                      </View>
+                    </View>
                   </View>
-                </View>
-              </SurfaceCard>
-            </MotionView>
-          ))}
+                </SurfaceCard>
+              </MotionView>
+            );
+          })}
         </View>
       </PageContainer>
     </Screen>

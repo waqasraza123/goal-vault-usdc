@@ -1,9 +1,12 @@
+import type { ComponentProps } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 
-import type { CreateVaultResult } from "../../types";
 import { interpolate, useI18n } from "../../lib/i18n";
 import { colors, radii, spacing } from "../../theme";
-import { MotionView, AppHeading, AppText, PrimaryButton, SecondaryButton, SurfaceCard } from "../primitives";
+import type { CreateVaultResult } from "../../types";
+import { FeedbackStatusCard } from "../feedback";
+import { AppText, MotionView, PrimaryButton, SecondaryButton } from "../primitives";
 
 export const CreateVaultSuccessCard = ({
   result,
@@ -14,113 +17,127 @@ export const CreateVaultSuccessCard = ({
   onViewVault: () => void;
   onBackToVaults: () => void;
 }) => {
-  const { messages } = useI18n();
+  const { inlineDirection, messages } = useI18n();
   const protectionLabel =
     result.review.ruleType === "timeLock"
       ? interpolate(messages.vaults.protectionRuleUnlocksOn, { date: result.review.unlockDateLabel ?? "" })
       : result.review.ruleType === "cooldownUnlock"
         ? `${result.review.cooldownDurationLabel} cooldown`
         : result.review.guardianAddress ?? "Guardian approval required";
+  const metrics = [
+    {
+      label: messages.common.labels.targetAmount,
+      value: result.review.targetAmountDisplay,
+      icon: "flag-checkered",
+      backgroundColor: colors.accentSoft,
+      iconColor: colors.accentStrong,
+    },
+    {
+      label: messages.common.labels.protectionRule,
+      value: protectionLabel,
+      icon: "shield-check-outline",
+      backgroundColor: colors.warningSoft,
+      iconColor: colors.warning,
+    },
+    {
+      label: messages.common.labels.networkAndAsset,
+      value: `${result.review.networkLabel} • ${result.review.assetSymbol}`,
+      icon: "cube-send",
+      backgroundColor: colors.positiveSoft,
+      iconColor: colors.positive,
+    },
+  ] satisfies Array<{
+    label: string;
+    value: string;
+    icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
+    backgroundColor: string;
+    iconColor: string;
+  }>;
 
   return (
-    <SurfaceCard tone="accent" level="floating" style={{ backgroundColor: colors.backgroundElevated }}>
-      <View style={{ gap: spacing[4] }}>
-        <MotionView preset="hero" intensity="emphasis" style={{ gap: spacing[2] }}>
-          <AppText size="sm" tone="accent" weight="semibold">
-            {messages.pages.createVault.success.eyebrow}
-          </AppText>
-          <AppHeading size="lg">{result.review.goalName}</AppHeading>
-          <AppText tone="secondary">{messages.pages.createVault.success.description}</AppText>
-        </MotionView>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing[3] }}>
+    <FeedbackStatusCard
+      description={messages.pages.createVault.success.description}
+      eyebrow={messages.pages.createVault.success.eyebrow}
+      icon="shield-check-outline"
+      title={result.review.goalName}
+      tone="positive"
+    >
+      <View style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[3] }}>
+        {metrics.map((metric) => (
           <View
+            key={metric.label}
             style={{
               flex: 1,
               minWidth: 180,
-              gap: spacing[1],
+              gap: spacing[3],
               borderRadius: radii.lg,
               borderWidth: 1,
-              borderColor: colors.border,
+              borderColor: colors.borderStrong,
               backgroundColor: colors.surfaceGlass,
               padding: spacing[4],
             }}
           >
-            <AppText size="sm" tone="secondary">
-              {messages.common.labels.targetAmount}
-            </AppText>
-            <AppText weight="semibold">{result.review.targetAmountDisplay}</AppText>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              minWidth: 180,
-              gap: spacing[1],
-              borderRadius: radii.lg,
-              borderWidth: 1,
-              borderColor: colors.border,
-              backgroundColor: colors.surfaceGlass,
-              padding: spacing[4],
-            }}
-          >
-            <AppText size="sm" tone="secondary">
-              {messages.common.labels.protectionRule}
-            </AppText>
-            <AppText weight="semibold">{protectionLabel}</AppText>
-          </View>
-        </View>
-        <View
-          style={{
-            borderRadius: radii.lg,
-            borderWidth: 1,
-            borderColor: colors.border,
-            backgroundColor: colors.surfaceGlass,
-            padding: spacing[4],
-            gap: spacing[2],
-          }}
-        >
-          <AppText tone="secondary">
-            {result.review.networkLabel} • {result.review.assetSymbol}
-          </AppText>
-          <AppText tone="secondary">{messages.pages.createVault.success.nextDescription}</AppText>
-        </View>
-        <View style={{ gap: spacing[3] }}>
-          {messages.pages.createVault.success.nextSteps.map((step, index) => (
             <View
-              key={step}
               style={{
-                flexDirection: "row",
-                alignItems: "flex-start",
-                gap: spacing[3],
-                borderRadius: radii.lg,
-                borderWidth: 1,
-                borderColor: colors.border,
-                backgroundColor: colors.surfaceGlass,
-                padding: spacing[4],
+                width: 34,
+                height: 34,
+                borderRadius: radii.sm,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: metric.backgroundColor,
               }}
             >
-              <View
-                style={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 14,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: colors.accentSoft,
-                }}
-              >
-                <AppText size="sm" tone="accent" weight="semibold">
-                  {index + 1}
-                </AppText>
-              </View>
-              <AppText style={{ flex: 1 }} tone="secondary">
-                {step}
-              </AppText>
+              <MaterialCommunityIcons color={metric.iconColor} name={metric.icon} size={18} />
             </View>
-          ))}
-        </View>
+            <View style={{ gap: spacing[1] }}>
+              <AppText size="sm" tone="secondary">
+                {metric.label}
+              </AppText>
+              <AppText weight="semibold">{metric.value}</AppText>
+            </View>
+          </View>
+        ))}
+      </View>
+
+      <View style={{ gap: spacing[3] }}>
+        {messages.pages.createVault.success.nextSteps.map((step, index) => (
+          <MotionView
+            key={step}
+            delay={80 + index * 45}
+            style={{
+              flexDirection: inlineDirection(),
+              alignItems: "flex-start",
+              gap: spacing[3],
+              borderRadius: radii.lg,
+              borderWidth: 1,
+              borderColor: colors.borderStrong,
+              backgroundColor: colors.surfaceGlass,
+              padding: spacing[4],
+            }}
+          >
+            <View
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: radii.pill,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: colors.positiveSoft,
+              }}
+            >
+              <MaterialCommunityIcons color={colors.positive} name="check" size={16} />
+            </View>
+            <AppText style={{ flex: 1 }} tone="secondary">
+              {step}
+            </AppText>
+          </MotionView>
+        ))}
+      </View>
+
+      <View style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[3] }}>
         <PrimaryButton icon="shield-check-outline" label={messages.common.buttons.viewVault} onPress={onViewVault} />
         <SecondaryButton icon="view-grid-outline" label={messages.common.buttons.backToVaults} onPress={onBackToVaults} />
       </View>
-    </SurfaceCard>
+    </FeedbackStatusCard>
   );
 };

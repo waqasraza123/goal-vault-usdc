@@ -1,7 +1,11 @@
-import type { VaultDetail } from "../../types";
+import { View } from "react-native";
+
 import { formatUsdc } from "../../lib/format";
 import { interpolate, useI18n } from "../../lib/i18n";
-import { MotionView, AppHeading, AppText, SecondaryButton, SurfaceCard } from "../primitives";
+import { colors, radii, spacing } from "../../theme";
+import type { VaultDetail } from "../../types";
+import { FeedbackStatusCard } from "../feedback";
+import { AppText, SecondaryButton } from "../primitives";
 
 export const WithdrawSuccessCard = ({
   vault,
@@ -13,17 +17,28 @@ export const WithdrawSuccessCard = ({
   const { messages } = useI18n();
 
   return (
-    <SurfaceCard level="floating" tone="accent">
-      <MotionView preset="hero" intensity="structural" style={{ gap: 12 }}>
-        <AppHeading size="md">{messages.withdraw.successTitle}</AppHeading>
-        <AppText tone="secondary">{messages.withdraw.successDescription}</AppText>
+    <FeedbackStatusCard
+      description={messages.withdraw.successDescription}
+      icon="check-circle-outline"
+      title={messages.withdraw.successTitle}
+      tone="positive"
+    >
+      <View
+        style={{
+          borderRadius: radii.lg,
+          borderWidth: 1,
+          borderColor: colors.borderStrong,
+          backgroundColor: colors.surfaceGlass,
+          padding: spacing[4],
+        }}
+      >
         <AppText weight="semibold">
           {interpolate(messages.withdraw.successProgress, {
             amount: formatUsdc(vault.savedAmount),
           })}
         </AppText>
-      </MotionView>
-      <SecondaryButton label={messages.common.buttons.withdrawAgain} onPress={onDismiss} />
-    </SurfaceCard>
+      </View>
+      <SecondaryButton icon="arrow-up-right" label={messages.common.buttons.withdrawAgain} onPress={onDismiss} />
+    </FeedbackStatusCard>
   );
 };

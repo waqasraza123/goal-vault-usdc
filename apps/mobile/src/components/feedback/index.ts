@@ -5,6 +5,7 @@ export * from "./ConfigurationNotice";
 export * from "./CreateVaultErrorState";
 export * from "./DepositErrorState";
 export * from "./DisconnectedState";
+export * from "./FeedbackStatusCard";
 export * from "./GuidedStepsCard";
 export * from "./MetadataRecoveryNotice";
 export * from "./OwnerOnlyNotice";

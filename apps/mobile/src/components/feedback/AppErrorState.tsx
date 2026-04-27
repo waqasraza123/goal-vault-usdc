@@ -1,7 +1,10 @@
+import type { ComponentProps } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 
 import { spacing } from "../../theme";
-import { AppHeading, AppText, PrimaryButton, SecondaryButton, SurfaceCard } from "../primitives";
+import { PrimaryButton, SecondaryButton } from "../primitives";
+import { FeedbackStatusCard } from "./FeedbackStatusCard";
 
 export const AppErrorState = ({
   title,
@@ -14,36 +17,32 @@ export const AppErrorState = ({
   primaryAction?: {
     label: string;
     onPress: () => void;
-    icon?: string;
+    icon?: ComponentProps<typeof MaterialCommunityIcons>["name"];
   };
   secondaryAction?: {
     label: string;
     onPress: () => void;
-    icon?: string;
+    icon?: ComponentProps<typeof MaterialCommunityIcons>["name"];
   };
 }) => {
   return (
-    <SurfaceCard tone="muted">
-      <View style={{ gap: spacing[2] }}>
-        <AppHeading size="md">{title}</AppHeading>
-        <AppText tone="secondary">{description}</AppText>
-      </View>
+    <FeedbackStatusCard description={description} icon="alert-circle-outline" title={title} tone="danger">
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing[3] }}>
         {primaryAction ? (
           <PrimaryButton
-            icon={(primaryAction.icon as never | undefined) ?? "refresh"}
+            icon={primaryAction.icon ?? "refresh"}
             label={primaryAction.label}
             onPress={primaryAction.onPress}
           />
         ) : null}
         {secondaryAction ? (
           <SecondaryButton
-            icon={(secondaryAction.icon as never | undefined) ?? "arrow-left"}
+            icon={secondaryAction.icon ?? "arrow-left"}
             label={secondaryAction.label}
             onPress={secondaryAction.onPress}
           />
         ) : null}
       </View>
-    </SurfaceCard>
+    </FeedbackStatusCard>
   );
 };

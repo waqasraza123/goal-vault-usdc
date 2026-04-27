@@ -88,6 +88,9 @@ const enMessages = {
       accentTheme: "Accent theme",
       livePreview: "Live preview",
       connectionStatus: "Connection status",
+      dataSource: "Data source",
+      synced: "Synced",
+      fallback: "Fallback",
     },
   },
   footer: {
@@ -737,6 +740,9 @@ const arMessages: AppMessages = {
       accentTheme: "الطابع اللوني",
       livePreview: "معاينة مباشرة",
       connectionStatus: "حالة الاتصال",
+      dataSource: "مصدر البيانات",
+      synced: "متزامن",
+      fallback: "احتياطي",
     },
   },
   footer: {

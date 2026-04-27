@@ -2,7 +2,8 @@ import type { PropsWithChildren } from "react";
 import { View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { colors, createShadowStyle, spacing } from "../../theme";
+import { useI18n } from "../../lib/i18n";
+import { colors, createShadowStyle, radii, spacing } from "../../theme";
 import { AppHeading } from "./AppHeading";
 import { AppText } from "./AppText";
 import { MotionView } from "./MotionView";
@@ -24,15 +25,17 @@ export const EmptyState = ({
   eyebrow,
   highlights = [],
 }: PropsWithChildren<EmptyStateProps>) => {
+  const { inlineDirection } = useI18n();
+
   return (
-    <SurfaceCard tone="muted" style={{ alignItems: "flex-start", backgroundColor: colors.backgroundElevated }}>
+    <SurfaceCard tone="muted" style={{ alignItems: "flex-start", backgroundColor: colors.backgroundElevated, padding: spacing[5] }}>
       <View style={{ gap: spacing[4], width: "100%" }}>
-        <MotionView preset="hero" intensity="emphasis">
+        <MotionView preset="hero" intensity="emphasis" style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
           <View
             style={{
-              width: 68,
-              height: 68,
-              borderRadius: 34,
+              width: 52,
+              height: 52,
+              borderRadius: radii.md,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: colors.accentSoft,
@@ -48,17 +51,17 @@ export const EmptyState = ({
               elevation: 4,
             }}
           >
-            <MaterialCommunityIcons color={colors.accentStrong} name={icon} size={30} />
+            <MaterialCommunityIcons color={colors.accentStrong} name={icon} size={26} />
           </View>
-        </MotionView>
-        <MotionView delay={70} style={{ gap: spacing[2] }}>
-          {eyebrow ? (
-            <AppText size="sm" tone="accent" weight="semibold">
-              {eyebrow}
-            </AppText>
-          ) : null}
-          <AppHeading size="md">{title}</AppHeading>
-          <AppText tone="secondary">{description}</AppText>
+          <View style={{ flex: 1, gap: spacing[2] }}>
+            {eyebrow ? (
+              <AppText size="sm" tone="accent" weight="semibold">
+                {eyebrow}
+              </AppText>
+            ) : null}
+            <AppHeading size="md">{title}</AppHeading>
+            <AppText tone="secondary">{description}</AppText>
+          </View>
         </MotionView>
         {highlights.length > 0 ? (
           <View style={{ gap: spacing[3], width: "100%" }}>
@@ -67,12 +70,12 @@ export const EmptyState = ({
                 key={highlight}
                 delay={120 + index * 55}
                 style={{
-                  flexDirection: "row",
+                  flexDirection: inlineDirection(),
                   alignItems: "flex-start",
                   gap: spacing[3],
-                  borderRadius: 18,
+                  borderRadius: radii.lg,
                   borderWidth: 1,
-                  borderColor: colors.border,
+                  borderColor: colors.borderStrong,
                   backgroundColor: colors.surface,
                   padding: spacing[4],
                 }}
@@ -81,15 +84,13 @@ export const EmptyState = ({
                   style={{
                     width: 28,
                     height: 28,
-                    borderRadius: 14,
+                    borderRadius: radii.pill,
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: colors.accentSoft,
                   }}
                 >
-                  <AppText size="sm" tone="accent" weight="semibold">
-                    {index + 1}
-                  </AppText>
+                  <MaterialCommunityIcons color={colors.accentStrong} name={index === 0 ? "plus" : "check"} size={16} />
                 </View>
                 <AppText size="sm" style={{ flex: 1 }} tone="secondary">
                   {highlight}

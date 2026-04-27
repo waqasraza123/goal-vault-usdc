@@ -4,40 +4,40 @@
 2026-04-27
 
 ## Current Objective
-Continue improving the mobile UI/UX with smoother, more modern create-vault and vault-detail flows.
+Continue production-grade mobile UI/UX polish focused on activity history and transaction feedback states.
 
 ## Last Completed Step
-Polished form primitives, create-vault progression, live preview/review panels, vault detail header, progress/rule/activity panels, and deposit/withdraw action panels.
+Committed and pushed the create/detail UI pass, then polished the activity ledger, reusable feedback card, success states, error states, transaction status details, empty states, and i18n labels.
 
 ## Files Touched
-- `apps/mobile/src/app/(app)/vaults/new.tsx`
-- `apps/mobile/src/components/forms/FormSection.tsx`
-- `apps/mobile/src/components/forms/StepPills.tsx`
-- `apps/mobile/src/components/primitives/TextField.tsx`
-- `apps/mobile/src/components/vaults/CreateVaultPreviewCard.tsx`
-- `apps/mobile/src/components/vaults/CreateVaultReviewPanel.tsx`
-- `apps/mobile/src/components/vaults/DepositActionPanel.tsx`
-- `apps/mobile/src/components/vaults/VaultActivityPreview.tsx`
-- `apps/mobile/src/components/vaults/VaultDetailHeader.tsx`
-- `apps/mobile/src/components/vaults/VaultProgressPanel.tsx`
-- `apps/mobile/src/components/vaults/VaultRulePanel.tsx`
-- `apps/mobile/src/components/vaults/WithdrawActionPanel.tsx`
+- `apps/mobile/src/app/(app)/activity.tsx`
+- `apps/mobile/src/components/feedback/AppErrorState.tsx`
+- `apps/mobile/src/components/feedback/CreateVaultErrorState.tsx`
+- `apps/mobile/src/components/feedback/DepositErrorState.tsx`
+- `apps/mobile/src/components/feedback/FeedbackStatusCard.tsx`
+- `apps/mobile/src/components/feedback/TransactionStatusCard.tsx`
+- `apps/mobile/src/components/feedback/WithdrawErrorState.tsx`
+- `apps/mobile/src/components/feedback/index.ts`
+- `apps/mobile/src/components/primitives/EmptyState.tsx`
+- `apps/mobile/src/components/vaults/CreateVaultSuccessCard.tsx`
+- `apps/mobile/src/components/vaults/DepositSuccessCard.tsx`
+- `apps/mobile/src/components/vaults/WithdrawSuccessCard.tsx`
+- `apps/mobile/src/lib/i18n/messages.ts`
 - `docs/_local/current-session.md`
 
 ## Durable Decisions Captured
-- Continued the existing Goal Vault visual system instead of changing palette or architecture.
-- Kept UI polish in reusable form and vault components where possible.
-- Preserved existing product behavior, validation, transaction flow, analytics, and wallet/network state handling.
+- Added a reusable `FeedbackStatusCard` for transaction and error/success state consistency.
+- Kept the existing Goal Vault visual system and product behavior.
+- Preserved bilingual support by adding English and Arabic labels for activity data-source status.
 
 ## Scope Boundaries
 - No production build, Expo export, deployment, database work, contract work, or live chain interactions were run.
 - No durable architecture or roadmap change was made, so `docs/project-state.md` was not updated.
 - No real test suite was run; lightweight static validation only.
-- Expo web dev server was attempted on port `19007`, but Expo reported the port unavailable and skipped startup in non-interactive mode.
 
 ## Verification Commands
 - `pnpm --filter @goal-vault/mobile typecheck`
 - `git diff --check`
 
 ## Handoff Note
-Next UI pass can target activity history, success/error states, and the marketing secondary pages for complete visual consistency.
+Next UI pass can target marketing secondary pages and remaining notices for complete visual consistency.
