@@ -1,9 +1,11 @@
+import type { ComponentProps } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 
-import type { VaultActivityEvent } from "../../types";
 import { getStaggerDelay } from "../../lib/motion/list-motion";
 import { useI18n } from "../../lib/i18n";
 import { colors, radii, spacing } from "../../theme";
+import type { VaultActivityEvent } from "../../types";
 import { AppHeading, AppText, MotionView, SecondaryButton, SurfaceCard } from "../primitives";
 
 export interface VaultActivityPreviewProps {
@@ -11,37 +13,96 @@ export interface VaultActivityPreviewProps {
   onOpenTimeline?: () => void;
 }
 
+const getActivityIcon = (type: VaultActivityEvent["type"]): ComponentProps<typeof MaterialCommunityIcons>["name"] => {
+  if (type === "deposit") {
+    return "plus-circle-outline";
+  }
+
+  if (type === "withdrawal") {
+    return "arrow-up-right";
+  }
+
+  if (type === "created") {
+    return "shield-lock-outline";
+  }
+
+  if (type === "milestone") {
+    return "flag-checkered";
+  }
+
+  return "timeline-check-outline";
+};
+
 export const VaultActivityPreview = ({ events, onOpenTimeline }: VaultActivityPreviewProps) => {
-  const { messages } = useI18n();
+  const { inlineDirection, messages } = useI18n();
 
   return (
-    <SurfaceCard>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: spacing[3] }}>
-        <AppHeading size="md">{messages.common.labels.recentActivity}</AppHeading>
+    <SurfaceCard style={{ padding: spacing[5] }}>
+      <View style={{ flexDirection: inlineDirection(), justifyContent: "space-between", alignItems: "center", gap: spacing[3] }}>
+        <View style={{ flexDirection: inlineDirection(), alignItems: "center", gap: spacing[3], flex: 1 }}>
+          <View
+            style={{
+              width: 42,
+              height: 42,
+              borderRadius: radii.md,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: colors.accentSoft,
+              borderWidth: 1,
+              borderColor: colors.borderStrong,
+            }}
+          >
+            <MaterialCommunityIcons color={colors.accentStrong} name="history" size={22} />
+          </View>
+          <AppHeading size="md">{messages.common.labels.recentActivity}</AppHeading>
+        </View>
         {onOpenTimeline ? (
           <SecondaryButton icon="arrow-right" label={messages.common.buttons.openActivity} onPress={onOpenTimeline} />
         ) : null}
       </View>
+
       {events.length === 0 ? (
-        <AppText tone="secondary">{messages.vaults.activityEmpty}</AppText>
+        <View
+          style={{
+            borderRadius: radii.lg,
+            borderWidth: 1,
+            borderColor: colors.borderStrong,
+            backgroundColor: colors.surfaceMuted,
+            padding: spacing[4],
+          }}
+        >
+          <AppText tone="secondary">{messages.vaults.activityEmpty}</AppText>
+        </View>
       ) : (
-        <View style={{ gap: spacing[4] }}>
+        <View style={{ gap: spacing[3] }}>
           {events.map((event, index) => (
-            <MotionView key={event.id} delay={getStaggerDelay(index)} style={{ flexDirection: "row", gap: spacing[3] }}>
+            <MotionView
+              key={event.id}
+              delay={getStaggerDelay(index)}
+              style={{
+                flexDirection: inlineDirection(),
+                gap: spacing[3],
+                borderRadius: radii.lg,
+                borderWidth: 1,
+                borderColor: colors.borderStrong,
+                backgroundColor: colors.surfaceGlass,
+                padding: spacing[4],
+              }}
+            >
               <View
                 style={{
-                  width: 12,
+                  width: 34,
+                  height: 34,
+                  borderRadius: radii.sm,
                   alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: event.type === "deposit" ? colors.positiveSoft : colors.accentSoft,
                 }}
               >
-                <View
-                  style={{
-                    width: 12,
-                    height: 12,
-                    borderRadius: radii.pill,
-                    backgroundColor: colors.accent,
-                    marginTop: 6,
-                  }}
+                <MaterialCommunityIcons
+                  color={event.type === "deposit" ? colors.positive : colors.accentStrong}
+                  name={getActivityIcon(event.type)}
+                  size={18}
                 />
               </View>
               <View style={{ flex: 1, gap: spacing[1] }}>

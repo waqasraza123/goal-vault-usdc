@@ -1,4 +1,6 @@
+import type { ComponentProps } from "react";
 import { useEffect, useMemo, useRef } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
@@ -54,6 +56,31 @@ export default function CreateVaultScreen() {
   const targetAmount = Number.parseFloat(values.targetAmount || "0");
   const stepLabels = messages.pages.createVault.steps;
   const accentThemeOptions = useMemo(() => getVaultAccentThemeOptions(), [messages.pages.createVault.accentThemes]);
+  const ruleOptions = [
+    {
+      value: "timeLock",
+      label: "Time Lock",
+      icon: "calendar-lock-outline",
+      description: messages.pages.createVault.timeLockDescription,
+    },
+    {
+      value: "cooldownUnlock",
+      label: "Cooldown Unlock",
+      icon: "timer-sand",
+      description: "Request unlock first, then wait through the cooldown.",
+    },
+    {
+      value: "guardianApproval",
+      label: "Guardian Approval",
+      icon: "account-supervisor-circle-outline",
+      description: "Require a guardian wallet to approve withdrawal readiness.",
+    },
+  ] satisfies Array<{
+    value: typeof values.ruleType;
+    label: string;
+    icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
+    description: string;
+  }>;
   const createRecovery = items.find((item) => item.kind === "create_vault") ?? null;
 
   const activeChainId = connectionState.session?.chain?.id ?? chainId ?? defaultGoalVaultChainId;
@@ -222,6 +249,7 @@ export default function CreateVaultScreen() {
               <MotionView key={`create-step-${step}`} intensity="structural" style={{ flex: 1, minWidth: 320, gap: spacing[6] }}>
                 {showGoalStep ? (
                   <FormSection
+                    icon="bullseye-arrow"
                     title={messages.pages.createVault.goalSectionTitle}
                     description={messages.pages.createVault.goalSectionDescription}
                   >
@@ -292,26 +320,31 @@ export default function CreateVaultScreen() {
 
                 {showRuleStep ? (
                   <FormSection
+                    icon="shield-lock-outline"
+                    tone="warning"
                     title={messages.pages.createVault.ruleSectionTitle}
                     description={messages.pages.createVault.ruleSectionDescription}
                     aside={
                       <View
                         style={{
-                          borderRadius: 18,
+                          borderRadius: radii.lg,
                           borderWidth: 1,
-                          borderColor: colors.border,
-                          backgroundColor: colors.surfaceMuted,
+                          borderColor: colors.borderStrong,
+                          backgroundColor: colors.warningSoft,
                           padding: spacing[5],
-                          gap: spacing[2],
+                          gap: spacing[3],
                         }}
                       >
-                        <AppText weight="semibold">
-                          {values.ruleType === "timeLock"
-                            ? "Time lock"
-                            : values.ruleType === "cooldownUnlock"
-                              ? "Cooldown unlock"
-                              : "Guardian approval"}
-                        </AppText>
+                        <View style={{ flexDirection: inlineDirection(), alignItems: "center", gap: spacing[2] }}>
+                          <MaterialCommunityIcons color={colors.warning} name="shield-alert-outline" size={20} />
+                          <AppText weight="semibold">
+                            {values.ruleType === "timeLock"
+                              ? "Time lock"
+                              : values.ruleType === "cooldownUnlock"
+                                ? "Cooldown unlock"
+                                : "Guardian approval"}
+                          </AppText>
+                        </View>
                         <AppText tone="secondary">
                           {values.ruleType === "timeLock"
                             ? messages.pages.createVault.timeLockDescription
@@ -327,28 +360,47 @@ export default function CreateVaultScreen() {
                         Protection rule
                       </AppText>
                       <View style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[3] }}>
-                        {[
-                          ["timeLock", "Time Lock"],
-                          ["cooldownUnlock", "Cooldown Unlock"],
-                          ["guardianApproval", "Guardian Approval"],
-                        ].map(([ruleType, label]) => {
-                          const isSelected = values.ruleType === ruleType;
+                        {ruleOptions.map((option) => {
+                          const isSelected = values.ruleType === option.value;
 
                           return (
                             <Pressable
-                              key={ruleType}
+                              key={option.value}
                               accessibilityRole="button"
-                              onPress={() => setFieldValue("ruleType", ruleType as typeof values.ruleType)}
+                              onPress={() => setFieldValue("ruleType", option.value)}
                               style={{
-                                borderRadius: radii.pill,
+                                flex: 1,
+                                minWidth: 190,
+                                borderRadius: radii.lg,
                                 borderWidth: 1,
                                 borderColor: isSelected ? colors.accentStrong : colors.border,
                                 backgroundColor: isSelected ? colors.accentSoft : colors.surface,
-                                paddingHorizontal: spacing[4],
-                                paddingVertical: spacing[3],
+                                padding: spacing[4],
+                                gap: spacing[3],
                               }}
                             >
-                              <AppText weight="semibold">{label}</AppText>
+                              <View style={{ flexDirection: inlineDirection(), alignItems: "center", gap: spacing[2] }}>
+                                <View
+                                  style={{
+                                    width: 34,
+                                    height: 34,
+                                    borderRadius: radii.sm,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    backgroundColor: isSelected ? colors.accentStrong : colors.surfaceMuted,
+                                  }}
+                                >
+                                  <MaterialCommunityIcons
+                                    color={isSelected ? colors.white : colors.accentStrong}
+                                    name={option.icon}
+                                    size={18}
+                                  />
+                                </View>
+                                <AppText weight="semibold">{option.label}</AppText>
+                              </View>
+                              <AppText size="sm" tone="secondary">
+                                {option.description}
+                              </AppText>
                             </Pressable>
                           );
                         })}
@@ -392,6 +444,8 @@ export default function CreateVaultScreen() {
 
                 {showReviewStep && review ? (
                   <FormSection
+                    icon="clipboard-check-outline"
+                    tone="positive"
                     title={messages.pages.createVault.reviewSectionTitle}
                     description={messages.pages.createVault.reviewSectionDescription}
                   >

@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 
 import { formatUsdc } from "../../lib/format";
@@ -11,7 +12,7 @@ import {
   WithdrawalLockedNotice,
 } from "../feedback";
 import { useI18n } from "../../lib/i18n";
-import { spacing } from "../../theme";
+import { colors, radii, spacing } from "../../theme";
 import { AppHeading, AppText, PrimaryButton, SurfaceCard } from "../primitives";
 import { UnlockCountdownCard } from "./UnlockCountdownCard";
 import { WithdrawAmountField } from "./WithdrawAmountField";
@@ -29,7 +30,7 @@ export const WithdrawActionPanel = ({
   flow: VaultWithdrawFlowController;
   unlockFlow: ReturnType<typeof useVaultUnlockFlow>;
 }) => {
-  const { messages } = useI18n();
+  const { inlineDirection, messages } = useI18n();
   const eligibility = flow.eligibility;
 
   if (!eligibility) {
@@ -37,10 +38,26 @@ export const WithdrawActionPanel = ({
   }
 
   return (
-    <SurfaceCard>
-      <View style={{ gap: spacing[2] }}>
-        <AppHeading size="md">{messages.withdraw.panelTitle}</AppHeading>
-        <AppText tone="secondary">{messages.withdraw.panelDescription}</AppText>
+    <SurfaceCard accentColor={colors.warning} style={{ padding: spacing[5] }}>
+      <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
+        <View
+          style={{
+            width: 42,
+            height: 42,
+            borderRadius: radii.md,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: colors.warningSoft,
+            borderWidth: 1,
+            borderColor: colors.warning,
+          }}
+        >
+          <MaterialCommunityIcons color={colors.warning} name="shield-lock-open-outline" size={22} />
+        </View>
+        <View style={{ flex: 1, gap: spacing[2] }}>
+          <AppHeading size="md">{messages.withdraw.panelTitle}</AppHeading>
+          <AppText tone="secondary">{messages.withdraw.panelDescription}</AppText>
+        </View>
       </View>
 
       <WithdrawEligibilityCard eligibility={eligibility} />

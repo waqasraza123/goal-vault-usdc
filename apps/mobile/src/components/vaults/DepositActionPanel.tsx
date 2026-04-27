@@ -1,9 +1,10 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 
 import { formatUsdc } from "../../lib/format";
 import { formatAtomicUsdcToNumber } from "../../lib/contracts/amount-utils";
 import { useI18n } from "../../lib/i18n";
-import { spacing } from "../../theme";
+import { colors, radii, spacing } from "../../theme";
 import type { VaultDetail } from "../../types";
 import type { VaultDepositFlowController } from "../../hooks/useVaultDepositFlow";
 import { DepositErrorState, TransactionStatusCard } from "../feedback";
@@ -20,7 +21,7 @@ export const DepositActionPanel = ({
   vault: VaultDetail;
   flow: VaultDepositFlowController;
 }) => {
-  const { messages } = useI18n();
+  const { inlineDirection, messages } = useI18n();
   const balanceLabel =
     flow.balance.balanceAtomic !== null && flow.balance.decimals !== null
       ? `${messages.common.labels.availableBalance} ${formatUsdc(
@@ -40,10 +41,26 @@ export const DepositActionPanel = ({
     flow.state.status === "deposit_confirming";
 
   return (
-    <SurfaceCard>
-      <View style={{ gap: spacing[2] }}>
-        <AppHeading size="md">{messages.deposit.panelTitle}</AppHeading>
-        <AppText tone="secondary">{messages.deposit.panelDescription}</AppText>
+    <SurfaceCard accentColor={colors.positive} style={{ padding: spacing[5] }}>
+      <View style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }}>
+        <View
+          style={{
+            width: 42,
+            height: 42,
+            borderRadius: radii.md,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: colors.positiveSoft,
+            borderWidth: 1,
+            borderColor: colors.positive,
+          }}
+        >
+          <MaterialCommunityIcons color={colors.positive} name="plus-circle-outline" size={22} />
+        </View>
+        <View style={{ flex: 1, gap: spacing[2] }}>
+          <AppHeading size="md">{messages.deposit.panelTitle}</AppHeading>
+          <AppText tone="secondary">{messages.deposit.panelDescription}</AppText>
+        </View>
       </View>
 
       <DepositAmountField
