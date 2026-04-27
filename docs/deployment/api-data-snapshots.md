@@ -82,3 +82,5 @@ The restore script:
 
 ## Managed Database Boundary
 These scripts do not replace managed database infrastructure. They make the current SQLite-backed backend safer to operate while provider, database, migration, and retention decisions remain open.
+
+Use `docs/deployment/api-managed-database-plan.md` to create a managed database plan before provisioning or migrating an external PostgreSQL target. Managed database plans should reference snapshots by artifact name or approved storage reference, not by embedding snapshot contents or credentials.

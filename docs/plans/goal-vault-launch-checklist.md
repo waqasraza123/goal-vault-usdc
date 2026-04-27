@@ -32,6 +32,13 @@
 - Create an API data snapshot before manual backend traffic movement.
 - Store API data snapshots only in approved operational storage.
 
+## Managed Database Planning
+- Run the `API Managed Database Plan` workflow before provisioning or migrating external database infrastructure.
+- Use a non-secret target reference, not a database connection string.
+- Include source and rollback API data snapshot references.
+- Review the schema inventory and private data classification before any provider-specific migration work.
+- Confirm the plan says `noDatabaseMutated: true` before treating it as a review artifact.
+
 ## CI And Release Candidate
 - Confirm the GitHub Environment exists for the target release.
 - Confirm production requires environment reviewer approval.

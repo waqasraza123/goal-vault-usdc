@@ -1,0 +1,107 @@
+name: API Managed Database Plan
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Backend environment.
+        type: choice
+        required: true
+        options:
+          - staging
+          - production
+      plan_label:
+        description: Stable migration plan label, such as v0.1.0-db-cutover.
+        type: string
+        required: true
+      target_reference:
+        description: Non-secret managed database reference, not a connection string.
+        type: string
+        required: true
+      source_snapshot:
+        description: API data snapshot artifact name or approved storage reference.
+        type: string
+        required: true
+      rollback_snapshot:
+        description: Previous known-good snapshot artifact name or approved storage reference.
+        type: string
+        required: true
+      cutover_strategy:
+        description: Managed database cutover strategy.
+        type: choice
+        required: true
+        default: cold-cutover
+        options:
+          - cold-cutover
+          - shadow-restore
+      preflight_report:
+        description: API preflight report artifact name or URL.
+        type: string
+        required: false
+      traffic_plan:
+        description: API traffic plan artifact name or URL.
+        type: string
+        required: false
+      change_window:
+        description: Approved change window.
+        type: string
+        required: false
+      observe_minutes:
+        description: Minimum observation window after cutover.
+        type: string
+        required: false
+        default: "30"
+      operator:
+        description: Operator or team responsible for executing the database plan.
+        type: string
+        required: false
+      notes:
+        description: Optional non-secret operator notes.
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: api-managed-database-plan-${{ inputs.target }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  FORCE_COLOR: 1
+  API_DATABASE_PLAN_TARGET: ${{ inputs.target }}
+  API_DATABASE_PLAN_LABEL: ${{ inputs.plan_label }}
+  API_DATABASE_ENGINE: postgresql
+  API_DATABASE_TARGET_REFERENCE: ${{ inputs.target_reference }}
+  API_DATABASE_SOURCE_SNAPSHOT: ${{ inputs.source_snapshot }}
+  API_DATABASE_ROLLBACK_SNAPSHOT: ${{ inputs.rollback_snapshot }}
+  API_DATABASE_PREFLIGHT_REPORT: ${{ inputs.preflight_report }}
+  API_DATABASE_TRAFFIC_PLAN: ${{ inputs.traffic_plan }}
+  API_DATABASE_CUTOVER_STRATEGY: ${{ inputs.cutover_strategy }}
+  API_DATABASE_CHANGE_WINDOW: ${{ inputs.change_window }}
+  API_DATABASE_OBSERVE_MINUTES: ${{ inputs.observe_minutes }}
+  API_DATABASE_OPERATOR: ${{ inputs.operator }}
+  API_DATABASE_NOTES: ${{ inputs.notes }}
+  API_DATABASE_PLAN_DIR: artifacts
+
+jobs:
+  api-managed-database-plan:
+    name: Write ${{ inputs.target }} API managed database plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write API managed database plan
+        id: plan
+        run: node scripts/write-api-managed-database-plan.mjs
+
+      - name: Upload API managed database plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-vault-api-managed-database-${{ inputs.target }}
+          path: ${{ steps.plan.outputs.plan_path }}
+          if-no-files-found: error

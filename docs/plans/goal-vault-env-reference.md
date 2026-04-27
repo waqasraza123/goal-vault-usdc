@@ -126,6 +126,36 @@
 - `API_DATA_RESTORE_CONFIRM`
   - must be `restore` before restore runs
 
+## API Managed Database Plan Variables
+- `API_DATABASE_PLAN_TARGET`
+  - `staging` or `production`
+- `API_DATABASE_PLAN_LABEL`
+  - stable label used in artifact naming
+- `API_DATABASE_ENGINE`
+  - currently `postgresql`
+- `API_DATABASE_TARGET_REFERENCE`
+  - non-secret managed database reference; do not use a connection string
+- `API_DATABASE_SOURCE_SNAPSHOT`
+  - source API data snapshot artifact name or approved storage reference
+- `API_DATABASE_ROLLBACK_SNAPSHOT`
+  - previous known-good snapshot artifact name or approved storage reference
+- `API_DATABASE_PREFLIGHT_REPORT`
+  - optional API preflight report artifact name or URL
+- `API_DATABASE_TRAFFIC_PLAN`
+  - optional API traffic plan artifact name or URL
+- `API_DATABASE_CUTOVER_STRATEGY`
+  - `cold-cutover` or `shadow-restore`
+- `API_DATABASE_CHANGE_WINDOW`
+  - approved operator change window
+- `API_DATABASE_OBSERVE_MINUTES`
+  - minimum post-cutover observation window
+- `API_DATABASE_OPERATOR`
+  - operator or team responsible for executing the plan
+- `API_DATABASE_NOTES`
+  - optional non-secret notes
+- `API_DATABASE_PLAN_DIR`
+  - output directory for local managed database plan artifacts
+
 ## Build Variables
 - `IOS_BUILD_NUMBER`
   - iOS build number used by Expo config
@@ -158,6 +188,7 @@
 - The API image workflow publishes to GHCR through `GITHUB_TOKEN` and does not require provider deployment credentials.
 - The API preflight workflow requires `API_INTERNAL_TOKEN` and target-chain RPC secrets but writes only redacted configured or missing status.
 - The API traffic plan workflow uses only non-secret operator inputs and does not require hosting-provider credentials.
+- The API managed database plan workflow uses only non-secret operator inputs and rejects target references that look like connection strings or credentials.
 - The mobile distribution workflow uses `EXPO_TOKEN`; App Store Connect and Google Play credentials should stay in EAS.
 - The release manifest workflow records non-secret deployment pointers only and must not include private keys, RPC URLs, or internal API tokens.
 

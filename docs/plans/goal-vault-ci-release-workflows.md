@@ -3,7 +3,7 @@
 ## Purpose
 This pass adds repository-owned GitHub Actions automation for the current production-shaped v1 codebase.
 
-The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
+The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, managed database planning, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
 
 ## Workflow Files
 - `.github/actions/setup-pnpm/action.yml`
@@ -43,6 +43,11 @@ The CI and release-candidate workflows intentionally stop at verification and re
   - supports promotion, rollback, and disablement planning
   - validates non-secret URLs, image tags, artifact references, and rollback inputs
   - uploads a traffic plan artifact without moving traffic
+- `.github/workflows/api-managed-database-plan.yml`
+  - manual staging or production managed database planning
+  - records current SQLite schema inventory and PostgreSQL cutover requirements
+  - validates snapshot references and non-secret target reference
+  - uploads a managed database plan artifact without mutating data
 - `.github/workflows/mobile-distribution.yml`
   - manual staging or production EAS mobile build and submit operations
   - starts remote EAS builds in build mode
@@ -98,6 +103,19 @@ Use GitHub Environment variables for public, non-secret release metadata:
 - `API_TRAFFIC_OBSERVE_MINUTES`
 - `API_TRAFFIC_OPERATOR`
 - `API_TRAFFIC_NOTES`
+- `API_DATABASE_PLAN_TARGET`
+- `API_DATABASE_PLAN_LABEL`
+- `API_DATABASE_ENGINE`
+- `API_DATABASE_TARGET_REFERENCE`
+- `API_DATABASE_SOURCE_SNAPSHOT`
+- `API_DATABASE_ROLLBACK_SNAPSHOT`
+- `API_DATABASE_PREFLIGHT_REPORT`
+- `API_DATABASE_TRAFFIC_PLAN`
+- `API_DATABASE_CUTOVER_STRATEGY`
+- `API_DATABASE_CHANGE_WINDOW`
+- `API_DATABASE_OBSERVE_MINUTES`
+- `API_DATABASE_OPERATOR`
+- `API_DATABASE_NOTES`
 - `IOS_BUILD_NUMBER`
 - `ANDROID_VERSION_CODE`
 
@@ -168,6 +186,16 @@ Use the manual API traffic plan workflow before provider-specific traffic change
 4. For promotion, provide candidate URL, rollback URL, candidate image, rollback image, release manifest reference, API preflight report reference, and API data snapshot reference.
 5. Download the traffic plan artifact and review the steps with the hosting-provider operator.
 
+## API Managed Database Plan Gate
+Use the manual API managed database plan workflow before external database work:
+
+1. Choose `staging` or `production`.
+2. Provide a stable plan label.
+3. Provide a non-secret managed database target reference.
+4. Provide source and rollback API data snapshot references.
+5. Choose `cold-cutover` or `shadow-restore`.
+6. Download the managed database plan artifact and review schema inventory, data classification, cutover steps, and rollback requirements.
+
 ## Mobile Distribution Gate
 Use the manual mobile distribution workflow after app, API, and contract release candidates are coherent:
 
@@ -192,6 +220,7 @@ Use the manual release manifest workflow before traffic movement:
 - Treat release-candidate artifacts as verification outputs, not deployable store releases.
 - Use `docs/deployment/contract-deployment.md` for contract simulation, broadcast, post-deploy config, and rollback handling.
 - Use `docs/deployment/api-image.md` for API image build, publish, runtime config, promotion, and rollback handling.
+- Use `docs/deployment/api-managed-database-plan.md` for external database migration planning before provider-specific work.
 - Use `docs/deployment/api-preflight.md` for API runtime env validation before backend deployment.
 - Use `docs/deployment/api-traffic-plan.md` for provider-neutral traffic movement, rollback, and disablement planning.
 - Use `docs/deployment/mobile-distribution.md` for EAS builds, store submission, and mobile rollback handling.
@@ -200,5 +229,5 @@ Use the manual release manifest workflow before traffic movement:
 
 ## Deferred Automation
 - Hosting-provider backend deployment
-- Database migration orchestration
+- Database provisioning, schema creation, migration orchestration, and parity checks
 - Traffic promotion and rollback automation

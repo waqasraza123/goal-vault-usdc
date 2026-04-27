@@ -18,6 +18,8 @@ It is not a deployment workflow. It does not move traffic, deploy the API image,
   - produces the redacted API environment readiness report that should accompany backend promotion records
 - `docs/deployment/api-traffic-plan.md`
   - records the provider-neutral traffic movement or rollback plan that should be reviewed before manual provider changes
+- `docs/deployment/api-managed-database-plan.md`
+  - records the provider-neutral managed database migration plan when persistence is changing
 
 ## Required Inputs
 - `target`
@@ -72,11 +74,12 @@ Use this manifest before manual promotion:
 1. Confirm contract deployment manifest matches the factory address.
 2. Confirm API image manifest matches the API image tag.
 3. Confirm API preflight report is passing for the target environment.
-4. Confirm mobile distribution manifest or EAS dashboard matches the build references.
-5. Generate and review the API traffic plan.
-6. Confirm `/ready` is acceptable on the target API.
-7. Save the release manifest and traffic plan artifacts with the release notes.
-8. Promote traffic manually through the selected hosting provider.
+4. Confirm managed database plan is reviewed when persistence is changing.
+5. Confirm mobile distribution manifest or EAS dashboard matches the build references.
+6. Generate and review the API traffic plan.
+7. Confirm `/ready` is acceptable on the target API.
+8. Save the release manifest, managed database plan when applicable, and traffic plan artifacts with the release notes.
+9. Promote traffic manually through the selected hosting provider.
 
 ## Rollback Use
 Use this manifest during rollback:
