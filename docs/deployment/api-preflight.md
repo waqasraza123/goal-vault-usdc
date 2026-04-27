@@ -3,13 +3,14 @@
 ## Purpose
 The API runtime preflight validates that staging or production backend configuration is coherent before an operator deploys or promotes the API.
 
-It does not start the server, connect to RPC providers, run database migrations, build images, deploy infrastructure, or move traffic. It reads the same runtime environment parser used by the Fastify API, adds target-chain readiness checks, and writes a redacted JSON report that can be attached to a release record.
+It does not start the server, connect to RPC providers, run database migrations, build images, deploy infrastructure, or move traffic. It reads the same runtime environment parser used by the Fastify API, adds target-chain readiness checks, optionally checks PostgreSQL connectivity and schema presence when PostgreSQL mode is selected, and writes a redacted JSON report that can be attached to a release record.
 
 ## Files
 - `apps/api/src/jobs/runtime-preflight.ts`
   - reads API runtime configuration through `readApiRuntimeEnv`
   - validates target-chain RPC and factory configuration
-  - validates persistence driver selection and blocks PostgreSQL runtime mode until the adapter exists
+  - validates persistence driver selection
+  - checks PostgreSQL connection and expected schema tables when `API_PERSISTENCE_DRIVER=postgresql`
   - reports redacted persistence runtime capabilities and PostgreSQL activation blockers
   - reports booleans for secrets instead of printing secret values
   - writes a JSON preflight report
@@ -94,6 +95,8 @@ The preflight report records:
 - whether `API_DATABASE_URL` is configured
 - PostgreSQL schema name selected for future managed database runtime
 - whether the selected persistence runtime is ready
+- PostgreSQL connection check status when PostgreSQL mode is selected
+- PostgreSQL schema check status and missing table names when PostgreSQL mode is selected
 - persistence runtime capabilities:
   - SQLite runtime readiness
   - asynchronous store port readiness
@@ -137,9 +140,9 @@ Common failures:
 - target-chain factory address missing or invalid
 - `APP_ENV` and `EXPO_PUBLIC_APP_ENV` mismatch
 - malformed numeric or boolean env values
-- `API_PERSISTENCE_DRIVER=postgresql` before the managed database runtime adapter exists
 - `API_DATABASE_URL` missing when `API_PERSISTENCE_DRIVER=postgresql`
-- PostgreSQL capability blockers showing the driver adapter, store factory wiring, or connection checks are not ready
+- PostgreSQL connection failure
+- PostgreSQL schema missing `vaults`, `vault_events`, `sync_states`, or `analytics_events`
 
 ## Boundary
 This preflight closes a promotion-readiness gap without selecting a hosting provider. Provider-specific deploy, traffic shifting, rollback automation, and managed database infrastructure remain deferred.

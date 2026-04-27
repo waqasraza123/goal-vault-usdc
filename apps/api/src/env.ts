@@ -70,6 +70,7 @@ export interface ApiChainRuntimeConfig {
 export interface ApiPersistenceRuntimeConfig {
   driver: "sqlite" | "postgresql";
   sqliteDataDir: string;
+  postgresConnectionString?: string | null;
   postgresUrlConfigured: boolean;
   schemaName: string;
   capabilities: ApiPersistenceRuntimeCapabilities;
@@ -137,9 +138,9 @@ const parseBoolean = (value: string | undefined) => {
 };
 
 export const createApiPersistenceRuntimeCapabilities = (): ApiPersistenceRuntimeCapabilities => {
-  const postgresqlDriverAdapterReady = false;
-  const postgresqlFactoryWiringReady = false;
-  const postgresqlPreflightConnectionCheckReady = false;
+  const postgresqlDriverAdapterReady = true;
+  const postgresqlFactoryWiringReady = true;
+  const postgresqlPreflightConnectionCheckReady = true;
   const postgresqlRuntimeReady =
     postgresqlDriverAdapterReady && postgresqlFactoryWiringReady && postgresqlPreflightConnectionCheckReady;
 
@@ -157,9 +158,9 @@ export const createApiPersistenceRuntimeCapabilities = (): ApiPersistenceRuntime
     blockedReasons: postgresqlRuntimeReady
       ? []
       : [
-          "PostgreSQL driver adapter is not installed or wired.",
-          "PostgreSQL store factory wiring is not enabled.",
-          "PostgreSQL preflight connection checks are not implemented.",
+          "PostgreSQL driver adapter is not ready.",
+          "PostgreSQL store factory wiring is not ready.",
+          "PostgreSQL preflight connection checks are not ready.",
         ],
   };
 };
@@ -167,11 +168,13 @@ export const createApiPersistenceRuntimeCapabilities = (): ApiPersistenceRuntime
 const createPersistenceRuntimeConfig = ({
   driver,
   sqliteDataDir,
+  postgresConnectionString,
   postgresUrlConfigured,
   schemaName,
 }: {
   driver: "sqlite" | "postgresql";
   sqliteDataDir: string;
+  postgresConnectionString: string | null;
   postgresUrlConfigured: boolean;
   schemaName: string;
 }): ApiPersistenceRuntimeConfig => {
@@ -181,17 +184,22 @@ const createPersistenceRuntimeConfig = ({
     return {
       driver,
       sqliteDataDir,
+      postgresConnectionString,
       postgresUrlConfigured,
       schemaName,
       capabilities,
-      runtimeReady: false,
-      message: "PostgreSQL persistence is recognized but no runtime adapter is implemented yet.",
+      runtimeReady: capabilities.postgresqlRuntimeReady && postgresUrlConfigured,
+      message:
+        capabilities.postgresqlRuntimeReady && postgresUrlConfigured
+          ? "PostgreSQL persistence is active."
+          : "PostgreSQL persistence requires API_DATABASE_URL and runtime capabilities before use.",
     };
   }
 
   return {
     driver,
     sqliteDataDir,
+    postgresConnectionString,
     postgresUrlConfigured,
     schemaName,
     capabilities,
@@ -239,6 +247,7 @@ export const readApiRuntimeEnv = (
       persistence: createPersistenceRuntimeConfig({
         driver: "sqlite",
         sqliteDataDir: path.resolve(process.cwd(), ".data"),
+        postgresConnectionString: source.API_DATABASE_URL?.trim() || null,
         postgresUrlConfigured: Boolean(source.API_DATABASE_URL?.trim()),
         schemaName: "goal_vault_api",
       }),
@@ -271,6 +280,7 @@ export const readApiRuntimeEnv = (
   const persistence = createPersistenceRuntimeConfig({
     driver: parsed.data.API_PERSISTENCE_DRIVER || "sqlite",
     sqliteDataDir: dataDir,
+    postgresConnectionString: parsed.data.API_DATABASE_URL || null,
     postgresUrlConfigured: Boolean(parsed.data.API_DATABASE_URL),
     schemaName: parsed.data.API_PERSISTENCE_SCHEMA_NAME || "goal_vault_api",
   });
@@ -303,8 +313,6 @@ export const readApiRuntimeEnv = (
     if (!persistence.postgresUrlConfigured) {
       validationErrors.push("API_DATABASE_URL is required when API_PERSISTENCE_DRIVER=postgresql.");
     }
-
-    validationErrors.push("API_PERSISTENCE_DRIVER=postgresql is blocked until the managed database runtime adapter is implemented.");
   }
 
   return {

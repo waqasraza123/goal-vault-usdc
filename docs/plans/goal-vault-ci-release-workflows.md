@@ -267,7 +267,7 @@ Use the manual API preflight workflow before deploying or promoting a backend im
 2. Confirm the target GitHub Environment has API variables and secrets configured.
 3. Run `API Preflight`.
 4. Download the preflight report artifact.
-5. Confirm `API_PERSISTENCE_DRIVER=sqlite` until the PostgreSQL runtime adapter exists.
+5. Confirm `API_PERSISTENCE_DRIVER=sqlite`, or confirm PostgreSQL preflight passes connection and schema checks before any managed database cutover.
 6. Fix any validation errors before API image deployment or traffic movement.
 
 ## API Traffic Plan Gate

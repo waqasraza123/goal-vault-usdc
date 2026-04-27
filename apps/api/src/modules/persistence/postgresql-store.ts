@@ -18,7 +18,7 @@ import type {
   PersistedVaultRecord,
 } from "./ports";
 
-export type PostgresqlQueryValue = string | number | boolean | null;
+export type PostgresqlQueryValue = string | number | boolean | null | readonly string[];
 
 export interface PostgresqlQueryResult<Row> {
   rows: Row[];

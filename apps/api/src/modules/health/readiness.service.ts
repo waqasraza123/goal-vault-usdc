@@ -121,7 +121,9 @@ export const buildApiHealthSummary = (env: ApiRuntimeEnv): ApiHealthSummary => {
       message:
         env.persistence.driver === "sqlite"
           ? `Indexer data will persist in SQLite under ${env.persistence.sqliteDataDir}.`
-          : "PostgreSQL persistence is configured but the API runtime adapter is not implemented yet.",
+          : env.persistence.runtimeReady
+            ? `Indexer data will persist in PostgreSQL schema ${env.persistence.schemaName}.`
+            : "PostgreSQL persistence is configured but not runtime-ready.",
     }),
     createCheck({
       key: "persistence-driver",
@@ -131,7 +133,7 @@ export const buildApiHealthSummary = (env: ApiRuntimeEnv): ApiHealthSummary => {
         env.persistence.driver === "sqlite"
           ? "SQLite is the active API persistence driver."
           : env.persistence.postgresUrlConfigured
-            ? "PostgreSQL credentials are configured but blocked until the runtime adapter exists."
+            ? "PostgreSQL is the active API persistence driver."
             : "PostgreSQL persistence requires API_DATABASE_URL and the runtime adapter before use.",
     }),
     createCheck({
@@ -274,7 +276,9 @@ export const buildReleaseReadinessSummary = (env: ApiRuntimeEnv): ReleaseReadine
       message:
         env.persistence.driver === "sqlite"
           ? "SQLite persistence is active for this API release."
-          : "PostgreSQL persistence is not release-ready until the runtime adapter is implemented.",
+          : env.persistence.runtimeReady
+            ? "PostgreSQL persistence is active for this API release."
+            : "PostgreSQL persistence is not release-ready until API_DATABASE_URL and runtime capabilities are configured.",
     },
     {
       key: "persistence-capabilities",

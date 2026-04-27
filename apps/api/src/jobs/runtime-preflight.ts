@@ -5,6 +5,11 @@ import path from "node:path";
 import type { SupportedChainId } from "@goal-vault/shared";
 
 import { readApiRuntimeEnv, type ApiPersistenceRuntimeCapabilities } from "../env";
+import {
+  checkPostgresqlConnection,
+  checkPostgresqlSchema,
+  createPostgresqlQueryExecutor,
+} from "../modules/persistence/postgresql-driver";
 
 type PreflightStatus = "valid" | "invalid";
 
@@ -38,6 +43,9 @@ interface RuntimePreflightReport {
     capabilities: ApiPersistenceRuntimeCapabilities;
     runtimeReady: boolean;
     message: string;
+    connectionCheck: "skipped" | "passed" | "failed";
+    schemaCheck: "skipped" | "passed" | "failed";
+    missingTables: string[];
   };
   syncIntervalMs: number;
   indexerEnabled: boolean;
@@ -90,10 +98,36 @@ const resolvePrimaryChainId = (environment: string): SupportedChainId | null => 
   return null;
 };
 
-const buildRuntimePreflightReport = (): RuntimePreflightReport => {
+const buildRuntimePreflightReport = async (): Promise<RuntimePreflightReport> => {
   const env = readApiRuntimeEnv();
   const primaryChainId = resolvePrimaryChainId(env.environment);
   const validationErrors = [...env.validationErrors];
+  let connectionCheck: RuntimePreflightReport["persistence"]["connectionCheck"] = "skipped";
+  let schemaCheck: RuntimePreflightReport["persistence"]["schemaCheck"] = "skipped";
+  let missingTables: string[] = [];
+
+  if (env.persistence.driver === "postgresql" && env.persistence.postgresConnectionString) {
+    const queryExecutor = createPostgresqlQueryExecutor({ connectionString: env.persistence.postgresConnectionString });
+
+    try {
+      await checkPostgresqlConnection(queryExecutor);
+      connectionCheck = "passed";
+
+      const schemaResult = await checkPostgresqlSchema(queryExecutor, env.persistence.schemaName);
+      missingTables = schemaResult.missingTables;
+      schemaCheck = schemaResult.ready ? "passed" : "failed";
+
+      if (!schemaResult.ready) {
+        validationErrors.push(`PostgreSQL schema is missing tables: ${schemaResult.missingTables.join(", ")}.`);
+      }
+    } catch (error) {
+      connectionCheck = "failed";
+      schemaCheck = "failed";
+      validationErrors.push(error instanceof Error ? error.message : "PostgreSQL preflight connection check failed.");
+    } finally {
+      await queryExecutor.close();
+    }
+  }
 
   if (primaryChainId) {
     const primaryChain = env.chains[primaryChainId];
@@ -139,6 +173,9 @@ const buildRuntimePreflightReport = (): RuntimePreflightReport => {
       capabilities: env.persistence.capabilities,
       runtimeReady: env.persistence.runtimeReady,
       message: env.persistence.message,
+      connectionCheck,
+      schemaCheck,
+      missingTables,
     },
     syncIntervalMs: env.syncIntervalMs,
     indexerEnabled: env.indexerEnabled,
@@ -162,7 +199,7 @@ const writeRuntimePreflightReport = async (report: RuntimePreflightReport) => {
 };
 
 const main = async () => {
-  const report = buildRuntimePreflightReport();
+  const report = await buildRuntimePreflightReport();
   const outputPath = await writeRuntimePreflightReport(report);
 
   console.log(JSON.stringify(report, null, 2));

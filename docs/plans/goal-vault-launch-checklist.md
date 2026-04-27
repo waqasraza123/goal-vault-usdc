@@ -28,8 +28,8 @@
 - Confirm `API_PUBLIC_BASE_URL` matches the public deployment URL.
 - Confirm indexer mode and sync interval are appropriate for the target environment.
 - Confirm container hosting uses `API_HOST=0.0.0.0`.
-- Confirm `API_PERSISTENCE_DRIVER=sqlite` until the PostgreSQL runtime adapter is implemented and accepted.
-- Confirm `API_DATABASE_URL` is not treated as active runtime storage while SQLite mode is selected.
+- Confirm `API_PERSISTENCE_DRIVER=sqlite`, or confirm PostgreSQL preflight passes connection and schema checks before any managed database cutover.
+- Confirm `API_DATABASE_URL` is treated as active runtime storage only when PostgreSQL mode is selected and the managed database runtime plan is accepted.
 - Confirm `API_DATA_DIR` points to durable mounted storage before relying on indexed history.
 - Create an API data snapshot before manual backend traffic movement.
 - Store API data snapshots only in approved operational storage.

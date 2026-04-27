@@ -4,35 +4,41 @@
 2026-04-27
 
 ## Current Objective
-Commit current work, then continue production-grade mobile UI/UX polish with code and documentation only.
+Commit current work, then implement the next real-audience beta readiness step with code and documentation only.
 
 ## Last Completed Step
-Polished shared navigation, compact header controls, form sections, and step indicators with active states, icon affordances, and RTL-aware rows.
+Added PostgreSQL API runtime adapter wiring, persistence factory activation, and redacted preflight connection/schema checks.
 
 ## Files Touched
-- `apps/mobile/src/components/forms/FormSection.tsx`
-- `apps/mobile/src/components/forms/StepPills.tsx`
-- `apps/mobile/src/components/layout/DesktopHeader.tsx`
-- `apps/mobile/src/components/layout/LanguageSwitcher.tsx`
-- `apps/mobile/src/components/layout/MobileHeader.tsx`
-- `apps/mobile/src/components/layout/TopNavigation.tsx`
-- `apps/mobile/src/components/layout/WalletEntryPlaceholder.tsx`
-- `docs/plans/goal-vault-mobile-ui-polish.md`
+- `apps/api/package.json`
+- `apps/api/src/env.ts`
+- `apps/api/src/jobs/runtime-preflight.ts`
+- `apps/api/src/modules/health/readiness.service.ts`
+- `apps/api/src/modules/persistence/postgresql-driver.ts`
+- `apps/api/src/modules/persistence/postgresql-store.ts`
+- `apps/api/src/modules/persistence/stores.ts`
+- `docs/deployment/api-persistence-runtime.md`
+- `docs/deployment/api-preflight.md`
+- `docs/plans/goal-vault-ci-release-workflows.md`
+- `docs/plans/goal-vault-env-reference.md`
+- `docs/plans/goal-vault-launch-checklist.md`
+- `docs/plans/goal-vault-universal-react-native-phase-42.md`
+- `docs/project-state.md`
 - `docs/_local/current-session.md`
+- `pnpm-lock.yaml`
 
 ## Durable Decisions Captured
-- `docs/plans/goal-vault-mobile-ui-polish.md` is now the implementation-facing reference for current mobile visual polish.
-- Header navigation now carries active route state and icon-led links on compact and desktop layouts.
-- Compact language and wallet controls now use tokenized borders, radii, and semantic status colors instead of one-off utility styling.
-- Form sections and step pills now use RTL-aware row direction for icon and label layouts.
+- PostgreSQL mode now uses `pg` through the API persistence boundary instead of direct route or service imports.
+- PostgreSQL startup and preflight require `API_DATABASE_URL`, successful connection, and the required schema tables.
+- API runtime and preflight reports continue to redact database credentials.
 
 ## Scope Boundaries
-- No production build, Expo export, deployment, database work, contract work, live chain interaction, or real test suite was run.
-- Existing product behavior, wallet state handling, analytics events, i18n model, and backend fallback behavior were preserved.
+- No production build, Expo export, deployment, database provisioning, schema application, import, parity comparison, traffic movement, contract work, live chain interaction, or real test suite was run.
+- Existing API route behavior and SQLite default persistence were preserved.
 
 ## Verification Commands
-- `pnpm --filter @goal-vault/mobile typecheck`
+- `pnpm --filter @goal-vault/api typecheck`
 - `git diff --check`
 
 ## Handoff Note
-Next code-focused step can continue production launch readiness or finish another focused UI consistency pass in vault action panels.
+Next code-focused step can add operator-side managed database cutover evidence for a real provider, or implement provider-specific backend promotion and rollback automation.
