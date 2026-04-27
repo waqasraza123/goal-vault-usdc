@@ -54,6 +54,14 @@
 - Store support exports only in approved operational storage and delete them after the review window.
 - Update support request status through the internal support triage API after offline review.
 
+## Beta Data Retention
+- Run the `Beta Data Retention Plan` workflow before inviting a broader beta cohort.
+- Provide policy, support, and incident owners.
+- Provide API data snapshot and beta support export references.
+- Confirm the plan covers support requests, support exports, analytics events, API snapshots, managed database exports, release artifacts, runtime logs, and incident records.
+- Confirm the plan says `commitAllowed: false`, `noLiveDataRead: true`, `noDataDeleted: true`, and `noRetentionPolicyApplied: true`.
+- Review deletion request and legal-hold handling with the operator before expanding beta access.
+
 ## Managed Database Planning
 - Run the `API Managed Database Plan` workflow before provisioning or migrating external database infrastructure.
 - Use a non-secret target reference, not a database connection string.

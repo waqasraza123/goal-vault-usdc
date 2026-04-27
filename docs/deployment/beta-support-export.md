@@ -140,7 +140,8 @@ The export directory contains:
 4. Review aggregate counts, urgent open requests, and recurring categories.
 5. Run `private` mode only when approved support handling requires full request text.
 6. Update support statuses through the internal support triage API after review.
-7. Record product follow-ups without copying private request bodies into committed docs.
+7. Generate or update the beta data retention plan before broadening beta access.
+8. Record product follow-ups without copying private request bodies into committed docs.
 
 ## Boundary
 This artifact supports offline support review. It is not a ticketing system, admin dashboard, notification integration, data retention policy, or public transparency report.

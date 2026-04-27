@@ -1,0 +1,144 @@
+name: Beta Data Retention Plan
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Backend environment.
+        type: choice
+        required: true
+        options:
+          - staging
+          - production
+      plan_label:
+        description: Stable retention plan label.
+        type: string
+        required: true
+      policy_owner:
+        description: Operator or team accountable for the retention policy.
+        type: string
+        required: true
+      support_owner:
+        description: Operator or team accountable for support data handling.
+        type: string
+        required: true
+      incident_owner:
+        description: Operator or team accountable for incident holds.
+        type: string
+        required: true
+      snapshot_reference:
+        description: API data snapshot artifact name or URL.
+        type: string
+        required: true
+      support_export_reference:
+        description: Beta support export artifact name or URL.
+        type: string
+        required: true
+      readiness_reference:
+        description: Optional beta readiness artifact name or URL.
+        type: string
+        required: false
+      review_cadence:
+        description: Retention review cadence.
+        type: choice
+        required: true
+        default: monthly
+        options:
+          - weekly
+          - monthly
+          - quarterly
+      support_requests_days:
+        description: Support request retention window in days.
+        type: string
+        required: false
+        default: "180"
+      support_exports_days:
+        description: Support export retention window in days.
+        type: string
+        required: false
+        default: "30"
+      analytics_events_days:
+        description: Analytics event retention window in days.
+        type: string
+        required: false
+        default: "180"
+      api_snapshots_days:
+        description: API data snapshot retention window in days.
+        type: string
+        required: false
+        default: "30"
+      managed_database_exports_days:
+        description: Managed database export retention window in days.
+        type: string
+        required: false
+        default: "14"
+      release_artifacts_days:
+        description: Release artifact retention window in days.
+        type: string
+        required: false
+        default: "365"
+      runtime_logs_days:
+        description: Runtime log retention window in days.
+        type: string
+        required: false
+        default: "30"
+      incident_records_days:
+        description: Incident record retention window in days.
+        type: string
+        required: false
+        default: "730"
+      notes:
+        description: Optional non-secret retention notes.
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: beta-data-retention-plan-${{ inputs.target }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  FORCE_COLOR: 1
+  BETA_DATA_RETENTION_TARGET: ${{ inputs.target }}
+  BETA_DATA_RETENTION_LABEL: ${{ inputs.plan_label }}
+  BETA_DATA_RETENTION_POLICY_OWNER: ${{ inputs.policy_owner }}
+  BETA_DATA_RETENTION_SUPPORT_OWNER: ${{ inputs.support_owner }}
+  BETA_DATA_RETENTION_INCIDENT_OWNER: ${{ inputs.incident_owner }}
+  BETA_DATA_RETENTION_SNAPSHOT_REFERENCE: ${{ inputs.snapshot_reference }}
+  BETA_DATA_RETENTION_SUPPORT_EXPORT_REFERENCE: ${{ inputs.support_export_reference }}
+  BETA_DATA_RETENTION_READINESS_REFERENCE: ${{ inputs.readiness_reference }}
+  BETA_DATA_RETENTION_REVIEW_CADENCE: ${{ inputs.review_cadence }}
+  BETA_DATA_RETENTION_SUPPORT_REQUESTS_DAYS: ${{ inputs.support_requests_days }}
+  BETA_DATA_RETENTION_SUPPORT_EXPORTS_DAYS: ${{ inputs.support_exports_days }}
+  BETA_DATA_RETENTION_ANALYTICS_EVENTS_DAYS: ${{ inputs.analytics_events_days }}
+  BETA_DATA_RETENTION_API_SNAPSHOTS_DAYS: ${{ inputs.api_snapshots_days }}
+  BETA_DATA_RETENTION_MANAGED_DATABASE_EXPORTS_DAYS: ${{ inputs.managed_database_exports_days }}
+  BETA_DATA_RETENTION_RELEASE_ARTIFACTS_DAYS: ${{ inputs.release_artifacts_days }}
+  BETA_DATA_RETENTION_RUNTIME_LOGS_DAYS: ${{ inputs.runtime_logs_days }}
+  BETA_DATA_RETENTION_INCIDENT_RECORDS_DAYS: ${{ inputs.incident_records_days }}
+  BETA_DATA_RETENTION_NOTES: ${{ inputs.notes }}
+  BETA_DATA_RETENTION_DIR: artifacts/beta-data-retention
+
+jobs:
+  beta-data-retention-plan:
+    name: Write ${{ inputs.target }} beta data retention plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write beta data retention plan
+        id: plan
+        run: node scripts/write-beta-data-retention-plan.mjs
+
+      - name: Upload beta data retention plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: goal-vault-beta-data-retention-${{ inputs.target }}
+          path: ${{ steps.plan.outputs.plan_path }}
+          if-no-files-found: error

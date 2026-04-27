@@ -46,6 +46,7 @@ The repository now has a real v1 foundation:
 - beta support intake across the app and API with durable SQLite/PostgreSQL persistence for structured real-user issue reports
 - operator-only beta support triage API for listing, reading, and updating support request status through internal access
 - guarded beta support export artifacts for offline operator review from verified API data snapshots
+- beta data retention plan artifacts covering support, snapshots, analytics, exports, logs, incidents, deletion requests, and legal holds
 - provider-neutral API traffic plan tooling for promotion, rollback, and disablement records
 - Vercel-specific API traffic command plan tooling that validates the neutral traffic plan and emits reviewable promote or rollback commands without moving traffic
 - provider-neutral managed database planning for future PostgreSQL migration
@@ -150,6 +151,7 @@ Still not implemented:
 - Phase 45: internal beta support triage API for operator review and status updates
 - Phase 46: Vercel API traffic command artifacts for provider-specific promotion and rollback handoff without automatic traffic movement
 - Phase 47: beta support export artifacts for offline operator review without live database access or support status mutation
+- Phase 48: beta data retention plan artifacts for real-audience private data handling before broader beta expansion
 
 ## Important Decisions
 - The product should feel like a premium savings tool, not a DeFi dashboard.
@@ -254,6 +256,8 @@ Still not implemented:
 - Vercel API traffic command artifacts must keep `noDeploymentPerformed: true` and `noTrafficMoved: true`; any actual `vercel promote` or `vercel rollback` execution remains an explicit operator action outside this artifact generation workflow.
 - Phase 47 adds a beta support export artifact that reads a verified API data snapshot, writes summary or explicitly confirmed private JSONL exports, and records `commitAllowed: false`, `noLiveDatabaseConnected: true`, and `noSupportStatusMutated: true`.
 - Support export artifacts are private operational data and must not be committed, attached to public issues, or copied into public release notes.
+- Phase 48 adds a beta data retention plan artifact that records retention windows, data classes, deletion request flow, legal-hold flow, and operator review checks without reading live data or deleting records.
+- Beta data retention plans are planning artifacts only; provider-specific deletion procedures and public privacy policy language remain separate approval tracks.
 - Product docs live in `docs/product/goal-vault/`:
   - `goal.md` for the concise product goal
   - `plan.md` for the detailed execution-oriented plan
@@ -313,6 +317,7 @@ Still not implemented:
 - The Phase 45 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-45.md`.
 - The Phase 46 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-46.md`.
 - The Phase 47 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-47.md`.
+- The Phase 48 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-48.md`.
 - The CI and release workflow note lives at `docs/plans/goal-vault-ci-release-workflows.md`.
 - The contract deployment runbook lives at `docs/deployment/contract-deployment.md`.
 - The API image runbook lives at `docs/deployment/api-image.md`.
@@ -332,6 +337,7 @@ Still not implemented:
 - The beta readiness runbook lives at `docs/deployment/beta-readiness.md`.
 - The beta support intake runbook lives at `docs/deployment/beta-support-intake.md`.
 - The beta support export runbook lives at `docs/deployment/beta-support-export.md`.
+- The beta data retention runbook lives at `docs/deployment/beta-data-retention.md`.
 
 ## Deferred / Not Yet Implemented
 - Accepted managed database schema/import/parity execution, production PostgreSQL cutover, and rollback operation

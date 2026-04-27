@@ -3,7 +3,7 @@
 ## Purpose
 This pass adds repository-owned GitHub Actions automation for the current production-shaped v1 codebase.
 
-The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, Vercel API traffic command planning, beta support export generation, managed database planning, managed database schema generation, managed database export generation, managed database import planning, managed database parity planning, managed database runtime activation planning, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
+The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, Vercel API traffic command planning, beta support export generation, beta data retention planning, managed database planning, managed database schema generation, managed database export generation, managed database import planning, managed database parity planning, managed database runtime activation planning, mobile distribution, and release manifest generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
 
 ## Workflow Files
 - `.github/actions/setup-pnpm/action.yml`
@@ -53,6 +53,10 @@ The CI and release-candidate workflows intentionally stop at verification and re
   - reads a downloaded API data snapshot artifact or runner-local snapshot directory
   - writes summary or explicitly confirmed private support JSONL exports
   - uploads a private operational artifact without connecting to live storage or mutating support status
+- `.github/workflows/beta-data-retention-plan.yml`
+  - manual staging or production beta data retention plan generation
+  - records retention windows, owners, data classes, deletion request flow, and legal-hold flow
+  - uploads a planning artifact without reading live data or deleting records
 - `.github/workflows/api-managed-database-plan.yml`
   - manual staging or production managed database planning
   - records current SQLite schema inventory and PostgreSQL cutover requirements
@@ -257,6 +261,25 @@ Use GitHub Environment variables for public, non-secret release metadata:
 - `BETA_SUPPORT_EXPORT_INCIDENT_REFERENCE`
 - `BETA_SUPPORT_EXPORT_NOTES`
 - `BETA_SUPPORT_EXPORT_DIR`
+- `BETA_DATA_RETENTION_TARGET`
+- `BETA_DATA_RETENTION_LABEL`
+- `BETA_DATA_RETENTION_POLICY_OWNER`
+- `BETA_DATA_RETENTION_SUPPORT_OWNER`
+- `BETA_DATA_RETENTION_INCIDENT_OWNER`
+- `BETA_DATA_RETENTION_SNAPSHOT_REFERENCE`
+- `BETA_DATA_RETENTION_SUPPORT_EXPORT_REFERENCE`
+- `BETA_DATA_RETENTION_READINESS_REFERENCE`
+- `BETA_DATA_RETENTION_REVIEW_CADENCE`
+- `BETA_DATA_RETENTION_SUPPORT_REQUESTS_DAYS`
+- `BETA_DATA_RETENTION_SUPPORT_EXPORTS_DAYS`
+- `BETA_DATA_RETENTION_ANALYTICS_EVENTS_DAYS`
+- `BETA_DATA_RETENTION_API_SNAPSHOTS_DAYS`
+- `BETA_DATA_RETENTION_MANAGED_DATABASE_EXPORTS_DAYS`
+- `BETA_DATA_RETENTION_RELEASE_ARTIFACTS_DAYS`
+- `BETA_DATA_RETENTION_RUNTIME_LOGS_DAYS`
+- `BETA_DATA_RETENTION_INCIDENT_RECORDS_DAYS`
+- `BETA_DATA_RETENTION_NOTES`
+- `BETA_DATA_RETENTION_DIR`
 - `API_DATABASE_SCHEMA_TARGET`
 - `API_DATABASE_SCHEMA_LABEL`
 - `API_DATABASE_SCHEMA_ENGINE`
@@ -347,6 +370,16 @@ Use the manual beta support export workflow when operators need offline support 
 4. Use `private` mode only with `confirm_private=export-private-support` when full request text or contact details are needed.
 5. Download the export artifact and confirm the manifest says `commitAllowed: false`, `noLiveDatabaseConnected: true`, and `noSupportStatusMutated: true`.
 6. Update request statuses through the internal support triage API after review.
+
+## Beta Data Retention Gate
+Use the manual beta data retention plan workflow before expanding beyond limited beta:
+
+1. Choose `staging` or `production`.
+2. Provide policy, support, and incident owners.
+3. Provide API data snapshot and beta support export references.
+4. Keep the default retention windows unless an operator has approved a stricter target-specific policy.
+5. Download the retention artifact and confirm it says `commitAllowed: false`, `noLiveDataRead: true`, `noDataDeleted: true`, and `noRetentionPolicyApplied: true`.
+6. Review deletion request and legal-hold handling before inviting a broader beta cohort.
 
 ## API Traffic Plan Gate
 Use the manual API traffic plan workflow before provider-specific traffic changes:
@@ -457,6 +490,7 @@ Use the manual release manifest workflow before traffic movement:
 - Use `docs/deployment/api-traffic-plan.md` for provider-neutral traffic movement, rollback, and disablement planning.
 - Use `docs/deployment/vercel-api-traffic.md` for Vercel-specific command planning after a provider-neutral traffic plan exists.
 - Use `docs/deployment/beta-support-export.md` for offline support review from API data snapshots.
+- Use `docs/deployment/beta-data-retention.md` for retention-window planning before broader beta expansion.
 - Use `docs/deployment/mobile-distribution.md` for EAS builds, store submission, and mobile rollback handling.
 - Use `docs/deployment/release-manifest.md` to record promotion and rollback pointers before manual traffic changes.
 - Add provider-specific backend execution jobs only after the staging backend host, Vercel project policy, approval model, and rollback policy are finalized.
