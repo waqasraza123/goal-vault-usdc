@@ -9,6 +9,8 @@
     "dev:web": "pnpm --filter @goal-vault/mobile web",
     "dev:ios": "pnpm --filter @goal-vault/mobile ios",
     "dev:android": "pnpm --filter @goal-vault/mobile android",
+    "api:data:restore": "node scripts/restore-api-data-snapshot.mjs",
+    "api:data:snapshot": "node scripts/create-api-data-snapshot.mjs",
     "test": "turbo run test",
     "test:ts": "pnpm --filter @goal-vault/api --filter @goal-vault/mobile --filter @goal-vault/api-client --filter @goal-vault/contracts-sdk test",
     "test:contracts": "pnpm --filter @goal-vault/contracts test",

@@ -28,6 +28,7 @@ The repository now has a real v1 foundation:
 - production-shaped API container image and manual GHCR publishing workflow
 - guarded EAS mobile build and production store submission workflow
 - release manifest workflow for promotion records and rollback pointers
+- API data snapshot and restore tooling for the current SQLite-backed persistence layer
 - root README with setup, scripts, architecture, and verification guidance
 
 Still not implemented:
@@ -98,6 +99,7 @@ Still not implemented:
 - Phase 19: API container image packaging, manual GHCR publishing, image manifests, and backend image runbook
 - Phase 20: guarded EAS mobile build and production store submission automation with mobile distribution runbook
 - Phase 21: release manifest automation for promotion records, artifact stitching, and rollback pointers
+- Phase 22: API data snapshot and restore tooling for SQLite-backed backend persistence
 
 ## Important Decisions
 - The product should feel like a premium savings tool, not a DeFi dashboard.
@@ -136,6 +138,8 @@ Still not implemented:
 - Mobile submission is production-only and requires explicit `confirm_submit=submit`.
 - Phase 21 adds provider-neutral release manifests that record app/API URLs, factory address, API image, mobile build references, and rollback pointers before manual traffic movement.
 - Release manifests must not include private keys, RPC URLs, EAS tokens, or internal API tokens.
+- Phase 22 adds snapshot and restore scripts for API data under `API_DATA_DIR`; snapshots are sensitive operational artifacts and should not be committed.
+- API data restore requires explicit confirmation and should be run only while the API is stopped.
 - Confirmed create, deposit, and withdraw flows now trigger a thin backend sync endpoint and then invalidate reads so backend-enriched vaults and activity refresh more cleanly.
 - Phase 7 adds shared readiness and recovery models, persistent mobile transaction recovery, app-shell readiness banners, calmer degraded-state handling, and explicit staging health summaries from the API.
 - Phase 7 removes connected-user mock live fallbacks when real reads fail. The app now prefers honest chain/session data plus syncing or recovery messaging.
@@ -160,6 +164,7 @@ Still not implemented:
 - Phase 19 adds API image packaging and publishing so backend releases can be promoted from immutable image tags.
 - Phase 20 adds EAS mobile build and production submit automation for iOS and Android.
 - Phase 21 adds release manifest artifacts so operators can tie together contract, API, mobile, and rollback state.
+- Phase 22 adds SQLite snapshot and restore tooling as an operational bridge before managed database infrastructure.
 - Product docs live in `docs/product/goal-vault/`:
   - `goal.md` for the concise product goal
   - `plan.md` for the detailed execution-oriented plan
@@ -192,11 +197,13 @@ Still not implemented:
 - The Phase 19 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-19.md`.
 - The Phase 20 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-20.md`.
 - The Phase 21 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-21.md`.
+- The Phase 22 implementation note lives at `docs/plans/goal-vault-universal-react-native-phase-22.md`.
 - The CI and release workflow note lives at `docs/plans/goal-vault-ci-release-workflows.md`.
 - The contract deployment runbook lives at `docs/deployment/contract-deployment.md`.
 - The API image runbook lives at `docs/deployment/api-image.md`.
 - The mobile distribution runbook lives at `docs/deployment/mobile-distribution.md`.
 - The release manifest runbook lives at `docs/deployment/release-manifest.md`.
+- The API data snapshot runbook lives at `docs/deployment/api-data-snapshots.md`.
 
 ## Deferred / Not Yet Implemented
 - External managed database infrastructure beyond the current in-repo SQLite persistence

@@ -64,6 +64,18 @@
 - `API_DATA_DIR`
   - should point to mounted durable storage before relying on SQLite-backed indexed state
 
+## API Data Snapshot Variables
+- `API_DATA_DIR`
+  - source or restore target for API data files
+- `API_DATA_SNAPSHOT_DIR`
+  - optional snapshot output root
+- `API_DATA_SNAPSHOT_LABEL`
+  - optional stable label for snapshot output
+- `API_DATA_RESTORE_SOURCE`
+  - snapshot directory used by restore
+- `API_DATA_RESTORE_CONFIRM`
+  - must be `restore` before restore runs
+
 ## Build Variables
 - `IOS_BUILD_NUMBER`
   - iOS build number used by Expo config

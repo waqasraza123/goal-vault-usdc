@@ -27,6 +27,8 @@
 - Confirm indexer mode and sync interval are appropriate for the target environment.
 - Confirm container hosting uses `API_HOST=0.0.0.0`.
 - Confirm `API_DATA_DIR` points to durable mounted storage before relying on indexed history.
+- Create an API data snapshot before manual backend traffic movement.
+- Store API data snapshots only in approved operational storage.
 
 ## CI And Release Candidate
 - Confirm the GitHub Environment exists for the target release.
@@ -89,6 +91,7 @@
 ## Rollback / Disable
 - If the API is unhealthy, disable public launch traffic or point the app back to a known-good API base URL.
 - If an API image is unhealthy, redeploy the previous known-good image tag.
+- Restore API data from the intended snapshot only with the API stopped.
 - If indexer background sync is disabled, do not claim indexed activity freshness until manual sync procedures are in place.
 - If a new factory deployment is wrong, restore the previous factory address in app/API configuration and stop promotion.
 - If a mobile build is wrong, stop store rollout and submit a fixed build through EAS.
