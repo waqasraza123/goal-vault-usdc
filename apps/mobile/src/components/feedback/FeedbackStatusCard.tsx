@@ -4,7 +4,7 @@ import { View } from "react-native";
 
 import { useI18n } from "../../lib/i18n";
 import { colors, radii, spacing } from "../../theme";
-import { AppHeading, AppText, MotionView, SurfaceCard } from "../primitives";
+import { AppHeading, AppText, MotionView, StatusPulse, SurfaceCard } from "../primitives";
 
 export interface FeedbackStatusCardProps {
   title: string;
@@ -12,6 +12,7 @@ export interface FeedbackStatusCardProps {
   eyebrow?: string;
   icon?: ComponentProps<typeof MaterialCommunityIcons>["name"];
   tone?: "accent" | "positive" | "warning" | "danger" | "neutral";
+  pulse?: boolean;
 }
 
 export const FeedbackStatusCard = ({
@@ -21,6 +22,7 @@ export const FeedbackStatusCard = ({
   eyebrow,
   icon = "information-outline",
   tone = "accent",
+  pulse = false,
 }: PropsWithChildren<FeedbackStatusCardProps>) => {
   const { inlineDirection } = useI18n();
   const isDanger = tone === "danger";
@@ -34,20 +36,22 @@ export const FeedbackStatusCard = ({
   return (
     <SurfaceCard accentColor={accentColor} level="floating" tone={surfaceTone} style={{ padding: spacing[5] }}>
       <MotionView style={{ flexDirection: inlineDirection(), alignItems: "flex-start", gap: spacing[3] }} preset="hero" intensity="emphasis">
-        <View
-          style={{
-            width: 46,
-            height: 46,
-            borderRadius: radii.md,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: iconBackgroundColor,
-            borderWidth: 1,
-            borderColor: accentColor,
-          }}
-        >
-          <MaterialCommunityIcons color={iconColor} name={icon} size={24} />
-        </View>
+        <StatusPulse active={pulse}>
+          <View
+            style={{
+              width: 46,
+              height: 46,
+              borderRadius: radii.md,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: iconBackgroundColor,
+              borderWidth: 1,
+              borderColor: accentColor,
+            }}
+          >
+            <MaterialCommunityIcons color={iconColor} name={icon} size={24} />
+          </View>
+        </StatusPulse>
         <View style={{ flex: 1, gap: spacing[2] }}>
           {eyebrow ? (
             <AppText size="sm" style={{ color: iconColor }} weight="semibold">

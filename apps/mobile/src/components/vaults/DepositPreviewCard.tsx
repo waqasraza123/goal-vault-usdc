@@ -16,7 +16,11 @@ export const DepositPreviewCard = ({ preview }: { preview: DepositPreview }) => 
             progress: formatProgress(preview.resultingProgressRatio),
           })}
         </AppText>
-        <ProgressBar progress={preview.resultingProgressRatio} tone={preview.resultingProgressRatio >= 1 ? "positive" : "accent"} />
+        <ProgressBar
+          emphasizeCompletion
+          progress={preview.resultingProgressRatio}
+          tone={preview.resultingProgressRatio >= 1 ? "positive" : "accent"}
+        />
         <AppText weight="semibold">
           {interpolate(messages.deposit.remainingToTarget, {
             amount: formatUsdc(preview.resultingRemainingAmount),

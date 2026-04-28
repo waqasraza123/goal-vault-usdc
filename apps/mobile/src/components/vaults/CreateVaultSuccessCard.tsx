@@ -63,9 +63,12 @@ export const CreateVaultSuccessCard = ({
       tone="positive"
     >
       <View style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[3] }}>
-        {metrics.map((metric) => (
-          <View
+        {metrics.map((metric, index) => (
+          <MotionView
             key={metric.label}
+            delay={index * 45}
+            intensity="emphasis"
+            preset="scale"
             style={{
               flex: 1,
               minWidth: 180,
@@ -95,7 +98,7 @@ export const CreateVaultSuccessCard = ({
               </AppText>
               <AppText weight="semibold">{metric.value}</AppText>
             </View>
-          </View>
+          </MotionView>
         ))}
       </View>
 

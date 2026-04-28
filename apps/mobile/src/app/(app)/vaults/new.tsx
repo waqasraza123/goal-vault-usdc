@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 import { useEffect, useMemo, useRef } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { useCreateVaultForm } from "../../../features/create-vault/useCreateVaultForm";
@@ -32,6 +32,7 @@ import { NetworkStatusBanner } from "../../../components/layout/NetworkStatusBan
 import {
   AmountField,
   AppText,
+  MotionPressable,
   MotionView,
   PageContainer,
   PrimaryButton,
@@ -294,9 +295,10 @@ export default function CreateVaultScreen() {
                           const isSelected = values.accentTheme === option.value;
 
                           return (
-                            <Pressable
+                            <MotionPressable
                               key={option.value}
                               accessibilityRole="button"
+                              intensity={isSelected ? "structural" : "subtle"}
                               onPress={() => setFieldValue("accentTheme", isSelected ? "" : option.value)}
                               style={{
                                 borderRadius: radii.pill,
@@ -310,7 +312,7 @@ export default function CreateVaultScreen() {
                               <AppText style={{ color: isSelected ? colors.white : option.tone }} weight="semibold">
                                 {option.label}
                               </AppText>
-                            </Pressable>
+                            </MotionPressable>
                           );
                         })}
                       </View>
@@ -364,13 +366,13 @@ export default function CreateVaultScreen() {
                           const isSelected = values.ruleType === option.value;
 
                           return (
-                            <Pressable
+                            <MotionPressable
                               key={option.value}
                               accessibilityRole="button"
+                              containerStyle={{ flex: 1, minWidth: 190 }}
+                              intensity={isSelected ? "structural" : "subtle"}
                               onPress={() => setFieldValue("ruleType", option.value)}
                               style={{
-                                flex: 1,
-                                minWidth: 190,
                                 borderRadius: radii.lg,
                                 borderWidth: 1,
                                 borderColor: isSelected ? colors.accentStrong : colors.border,
@@ -401,7 +403,7 @@ export default function CreateVaultScreen() {
                               <AppText size="sm" tone="secondary">
                                 {option.description}
                               </AppText>
-                            </Pressable>
+                            </MotionPressable>
                           );
                         })}
                       </View>

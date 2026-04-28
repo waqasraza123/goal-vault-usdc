@@ -1,11 +1,9 @@
-import { View } from "react-native";
-
 import { formatUsdc } from "../../lib/format";
 import { interpolate, useI18n } from "../../lib/i18n";
 import { colors, radii, spacing } from "../../theme";
 import type { VaultDetail } from "../../types";
 import { FeedbackStatusCard } from "../feedback";
-import { AppText, SecondaryButton } from "../primitives";
+import { AppText, MotionView, SecondaryButton } from "../primitives";
 
 export const WithdrawSuccessCard = ({
   vault,
@@ -23,7 +21,9 @@ export const WithdrawSuccessCard = ({
       title={messages.withdraw.successTitle}
       tone="positive"
     >
-      <View
+      <MotionView
+        intensity="emphasis"
+        preset="scale"
         style={{
           borderRadius: radii.lg,
           borderWidth: 1,
@@ -37,7 +37,7 @@ export const WithdrawSuccessCard = ({
             amount: formatUsdc(vault.savedAmount),
           })}
         </AppText>
-      </View>
+      </MotionView>
       <SecondaryButton icon="arrow-up-right" label={messages.common.buttons.withdrawAgain} onPress={onDismiss} />
     </FeedbackStatusCard>
   );

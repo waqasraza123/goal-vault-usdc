@@ -147,7 +147,12 @@ export const VaultDetailHeader = ({ vault }: VaultDetailHeaderProps) => {
             </View>
           </View>
           <View style={{ gap: spacing[2] }}>
-            <ProgressBar progress={vault.progressRatio} tone={vault.progressRatio >= 1 ? "positive" : "accent"} height={12} />
+            <ProgressBar
+              emphasizeCompletion
+              progress={vault.progressRatio}
+              tone={vault.progressRatio >= 1 ? "positive" : "accent"}
+              height={12}
+            />
             <AppText style={{ color: "#cbd5e1" }}>
               {messages.common.labels.of} {formatUsdc(vault.targetAmount)}
             </AppText>

@@ -8,6 +8,6 @@ export const AppLoadingState = ({
   description: string;
 }) => {
   return (
-    <FeedbackStatusCard description={description} icon="sync" title={title} tone="neutral" />
+    <FeedbackStatusCard description={description} icon="sync" pulse title={title} tone="neutral" />
   );
 };

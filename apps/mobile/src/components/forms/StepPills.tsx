@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { useI18n } from "../../lib/i18n";
 import { colors, radii, spacing } from "../../theme";
-import { AppText } from "../primitives";
+import { AppText, MotionView, StatusPulse } from "../primitives";
 
 export interface StepPillsProps {
   currentStep: number;
@@ -25,8 +25,11 @@ export const StepPills = ({ currentStep, steps }: StepPillsProps) => {
         const labelColor = isActive ? colors.accentStrong : isComplete ? colors.positive : colors.textSecondary;
 
         return (
-          <View
+          <MotionView
             key={step}
+            delay={index * 35}
+            intensity={isActive ? "structural" : "subtle"}
+            preset="scale"
             style={{
               minHeight: 42,
               paddingHorizontal: spacing[3],
@@ -40,28 +43,30 @@ export const StepPills = ({ currentStep, steps }: StepPillsProps) => {
               gap: spacing[2],
             }}
           >
-            <View
-              style={{
-                width: 22,
-                height: 22,
-                borderRadius: radii.pill,
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: indicatorBackground,
-              }}
-            >
-              {isComplete ? (
-                <MaterialCommunityIcons color={colors.white} name="check" size={14} />
-              ) : (
-                <AppText size="xs" style={{ color: indicatorTextColor }} weight="semibold">
-                  {index + 1}
-                </AppText>
-              )}
-            </View>
+            <StatusPulse active={isActive}>
+              <View
+                style={{
+                  width: 22,
+                  height: 22,
+                  borderRadius: radii.pill,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: indicatorBackground,
+                }}
+              >
+                {isComplete ? (
+                  <MaterialCommunityIcons color={colors.white} name="check" size={14} />
+                ) : (
+                  <AppText size="xs" style={{ color: indicatorTextColor }} weight="semibold">
+                    {index + 1}
+                  </AppText>
+                )}
+              </View>
+            </StatusPulse>
             <AppText size="sm" style={{ color: labelColor }} weight="semibold">
               {step}
             </AppText>
-          </View>
+          </MotionView>
         );
       })}
     </View>

@@ -33,6 +33,7 @@ export const TransactionStatusCard = ({
       description={description}
       eyebrow={eyebrow ?? messages.common.labels.transactionStatus}
       icon={statusIcon}
+      pulse={tone !== "muted"}
       title={title}
       tone={statusTone}
     >

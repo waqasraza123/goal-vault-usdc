@@ -10,11 +10,13 @@ export interface ProgressBarProps {
   style?: StyleProp<ViewStyle>;
   height?: number;
   tone?: "accent" | "positive";
+  emphasizeCompletion?: boolean;
 }
 
-export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: ProgressBarProps) => {
+export const ProgressBar = ({ progress, style, height = 10, tone = "accent", emphasizeCompletion = false }: ProgressBarProps) => {
   const clampedProgress = Math.max(0, Math.min(1, progress));
   const progressValue = useRef(new Animated.Value(clampedProgress)).current;
+  const completionScale = useRef(new Animated.Value(1)).current;
   const { isReducedMotion } = useReducedMotionPreference();
 
   useEffect(() => {
@@ -32,6 +34,29 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
     }).start();
   }, [clampedProgress, isReducedMotion, progressValue]);
 
+  useEffect(() => {
+    if (isReducedMotion || !emphasizeCompletion || clampedProgress < 1) {
+      completionScale.setValue(1);
+      return;
+    }
+
+    completionScale.setValue(0.992);
+    Animated.sequence([
+      createTiming({
+        value: completionScale,
+        toValue: 1.018,
+        duration: 180,
+        intensity: "emphasis",
+      }),
+      createTiming({
+        value: completionScale,
+        toValue: 1,
+        duration: 220,
+        intensity: "structural",
+      }),
+    ]).start();
+  }, [clampedProgress, completionScale, emphasizeCompletion, isReducedMotion]);
+
   const fillWidth = useMemo(
     () =>
       progressValue.interpolate({
@@ -44,7 +69,7 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
   const glowColor = tone === "positive" ? colors.positive : colors.accentStrong;
 
   return (
-    <View
+    <Animated.View
       style={[
         {
           height,
@@ -55,6 +80,7 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
           backgroundColor: colors.surfaceMuted,
           overflow: "hidden",
           padding: 2,
+          transform: [{ scale: completionScale }],
         },
         style,
       ]}
@@ -102,6 +128,6 @@ export const ProgressBar = ({ progress, style, height = 10, tone = "accent" }: P
           }}
         />
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 };

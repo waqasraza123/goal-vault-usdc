@@ -68,7 +68,12 @@ export const VaultProgressPanel = ({ vault }: VaultProgressPanelProps) => {
         </View>
       </MotionView>
 
-      <ProgressBar progress={vault.progressRatio} tone={vault.progressRatio >= 1 ? "positive" : "accent"} height={12} />
+      <ProgressBar
+        emphasizeCompletion
+        progress={vault.progressRatio}
+        tone={vault.progressRatio >= 1 ? "positive" : "accent"}
+        height={12}
+      />
 
       <View style={{ flexDirection: inlineDirection(), flexWrap: "wrap", gap: spacing[3] }}>
         {metrics.map((metric) => (

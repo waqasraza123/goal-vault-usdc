@@ -4,42 +4,43 @@
 2026-04-28
 
 ## Current Objective
-Audit and harden Pocket Vault smart contracts for practical maximum security while preserving additive compatibility.
+Add subtle premium animations to authenticated Pocket Vault app flows using the existing React Native `Animated` motion layer.
 
 ## Completed
-- Hardened `GoalVault` with SafeERC20 token movement, ReentrancyGuard protection, direct constructor validation, rule-shape validation, and zero-recipient withdrawal rejection.
-- Hardened `GoalVaultFactory` with zero-USDC rejection, zero-target rejection, and stricter rule-specific parameter validation.
-- Added malicious token and edge-case Foundry tests for false-returning tokens, reverting tokens, reentrant transfer callbacks, direct constructor failures, factory failures, zero withdrawal recipient, guardian re-request after rejection, and time-lock accounting invariants.
-- Added `docs/plans/pocket-vault-contract-security-audit.md`.
-- Updated `docs/project-state.md` with the durable contract security posture and additive compatibility rule.
+- Added reusable `MotionPressable` and `StatusPulse` primitives.
+- Added optional completion emphasis to `ProgressBar`.
+- Added pulsing pending motion to loading, sync, metadata-pending, and transaction status surfaces.
+- Added animated selected-state feedback to create-vault accent and rule options.
+- Added motion polish to create-vault step pills and create/deposit/withdraw success states.
+- Applied completion emphasis to dashboard/detail/deposit progress bars.
 
 ## Important Boundaries
-- Onchain contracts remain `GoalVault` and `GoalVaultFactory`.
-- Existing public contract functions and existing events remain stable.
-- No proxy upgradeability, pause role, admin withdrawal, rescue function, multichain support, yield, swaps, or new product behavior was added.
-- Hardening applies to new deployments from the updated source; existing deployed contracts are not upgraded.
+- No new animation dependency was introduced.
+- No wallet, contract, API, schema, transaction, or persistence behavior was changed.
+- Reduced-motion handling remains centralized through the existing motion preference hook.
+- Local `.env` remains untracked and must not be committed.
 
 ## Main Files/Folders Touched
-- `packages/contracts/src/GoalVault.sol`
-- `packages/contracts/src/GoalVaultFactory.sol`
-- `packages/contracts/test/GoalVault.t.sol`
-- `docs/plans/pocket-vault-contract-security-audit.md`
-- `docs/project-state.md`
+- `apps/mobile/src/components/primitives/`
+- `apps/mobile/src/components/feedback/`
+- `apps/mobile/src/components/forms/StepPills.tsx`
+- `apps/mobile/src/components/vaults/`
+- `apps/mobile/src/app/(app)/vaults/new.tsx`
 - `docs/_local/current-session.md`
 
 ## Verification Commands
-- `pnpm typecheck`
+- `pnpm --filter @pocket-vault/mobile typecheck`
+- `pnpm --filter @pocket-vault/mobile test`
 - `pnpm test:ts`
-- `pnpm test:contracts`
-- `pnpm verify:ci`
+- `pnpm typecheck`
 - `git diff --check`
 
 ## Verification Result
-- TypeScript passed.
-- TS tests passed.
-- Foundry contract tests passed with 14 tests, including the new fuzz invariant.
-- Full CI verification passed.
+- Mobile typecheck passed.
+- Mobile tests passed after rerunning with sandbox escalation for `tsx` IPC pipe creation.
+- Workspace TypeScript tests passed.
+- Workspace typecheck passed.
 - Diff whitespace check passed.
 
 ## Next Step
-Review whether to add optional static-analysis tooling in a separate phase. Do not mutate ABI or product behavior without an explicit v2 migration plan.
+Run a visual browser or device smoke check before release to judge motion timing in real dashboard, create-vault, deposit, and withdraw flows.

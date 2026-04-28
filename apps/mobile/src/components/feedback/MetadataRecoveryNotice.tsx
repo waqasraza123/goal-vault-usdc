@@ -19,6 +19,7 @@ export const MetadataRecoveryNotice = ({
     <FeedbackStatusCard
       description={description}
       icon={onRetry ? "database-sync-outline" : "database-clock-outline"}
+      pulse={!onRetry}
       title={title ?? messages.feedback.metadataLiveTitle}
       tone="warning"
     >
