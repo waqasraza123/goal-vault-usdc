@@ -27,7 +27,7 @@ User-facing product state:
 Operator-facing product state:
 - The API exposes health and readiness surfaces, internal sync triggers, enriched vault/activity reads, analytics ingestion, support intake, and internal support triage.
 - Backend persistence runs through typed ports with SQLite as the local/default durable store and PostgreSQL runtime support available when schema, credentials, and preflight gates are accepted.
-- Production operations have guarded workflows for contract deployment, API image publishing, mobile build/submit, release manifests, data snapshots, managed database schema/import/parity execution, Vercel promote/rollback execution, production smoke evidence, post-cutover activation records, post-activation observation reports, limited-beta invitation wave plans, and beta wave outcome reports.
+- Production operations have guarded workflows for contract deployment, API image publishing, mobile build/submit, release manifests, data snapshots, managed database schema/import/parity execution, Vercel promote/rollback execution, production smoke evidence, post-cutover activation records, post-activation observation reports, limited-beta invitation wave plans, beta wave outcome reports, and beta expansion decision reports.
 - Production activation readiness now has explicit runtime gates for PostgreSQL cutover, protected smoke evidence, rollback evidence, support, analytics, and limited beta scope in API preflight and `/ready`.
 - Contract security hardening now uses SafeERC20, reentrancy protection, explicit vault and factory validation, zero-recipient withdrawal rejection, malicious-token regression tests, and a repo-local contract security audit note.
 - Current launch posture is code- and workflow-ready for controlled production execution, but live production database cutover and traffic movement remain unexecuted/deferred.
@@ -88,6 +88,7 @@ The repository now has a real v1 foundation:
 - guarded production observation report workflow for recording public API health/readiness plus indexer, support, analytics, error-budget, failed-transaction, and incident signals after activation
 - guarded beta invitation wave plan workflow for approving non-PII invite waves after beta readiness and stable observation evidence
 - guarded beta wave outcome report workflow for aggregate continue, pause, rollback, or disable decisions after each invitation wave
+- guarded beta expansion decision report workflow for expand, hold, rollback, or disable decisions after wave outcomes and retention review
 - production activation readiness gates that block ambiguous production SQLite mode, reject mixed SQLite/PostgreSQL runtime env, and require accepted smoke, rollback, and beta scope evidence before limited beta traffic
 - production activation, production cutover, production smoke, limited beta, and rollback runbooks under `docs/plans/`
 - root README with setup, scripts, architecture, and verification guidance
@@ -195,6 +196,7 @@ Still not implemented:
 - Phase 53: production observation reports for post-activation beta expansion gates
 - Phase 54: beta invitation wave plans for non-PII cohort approval
 - Phase 55: beta wave outcome reports for aggregate post-wave decisions
+- Phase 56: beta expansion decision reports for broader beta gates
 
 ## Important Decisions
 - The product should feel like a premium savings tool, not a DeFi dashboard.
@@ -311,6 +313,7 @@ Still not implemented:
 - Phase 53 adds guarded production observation reports that read public `/health` and `/ready`, validate an accepted activation record, and record indexer, support, analytics, error-budget, failed-transaction, and incident signals before beta invitation expansion.
 - Phase 54 adds guarded beta invitation wave plans that validate beta readiness, stable observation, participant counts, value guidance, support reference, incident owner, and invite owner without sending invites or recording participant PII.
 - Phase 55 adds guarded beta wave outcome reports that validate invitation wave evidence, post-wave observation, aggregate counts, and continue/pause/rollback/disable decisions without recording participant PII or executing recovery actions.
+- Phase 56 adds guarded beta expansion decision reports that validate latest wave outcome, retention evidence, participant capacity, support backlog, operator capacity, and privacy/support/retention reviews before broader beta waves.
 - Product docs live in `docs/product/pocket-vault/`:
   - `goal.md` for the concise product goal
   - `plan.md` for the detailed execution-oriented plan
@@ -376,6 +379,7 @@ Still not implemented:
 - The Phase 53 implementation note lives at `docs/plans/pocket-vault-universal-react-native-phase-53.md`.
 - The Phase 54 implementation note lives at `docs/plans/pocket-vault-universal-react-native-phase-54.md`.
 - The Phase 55 implementation note lives at `docs/plans/pocket-vault-universal-react-native-phase-55.md`.
+- The Phase 56 implementation note lives at `docs/plans/pocket-vault-universal-react-native-phase-56.md`.
 - The CI and release workflow note lives at `docs/plans/pocket-vault-ci-release-workflows.md`.
 - The contract deployment runbook lives at `docs/deployment/contract-deployment.md`.
 - The API image runbook lives at `docs/deployment/api-image.md`.
@@ -395,6 +399,7 @@ Still not implemented:
 - The production observation report runbook lives at `docs/deployment/production-observation-report.md`.
 - The beta invitation wave runbook lives at `docs/deployment/beta-invitation-wave.md`.
 - The beta wave outcome runbook lives at `docs/deployment/beta-wave-outcome.md`.
+- The beta expansion decision runbook lives at `docs/deployment/beta-expansion-decision.md`.
 - The API data snapshot runbook lives at `docs/deployment/api-data-snapshots.md`.
 - The beta readiness runbook lives at `docs/deployment/beta-readiness.md`.
 - The beta support intake runbook lives at `docs/deployment/beta-support-intake.md`.

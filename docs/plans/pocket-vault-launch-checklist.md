@@ -49,6 +49,7 @@
 - Generate a stable production observation report after activation and before expanding beta invitations.
 - Generate a beta invitation wave plan before each cohort invite and keep participant PII outside artifacts.
 - Generate a beta wave outcome report after each wave observation window before approving the next wave.
+- Generate a beta expansion decision report before any larger invitation wave.
 - Confirm rollback steps are reviewed with the operator before sending invitations.
 - Treat beta limits as operational guidance, not protocol-enforced limits.
 
@@ -192,6 +193,15 @@
 - Confirm `participant_identifiers_recorded=false`.
 - Confirm no participant names, emails, wallet addresses, social handles, invite links, contact details, private support text, or participant-level transaction traces are recorded.
 - Approve the next invitation wave only after a `continue` outcome report.
+
+## Beta Expansion Decision
+- Run the `Beta Expansion Decision Report` workflow before a larger invitation wave.
+- Provide latest wave outcome, retention plan, current participant count, proposed next wave size, participant limit, open support count, unresolved incident count, failed transaction count, support backlog status, operator capacity, retention review, support review, privacy review, support reference, incident owner, and expansion owner.
+- Use `decision=expand` only when the latest wave outcome is `continue`, support is clear, capacity is ready, reviews are accepted, and aggregate blockers are zero.
+- Use `decision=hold`, `rollback`, or `disable` when review, support, incident, transaction, retention, or capacity gates are not accepted.
+- Confirm `participant_identifiers_recorded=false`.
+- Confirm no participant names, emails, wallet addresses, social handles, invite links, contact details, private support text, or participant-level transaction traces are recorded.
+- Generate the next observation report and invitation wave plan only after an `expand` decision.
 
 ## Post-Deploy Checks
 - Confirm `/ready` stays usable after deployment.

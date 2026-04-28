@@ -19,6 +19,7 @@
 - Observation clean: stable production observation report is stored for the current invitation wave.
 - Invitation wave approved: beta invitation wave plan is stored and contains no participant PII.
 - Prior wave outcome accepted: previous wave outcome report is `continue` before any expansion.
+- Expansion accepted: beta expansion decision report is `expand` before any larger wave.
 - Beta scope approved: participant limit, value limit, support owner, incident owner, observation window, pause criteria, and re-enable criteria are recorded.
 
 ## Required Commands
@@ -31,6 +32,7 @@
 - `pnpm production:observation:report`
 - `pnpm beta:invitation:wave`
 - `pnpm beta:wave:outcome`
+- `pnpm beta:expansion:decision`
 
 ## Launch Procedure
 1. Confirm all go/no-go gates.
@@ -42,9 +44,10 @@
 7. Invite only the approved initial beta cohort from the private operational system.
 8. Monitor for the approved observation window before expanding invites.
 9. Run a beta wave outcome report before deciding on expansion.
-10. Run another observation report and invitation wave plan before each invitation expansion.
-11. Review support queue after each participant wave.
-12. Record launch outcome and incidents in release notes.
+10. Run a beta expansion decision report before any larger wave.
+11. Run another observation report and invitation wave plan before each invitation expansion.
+12. Review support queue after each participant wave.
+13. Record launch outcome and incidents in release notes.
 
 ## Monitoring Priorities
 - `/health` alive.

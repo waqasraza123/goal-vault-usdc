@@ -31,6 +31,7 @@
 18. Generate the production observation report with `pnpm production:observation:report`.
 19. Generate the beta invitation wave plan with `pnpm beta:invitation:wave` before any invitations are sent.
 20. Generate the beta wave outcome report with `pnpm beta:wave:outcome` after the wave observation window.
+21. Generate the beta expansion decision report with `pnpm beta:expansion:decision` before any larger invitation wave.
 
 ## Go Criteria
 - Preflight `status` is `valid`.
@@ -43,6 +44,7 @@
 - Production observation report is generated with `observationStatus=stable`.
 - Beta invitation wave plan is generated with `noInvitesSent=true` before private outreach starts.
 - Beta wave outcome report is generated with `decision=continue` before any next invitation wave.
+- Beta expansion decision report is generated with `decision=expand` before any larger beta wave.
 
 ## No-Go Criteria
 - Any production runtime uses SQLite.

@@ -196,6 +196,43 @@
   - must be `report`
 - `BETA_WAVE_OUTCOME_DIR`
 
+## Beta Expansion Decision Variables
+- `BETA_EXPANSION_TARGET`
+  - `staging` or `production`
+- `BETA_EXPANSION_LABEL`
+  - stable beta expansion decision label
+- `BETA_EXPANSION_DECISION`
+  - `expand`, `hold`, `rollback`, or `disable`
+- `BETA_EXPANSION_LATEST_WAVE_OUTCOME`
+  - latest beta wave outcome artifact name, URL, or local path
+- `BETA_EXPANSION_RETENTION_PLAN`
+  - beta data retention artifact name, URL, or local path
+- `BETA_EXPANSION_CURRENT_PARTICIPANT_COUNT`
+- `BETA_EXPANSION_NEXT_WAVE_SIZE`
+- `BETA_EXPANSION_PARTICIPANT_LIMIT`
+- `BETA_EXPANSION_OPEN_SUPPORT_REQUEST_COUNT`
+- `BETA_EXPANSION_UNRESOLVED_INCIDENT_COUNT`
+- `BETA_EXPANSION_FAILED_TRANSACTION_COUNT`
+- `BETA_EXPANSION_SUPPORT_BACKLOG_STATUS`
+  - `clear`, `watch`, or `blocked`
+- `BETA_EXPANSION_OPERATOR_CAPACITY_STATUS`
+  - `ready`, `constrained`, or `blocked`
+- `BETA_EXPANSION_RETENTION_REVIEW_ACCEPTED`
+- `BETA_EXPANSION_SUPPORT_REVIEW_ACCEPTED`
+- `BETA_EXPANSION_PRIVACY_REVIEW_ACCEPTED`
+- `BETA_EXPANSION_PARTICIPANT_IDENTIFIERS_RECORDED`
+  - must be `false`
+- `BETA_EXPANSION_SUPPORT_REFERENCE`
+- `BETA_EXPANSION_INCIDENT_OWNER`
+- `BETA_EXPANSION_OWNER`
+- `BETA_EXPANSION_INCIDENT_REFERENCE`
+  - required for rollback, disable, or unresolved incidents
+- `BETA_EXPANSION_OPERATOR`
+- `BETA_EXPANSION_NOTES`
+- `BETA_EXPANSION_CONFIRM_REPORT`
+  - must be `report`
+- `BETA_EXPANSION_DIR`
+
 ## Production Activation Record Variables
 - `PRODUCTION_ACTIVATION_TARGET`
   - `staging` or `production`

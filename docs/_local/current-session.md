@@ -4,27 +4,27 @@
 2026-04-29
 
 ## Current Objective
-Implement the next production-readiness step with code and detailed docs only: beta wave outcome report.
+Implement the next production-readiness step with code and detailed docs only: beta expansion decision report.
 
 ## Completed
 - Confirmed there was no uncommitted current work before starting.
-- Added `scripts/write-beta-wave-outcome-report.mjs` for aggregate post-wave continue, pause, rollback, or disable decisions.
-- Added the guarded `Beta Wave Outcome Report` GitHub Actions workflow.
-- Added `pnpm beta:wave:outcome`.
-- Added a beta wave outcome runbook and Phase 55 implementation note.
+- Added `scripts/write-beta-expansion-decision-report.mjs` for expand, hold, rollback, or disable decisions before broader beta waves.
+- Added the guarded `Beta Expansion Decision Report` GitHub Actions workflow.
+- Added `pnpm beta:expansion:decision`.
+- Added a beta expansion decision runbook and Phase 56 implementation note.
 - Updated README, env reference, CI/release workflow docs, launch checklist, limited beta checklist, production cutover runbook, and project state docs.
 
 ## Important Boundaries
-- No real tests, builds, deployments, database operations, traffic movement, chain actions, production health checks, invitations, or recovery actions were run.
-- The outcome report is non-mutating and records `noInvitesSent: true`, `noParticipantIdentifiersRecorded: true`, `noDeploymentPerformed: true`, `noDatabaseMutated: true`, `noTrafficMoved: true`, and `noChainTransactionSent: true`.
-- Continue decisions require stable observation evidence and zero incidents; rollback, disable, incident status, and non-zero incidents require an incident reference.
+- No real tests, builds, deployments, database operations, traffic movement, chain actions, live data reads, production health checks, invitations, or recovery actions were run.
+- The expansion report is non-mutating and records `noInvitesSent: true`, `noParticipantIdentifiersRecorded: true`, `noDeploymentPerformed: true`, `noDatabaseMutated: true`, `noTrafficMoved: true`, and `noChainTransactionSent: true`.
+- Expand decisions require latest wave outcome `continue`, stable observation when inspected, clean support/incident/failed-transaction counts, ready operator capacity, and accepted retention/support/privacy reviews.
 - Secrets and participant PII remain outside workflow inputs and artifacts.
 
 ## Main Files/Folders Touched
-- `scripts/write-beta-wave-outcome-report.mjs`
-- `.github/workflows/beta-wave-outcome-report.yml`
-- `docs/deployment/beta-wave-outcome.md`
-- `docs/plans/pocket-vault-universal-react-native-phase-55.md`
+- `scripts/write-beta-expansion-decision-report.mjs`
+- `.github/workflows/beta-expansion-decision-report.yml`
+- `docs/deployment/beta-expansion-decision.md`
+- `docs/plans/pocket-vault-universal-react-native-phase-56.md`
 - `docs/plans/pocket-vault-ci-release-workflows.md`
 - `docs/plans/pocket-vault-env-reference.md`
 - `docs/plans/pocket-vault-launch-checklist.md`
@@ -35,7 +35,7 @@ Implement the next production-readiness step with code and detailed docs only: b
 - `package.json`
 
 ## Verification Commands
-- `node --check scripts/write-beta-wave-outcome-report.mjs`
+- `node --check scripts/write-beta-expansion-decision-report.mjs`
 - `git diff --check`
 
 ## Verification Result
@@ -44,4 +44,4 @@ Implement the next production-readiness step with code and detailed docs only: b
 - Full tests and builds intentionally skipped per user request.
 
 ## Next Step
-Run `Beta Wave Outcome Report` after each invitation wave observation window before approving the next beta invitation wave.
+Run `Beta Expansion Decision Report` after a beta wave outcome and retention review before approving any larger beta invitation wave.
