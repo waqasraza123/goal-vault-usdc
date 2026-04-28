@@ -12,6 +12,8 @@ contract GoalVaultFactory {
     mapping(address owner => address[] vaults) private vaultsByOwner;
     mapping(address vault => bool) public isGoalVault;
 
+    error GoalVaultFactoryInvalidAsset();
+    error GoalVaultFactoryInvalidTargetAmount();
     error GoalVaultFactoryInvalidUnlockAt();
     error GoalVaultFactoryInvalidRuleType();
     error GoalVaultFactoryInvalidCooldownDuration();
@@ -39,6 +41,8 @@ contract GoalVaultFactory {
     );
 
     constructor(address usdc_) {
+        if (usdc_ == address(0)) revert GoalVaultFactoryInvalidAsset();
+
         usdc = usdc_;
     }
 
@@ -67,6 +71,7 @@ contract GoalVaultFactory {
         uint64 cooldownDuration,
         address guardian
     ) internal returns (address vault) {
+        if (targetAmount == 0) revert GoalVaultFactoryInvalidTargetAmount();
         if (ruleType > RULE_GUARDIAN_APPROVAL) revert GoalVaultFactoryInvalidRuleType();
 
         if (ruleType == RULE_TIME_LOCK) {
@@ -76,11 +81,13 @@ contract GoalVaultFactory {
         }
 
         if (ruleType == RULE_COOLDOWN_UNLOCK) {
+            if (unlockAt != 0) revert GoalVaultFactoryInvalidUnlockAt();
             if (cooldownDuration == 0) revert GoalVaultFactoryInvalidCooldownDuration();
             if (guardian != address(0)) revert GoalVaultFactoryInvalidGuardian();
         }
 
         if (ruleType == RULE_GUARDIAN_APPROVAL) {
+            if (unlockAt != 0) revert GoalVaultFactoryInvalidUnlockAt();
             if (guardian == address(0) || guardian == msg.sender) revert GoalVaultFactoryInvalidGuardian();
             if (cooldownDuration != 0) revert GoalVaultFactoryInvalidCooldownDuration();
         }

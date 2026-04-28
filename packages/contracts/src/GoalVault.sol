@@ -1,8 +1,12 @@
 pragma solidity ^0.8.30;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-contract GoalVault {
+contract GoalVault is ReentrancyGuard {
+    using SafeERC20 for IERC20;
+
     uint8 internal constant RULE_TIME_LOCK = 0;
     uint8 internal constant RULE_COOLDOWN_UNLOCK = 1;
     uint8 internal constant RULE_GUARDIAN_APPROVAL = 2;
@@ -28,6 +32,12 @@ contract GoalVault {
 
     error GoalVaultUnauthorized();
     error GoalVaultInvalidAmount();
+    error GoalVaultInvalidOwner();
+    error GoalVaultInvalidAsset();
+    error GoalVaultInvalidTargetAmount();
+    error GoalVaultInvalidUnlockAt();
+    error GoalVaultInvalidCooldownDuration();
+    error GoalVaultInvalidRecipient();
     error GoalVaultLocked();
     error GoalVaultUnsupportedRuleAction();
     error GoalVaultInvalidGuardian();
@@ -52,8 +62,28 @@ contract GoalVault {
         uint64 cooldownDuration_,
         address guardian_
     ) {
+        if (owner_ == address(0)) revert GoalVaultInvalidOwner();
+        if (asset_ == address(0)) revert GoalVaultInvalidAsset();
+        if (targetAmount_ == 0) revert GoalVaultInvalidTargetAmount();
         if (ruleType_ > RULE_GUARDIAN_APPROVAL) revert GoalVaultUnsupportedRuleAction();
-        if (ruleType_ == RULE_GUARDIAN_APPROVAL && (guardian_ == address(0) || guardian_ == owner_)) revert GoalVaultInvalidGuardian();
+
+        if (ruleType_ == RULE_TIME_LOCK) {
+            if (unlockAt_ <= block.timestamp) revert GoalVaultInvalidUnlockAt();
+            if (cooldownDuration_ != 0) revert GoalVaultInvalidCooldownDuration();
+            if (guardian_ != address(0)) revert GoalVaultInvalidGuardian();
+        }
+
+        if (ruleType_ == RULE_COOLDOWN_UNLOCK) {
+            if (unlockAt_ != 0) revert GoalVaultInvalidUnlockAt();
+            if (cooldownDuration_ == 0) revert GoalVaultInvalidCooldownDuration();
+            if (guardian_ != address(0)) revert GoalVaultInvalidGuardian();
+        }
+
+        if (ruleType_ == RULE_GUARDIAN_APPROVAL) {
+            if (unlockAt_ != 0) revert GoalVaultInvalidUnlockAt();
+            if (cooldownDuration_ != 0) revert GoalVaultInvalidCooldownDuration();
+            if (guardian_ == address(0) || guardian_ == owner_) revert GoalVaultInvalidGuardian();
+        }
 
         owner = owner_;
         asset = asset_;
@@ -65,21 +95,21 @@ contract GoalVault {
         guardianDecision = GUARDIAN_NONE;
     }
 
-    function deposit(uint256 amount) external {
+    function deposit(uint256 amount) external nonReentrant {
         if (amount == 0) revert GoalVaultInvalidAmount();
 
         totalDeposited += amount;
-        IERC20(asset).transferFrom(msg.sender, address(this), amount);
+        IERC20(asset).safeTransferFrom(msg.sender, address(this), amount);
 
         emit Deposited(msg.sender, amount, block.timestamp);
     }
 
-    function requestUnlock() external {
+    function requestUnlock() external nonReentrant {
         if (msg.sender != owner) revert GoalVaultUnauthorized();
         if (IERC20(asset).balanceOf(address(this)) == 0) revert GoalVaultInvalidAmount();
 
         if (ruleType == RULE_TIME_LOCK) {
-          revert GoalVaultUnsupportedRuleAction();
+            revert GoalVaultUnsupportedRuleAction();
         }
 
         if (ruleType == RULE_COOLDOWN_UNLOCK) {
@@ -101,7 +131,7 @@ contract GoalVault {
         emit UnlockRequested(msg.sender, ruleType, 0, block.timestamp);
     }
 
-    function cancelUnlockRequest() external {
+    function cancelUnlockRequest() external nonReentrant {
         if (msg.sender != owner) revert GoalVaultUnauthorized();
         if (unlockRequestedAt == 0) revert GoalVaultUnlockNotRequested();
         if (ruleType == RULE_TIME_LOCK) revert GoalVaultUnsupportedRuleAction();
@@ -116,7 +146,7 @@ contract GoalVault {
         emit UnlockCanceled(msg.sender, ruleType, block.timestamp);
     }
 
-    function approveUnlock() external {
+    function approveUnlock() external nonReentrant {
         if (ruleType != RULE_GUARDIAN_APPROVAL) revert GoalVaultUnsupportedRuleAction();
         if (msg.sender != guardian) revert GoalVaultUnauthorized();
         if (unlockRequestedAt == 0 || guardianDecision != GUARDIAN_PENDING) revert GoalVaultGuardianDecisionUnavailable();
@@ -127,7 +157,7 @@ contract GoalVault {
         emit GuardianApproved(msg.sender, block.timestamp);
     }
 
-    function rejectUnlock() external {
+    function rejectUnlock() external nonReentrant {
         if (ruleType != RULE_GUARDIAN_APPROVAL) revert GoalVaultUnsupportedRuleAction();
         if (msg.sender != guardian) revert GoalVaultUnauthorized();
         if (unlockRequestedAt == 0 || guardianDecision != GUARDIAN_PENDING) revert GoalVaultGuardianDecisionUnavailable();
@@ -138,13 +168,14 @@ contract GoalVault {
         emit GuardianRejected(msg.sender, block.timestamp);
     }
 
-    function withdraw(uint256 amount, address to) external {
+    function withdraw(uint256 amount, address to) external nonReentrant {
         if (msg.sender != owner) revert GoalVaultUnauthorized();
         if (!_isWithdrawalUnlocked()) revert GoalVaultLocked();
         if (amount == 0) revert GoalVaultInvalidAmount();
+        if (to == address(0)) revert GoalVaultInvalidRecipient();
 
         totalWithdrawn += amount;
-        IERC20(asset).transfer(to, amount);
+        IERC20(asset).safeTransfer(to, amount);
 
         emit Withdrawn(to, amount, block.timestamp);
     }

@@ -29,6 +29,7 @@ Operator-facing product state:
 - Backend persistence runs through typed ports with SQLite as the local/default durable store and PostgreSQL runtime support available when schema, credentials, and preflight gates are accepted.
 - Production operations have guarded workflows for contract deployment, API image publishing, mobile build/submit, release manifests, data snapshots, managed database schema/import/parity execution, Vercel promote/rollback execution, and production smoke evidence.
 - Production activation readiness now has explicit runtime gates for PostgreSQL cutover, protected smoke evidence, rollback evidence, support, analytics, and limited beta scope in API preflight and `/ready`.
+- Contract security hardening now uses SafeERC20, reentrancy protection, explicit vault and factory validation, zero-recipient withdrawal rejection, malicious-token regression tests, and a repo-local contract security audit note.
 - Current launch posture is code- and workflow-ready for controlled production execution, but live production database cutover, traffic movement, and provider-specific public API disablement automation remain unexecuted/deferred.
 
 ## Current Repository Reality
@@ -189,6 +190,7 @@ Still not implemented:
 - The product should feel like a premium savings tool, not a DeFi dashboard.
 - The narrow scope is intentional and part of the moat.
 - The initial contract design should be boring, strict, auditable, and avoid unnecessary upgradeability.
+- Contract hardening remains additive unless a separate v2 migration is explicitly planned: keep `GoalVault`, `GoalVaultFactory`, existing public functions, and existing events stable for app, API, and SDK compatibility.
 - Repo coding rules require no code comments, strong naming, modular design, strong typing, validation, error handling, and explicit assumptions when requirements are missing.
 - Repo workflow rules require commit messages under 140 characters and committing/pushing changes when explicitly requested.
 - The repo direction has changed from the earlier web-first planning path to a universal React Native plan with one Expo app for iOS, Android, and web.
