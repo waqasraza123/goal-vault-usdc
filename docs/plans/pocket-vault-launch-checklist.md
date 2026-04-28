@@ -50,6 +50,7 @@
 - Generate a beta invitation wave plan before each cohort invite and keep participant PII outside artifacts.
 - Generate a beta wave outcome report after each wave observation window before approving the next wave.
 - Generate a beta expansion decision report before any larger invitation wave.
+- Generate a beta graduation decision report before public launch planning.
 - Confirm rollback steps are reviewed with the operator before sending invitations.
 - Treat beta limits as operational guidance, not protocol-enforced limits.
 
@@ -202,6 +203,15 @@
 - Confirm `participant_identifiers_recorded=false`.
 - Confirm no participant names, emails, wallet addresses, social handles, invite links, contact details, private support text, or participant-level transaction traces are recorded.
 - Generate the next observation report and invitation wave plan only after an `expand` decision.
+
+## Beta Graduation Decision
+- Run the `Beta Graduation Decision Report` workflow before public launch planning.
+- Provide expansion decision, latest wave outcome, retention plan, participant count, minimum participant sample, open support count, unresolved incident count, failed transaction count, support readiness, privacy readiness, reliability readiness, communications readiness, store readiness, review approvals, support reference, incident owner, and graduation owner.
+- Use `decision=graduate` only when expanded beta evidence is clean, review gates are accepted, and readiness statuses are `ready`.
+- Use `decision=extend-beta`, `hold`, `rollback`, or `disable` when more beta evidence, review work, or recovery action is needed.
+- Confirm `participant_identifiers_recorded=false`.
+- Confirm no participant names, emails, wallet addresses, social handles, invite links, contact details, private support text, or participant-level transaction traces are recorded.
+- Start public launch planning only after a `graduate` decision.
 
 ## Post-Deploy Checks
 - Confirm `/ready` stays usable after deployment.

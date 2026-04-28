@@ -32,6 +32,7 @@
 19. Generate the beta invitation wave plan with `pnpm beta:invitation:wave` before any invitations are sent.
 20. Generate the beta wave outcome report with `pnpm beta:wave:outcome` after the wave observation window.
 21. Generate the beta expansion decision report with `pnpm beta:expansion:decision` before any larger invitation wave.
+22. Generate the beta graduation decision report with `pnpm beta:graduation:decision` before public launch planning.
 
 ## Go Criteria
 - Preflight `status` is `valid`.
@@ -45,6 +46,7 @@
 - Beta invitation wave plan is generated with `noInvitesSent=true` before private outreach starts.
 - Beta wave outcome report is generated with `decision=continue` before any next invitation wave.
 - Beta expansion decision report is generated with `decision=expand` before any larger beta wave.
+- Beta graduation decision report is generated with `decision=graduate` before public launch planning.
 
 ## No-Go Criteria
 - Any production runtime uses SQLite.

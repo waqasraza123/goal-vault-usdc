@@ -175,6 +175,7 @@ pnpm production:observation:report
 pnpm beta:invitation:wave
 pnpm beta:wave:outcome
 pnpm beta:expansion:decision
+pnpm beta:graduation:decision
 ```
 
 `pnpm smoke:production-v1` checks public API health/readiness and records operator evidence. It does not send wallet transactions.
@@ -191,6 +192,8 @@ pnpm beta:expansion:decision
 
 `pnpm beta:expansion:decision` records whether to expand, hold, roll back, or disable after reviewing the latest wave outcome, retention readiness, support load, operator capacity, and privacy gates. It does not send invites or read live data.
 
+`pnpm beta:graduation:decision` records whether expanded beta evidence is ready for public launch planning, needs more beta time, should hold, or requires rollback/disablement. It does not launch publicly or record participant PII.
+
 Runbooks:
 
 - `docs/plans/pocket-vault-production-cutover-runbook.md`
@@ -202,6 +205,7 @@ Runbooks:
 - `docs/deployment/beta-invitation-wave.md`
 - `docs/deployment/beta-wave-outcome.md`
 - `docs/deployment/beta-expansion-decision.md`
+- `docs/deployment/beta-graduation-decision.md`
 
 ## Rollback
 

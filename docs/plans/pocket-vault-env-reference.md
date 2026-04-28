@@ -233,6 +233,52 @@
   - must be `report`
 - `BETA_EXPANSION_DIR`
 
+## Beta Graduation Decision Variables
+- `BETA_GRADUATION_TARGET`
+  - `staging` or `production`
+- `BETA_GRADUATION_LABEL`
+  - stable beta graduation decision label
+- `BETA_GRADUATION_DECISION`
+  - `graduate`, `extend-beta`, `hold`, `rollback`, or `disable`
+- `BETA_GRADUATION_EXPANSION_DECISION`
+  - latest beta expansion decision artifact name, URL, or local path
+- `BETA_GRADUATION_LATEST_WAVE_OUTCOME`
+  - latest beta wave outcome artifact name, URL, or local path
+- `BETA_GRADUATION_RETENTION_PLAN`
+  - beta data retention artifact name, URL, or local path
+- `BETA_GRADUATION_PARTICIPANT_COUNT`
+- `BETA_GRADUATION_MINIMUM_PARTICIPANT_COUNT`
+- `BETA_GRADUATION_OPEN_SUPPORT_REQUEST_COUNT`
+- `BETA_GRADUATION_UNRESOLVED_INCIDENT_COUNT`
+- `BETA_GRADUATION_FAILED_TRANSACTION_COUNT`
+- `BETA_GRADUATION_SUPPORT_READINESS`
+  - `ready`, `watch`, or `blocked`
+- `BETA_GRADUATION_PRIVACY_READINESS`
+  - `ready`, `watch`, or `blocked`
+- `BETA_GRADUATION_RELIABILITY_READINESS`
+  - `ready`, `watch`, or `blocked`
+- `BETA_GRADUATION_COMMUNICATIONS_READINESS`
+  - `ready`, `watch`, or `blocked`
+- `BETA_GRADUATION_STORE_READINESS`
+  - `ready`, `watch`, or `blocked`
+- `BETA_GRADUATION_SUPPORT_REVIEW_ACCEPTED`
+- `BETA_GRADUATION_PRIVACY_REVIEW_ACCEPTED`
+- `BETA_GRADUATION_RELIABILITY_REVIEW_ACCEPTED`
+- `BETA_GRADUATION_RETENTION_REVIEW_ACCEPTED`
+- `BETA_GRADUATION_COMMUNICATIONS_REVIEW_ACCEPTED`
+- `BETA_GRADUATION_PARTICIPANT_IDENTIFIERS_RECORDED`
+  - must be `false`
+- `BETA_GRADUATION_SUPPORT_REFERENCE`
+- `BETA_GRADUATION_INCIDENT_OWNER`
+- `BETA_GRADUATION_OWNER`
+- `BETA_GRADUATION_INCIDENT_REFERENCE`
+  - required for rollback, disable, or unresolved incidents
+- `BETA_GRADUATION_OPERATOR`
+- `BETA_GRADUATION_NOTES`
+- `BETA_GRADUATION_CONFIRM_REPORT`
+  - must be `report`
+- `BETA_GRADUATION_DIR`
+
 ## Production Activation Record Variables
 - `PRODUCTION_ACTIVATION_TARGET`
   - `staging` or `production`

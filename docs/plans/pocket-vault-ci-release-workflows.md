@@ -3,7 +3,7 @@
 ## Purpose
 This pass adds repository-owned GitHub Actions automation for the current production-shaped v1 codebase.
 
-The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, Vercel API traffic command planning, beta support export generation, beta invitation wave planning, beta wave outcome reporting, beta expansion decision reporting, beta data retention planning, managed database planning, managed database schema generation, managed database export generation, managed database import planning, managed database parity planning, managed database runtime activation planning, mobile distribution, release manifest generation, production activation record generation, and production observation report generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
+The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, Vercel API traffic command planning, beta support export generation, beta invitation wave planning, beta wave outcome reporting, beta expansion decision reporting, beta graduation decision reporting, beta data retention planning, managed database planning, managed database schema generation, managed database export generation, managed database import planning, managed database parity planning, managed database runtime activation planning, mobile distribution, release manifest generation, production activation record generation, and production observation report generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
 
 ## Workflow Files
 - `.github/actions/setup-pnpm/action.yml`
@@ -65,6 +65,10 @@ The CI and release-candidate workflows intentionally stop at verification and re
   - manual staging or production beta expansion decision report generation
   - validates latest wave outcome, retention plan, support load, operator capacity, review approvals, participant limits, and expansion decision rules
   - uploads a non-PII expansion decision artifact without sending invitations or reading live data
+- `.github/workflows/beta-graduation-decision-report.yml`
+  - manual staging or production beta graduation decision report generation
+  - validates expansion decision, latest wave outcome, retention plan, aggregate signals, readiness statuses, review approvals, and graduation decision rules
+  - uploads a non-PII graduation decision artifact without launching publicly
 - `.github/workflows/beta-data-retention-plan.yml`
   - manual staging or production beta data retention plan generation
   - records retention windows, owners, data classes, deletion request flow, and legal-hold flow
@@ -345,6 +349,36 @@ Use GitHub Environment variables for public, non-secret release metadata:
 - `BETA_EXPANSION_NOTES`
 - `BETA_EXPANSION_CONFIRM_REPORT`
 - `BETA_EXPANSION_DIR`
+- `BETA_GRADUATION_TARGET`
+- `BETA_GRADUATION_LABEL`
+- `BETA_GRADUATION_DECISION`
+- `BETA_GRADUATION_EXPANSION_DECISION`
+- `BETA_GRADUATION_LATEST_WAVE_OUTCOME`
+- `BETA_GRADUATION_RETENTION_PLAN`
+- `BETA_GRADUATION_PARTICIPANT_COUNT`
+- `BETA_GRADUATION_MINIMUM_PARTICIPANT_COUNT`
+- `BETA_GRADUATION_OPEN_SUPPORT_REQUEST_COUNT`
+- `BETA_GRADUATION_UNRESOLVED_INCIDENT_COUNT`
+- `BETA_GRADUATION_FAILED_TRANSACTION_COUNT`
+- `BETA_GRADUATION_SUPPORT_READINESS`
+- `BETA_GRADUATION_PRIVACY_READINESS`
+- `BETA_GRADUATION_RELIABILITY_READINESS`
+- `BETA_GRADUATION_COMMUNICATIONS_READINESS`
+- `BETA_GRADUATION_STORE_READINESS`
+- `BETA_GRADUATION_SUPPORT_REVIEW_ACCEPTED`
+- `BETA_GRADUATION_PRIVACY_REVIEW_ACCEPTED`
+- `BETA_GRADUATION_RELIABILITY_REVIEW_ACCEPTED`
+- `BETA_GRADUATION_RETENTION_REVIEW_ACCEPTED`
+- `BETA_GRADUATION_COMMUNICATIONS_REVIEW_ACCEPTED`
+- `BETA_GRADUATION_PARTICIPANT_IDENTIFIERS_RECORDED`
+- `BETA_GRADUATION_SUPPORT_REFERENCE`
+- `BETA_GRADUATION_INCIDENT_OWNER`
+- `BETA_GRADUATION_OWNER`
+- `BETA_GRADUATION_INCIDENT_REFERENCE`
+- `BETA_GRADUATION_OPERATOR`
+- `BETA_GRADUATION_NOTES`
+- `BETA_GRADUATION_CONFIRM_REPORT`
+- `BETA_GRADUATION_DIR`
 - `BETA_DATA_RETENTION_TARGET`
 - `BETA_DATA_RETENTION_LABEL`
 - `BETA_DATA_RETENTION_POLICY_OWNER`
@@ -531,6 +565,16 @@ Use the manual beta expansion decision workflow before a larger invitation wave:
 5. Download the expansion decision report and confirm it contains aggregate counts only.
 6. Generate the next observation report and invitation wave plan only when the decision is `expand`.
 
+## Beta Graduation Decision Gate
+Use the manual beta graduation decision workflow before public launch planning:
+
+1. Choose `staging` or `production`.
+2. Provide the expansion decision, latest wave outcome, retention plan, participant count, minimum sample, support count, incident count, failed transaction count, readiness statuses, and review approvals.
+3. Confirm `participant_identifiers_recorded=false`.
+4. Set `confirm_report` to `report`.
+5. Download the graduation decision report and confirm it contains aggregate counts only.
+6. Begin public launch planning only when the decision is `graduate`.
+
 ## Beta Data Retention Gate
 Use the manual beta data retention plan workflow before expanding beyond limited beta:
 
@@ -673,6 +717,7 @@ Use the manual production observation report workflow after an activation record
 - Use `docs/deployment/beta-invitation-wave.md` for non-PII invitation wave approval before sending beta invites.
 - Use `docs/deployment/beta-wave-outcome.md` for aggregate invite-wave outcome decisions before the next wave.
 - Use `docs/deployment/beta-expansion-decision.md` for broader beta expansion decisions after wave outcomes.
+- Use `docs/deployment/beta-graduation-decision.md` for beta graduation decisions before public launch planning.
 - Use `docs/deployment/beta-support-export.md` for offline support review from API data snapshots.
 - Use `docs/deployment/beta-data-retention.md` for retention-window planning before broader beta expansion.
 - Use `docs/deployment/mobile-distribution.md` for EAS builds, store submission, and mobile rollback handling.
