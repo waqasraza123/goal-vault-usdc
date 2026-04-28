@@ -27,7 +27,8 @@
 14. Run protected production smoke and store the artifact.
 15. Generate beta readiness if it has not already been generated against the final traffic and persistence evidence.
 16. Generate the production activation record with `pnpm production:activation:record`.
-17. Observe `/ready`, indexer freshness, support intake, and analytics for the approved window.
+17. Observe `/ready`, indexer freshness, support intake, analytics, failed transaction reports, and incidents for the approved window.
+18. Generate the production observation report with `pnpm production:observation:report`.
 
 ## Go Criteria
 - Preflight `status` is `valid`.
@@ -37,6 +38,7 @@
 - Parity is accepted.
 - Traffic plan records candidate and rollback URLs plus candidate and rollback images.
 - Production activation record is generated with `activationOutcome=accepted`.
+- Production observation report is generated with `observationStatus=stable`.
 
 ## No-Go Criteria
 - Any production runtime uses SQLite.

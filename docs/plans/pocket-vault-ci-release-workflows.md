@@ -3,7 +3,7 @@
 ## Purpose
 This pass adds repository-owned GitHub Actions automation for the current production-shaped v1 codebase.
 
-The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, Vercel API traffic command planning, beta support export generation, beta data retention planning, managed database planning, managed database schema generation, managed database export generation, managed database import planning, managed database parity planning, managed database runtime activation planning, mobile distribution, release manifest generation, and production activation record generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
+The CI and release-candidate workflows intentionally stop at verification and release-candidate artifact creation. Contract deployment, API runtime preflight, API image publishing, API traffic planning, Vercel API traffic command planning, beta support export generation, beta data retention planning, managed database planning, managed database schema generation, managed database export generation, managed database import planning, managed database parity planning, managed database runtime activation planning, mobile distribution, release manifest generation, production activation record generation, and production observation report generation have separate guarded manual workflows. No workflow mutates backend production infrastructure or promotes traffic automatically.
 
 ## Workflow Files
 - `.github/actions/setup-pnpm/action.yml`
@@ -95,6 +95,10 @@ The CI and release-candidate workflows intentionally stop at verification and re
   - manual staging or production activation record generation
   - validates release, preflight, managed database, traffic execution, smoke, beta readiness, snapshot, support, and incident-owner references
   - uploads an activation record artifact without deploying, mutating a database, or moving traffic
+- `.github/workflows/production-observation-report.yml`
+  - manual staging or production observation report generation
+  - reads public `/health` and `/ready` and records indexer, support, analytics, error budget, failed transaction, and incident signals
+  - uploads an observation report artifact without deploying, mutating a database, moving traffic, or inviting users
 
 ## Required GitHub Environments
 Create two GitHub Environments before relying on release-candidate runs:
@@ -308,6 +312,28 @@ Use GitHub Environment variables for public, non-secret release metadata:
 - `PRODUCTION_ACTIVATION_NOTES`
 - `PRODUCTION_ACTIVATION_CONFIRM_RECORD`
 - `PRODUCTION_ACTIVATION_DIR`
+- `PRODUCTION_OBSERVATION_TARGET`
+- `PRODUCTION_OBSERVATION_LABEL`
+- `PRODUCTION_OBSERVATION_STATUS`
+- `PRODUCTION_OBSERVATION_PERSISTENCE_DRIVER`
+- `PRODUCTION_OBSERVATION_API_BASE_URL`
+- `PRODUCTION_OBSERVATION_ACTIVATION_RECORD`
+- `PRODUCTION_OBSERVATION_MINUTES`
+- `PRODUCTION_OBSERVATION_TIMEOUT_MS`
+- `PRODUCTION_OBSERVATION_INDEXER_STATUS`
+- `PRODUCTION_OBSERVATION_SUPPORT_STATUS`
+- `PRODUCTION_OBSERVATION_ANALYTICS_STATUS`
+- `PRODUCTION_OBSERVATION_ERROR_BUDGET_STATUS`
+- `PRODUCTION_OBSERVATION_SUPPORT_REQUEST_COUNT`
+- `PRODUCTION_OBSERVATION_FAILED_TRANSACTION_COUNT`
+- `PRODUCTION_OBSERVATION_INCIDENT_COUNT`
+- `PRODUCTION_OBSERVATION_SUPPORT_REFERENCE`
+- `PRODUCTION_OBSERVATION_INCIDENT_OWNER`
+- `PRODUCTION_OBSERVATION_INCIDENT_REFERENCE`
+- `PRODUCTION_OBSERVATION_OPERATOR`
+- `PRODUCTION_OBSERVATION_NOTES`
+- `PRODUCTION_OBSERVATION_CONFIRM`
+- `PRODUCTION_OBSERVATION_DIR`
 - `API_DATABASE_SCHEMA_TARGET`
 - `API_DATABASE_SCHEMA_LABEL`
 - `API_DATABASE_SCHEMA_ENGINE`
@@ -512,6 +538,16 @@ Use the manual production activation record workflow after traffic execution, pr
 4. Set `confirm_record` to `record`.
 5. Download the activation record and store it with release evidence before expanding beta invitations.
 
+## Production Observation Report Gate
+Use the manual production observation report workflow after an activation record is accepted and before beta invitation expansion:
+
+1. Choose `staging` or `production`.
+2. Provide a stable observation label, accepted activation record, public API URL, support reference, incident owner, and operational signal counts.
+3. Use `stable` only when public `/health`, public `/ready`, indexer, support, analytics, error budget, and incident signals are accepted.
+4. Use `degraded` or `incident` when beta expansion should pause for operator review.
+5. Set `confirm_observe` to `observe`.
+6. Download the observation report and store it with activation evidence before expanding the invitation wave.
+
 ## Operator Notes
 - Keep GitHub Environment values aligned with `docs/plans/pocket-vault-env-reference.md`.
 - Keep production approval on the GitHub Environment instead of adding custom approval logic to workflow YAML.
@@ -527,6 +563,7 @@ Use the manual production activation record workflow after traffic execution, pr
 - Use `docs/deployment/api-traffic-plan.md` for provider-neutral traffic movement, rollback, and disablement planning.
 - Use `docs/deployment/vercel-api-traffic.md` for Vercel-specific command planning after a provider-neutral traffic plan exists.
 - Use `docs/deployment/production-activation-record.md` for post-cutover acceptance, rollback, or disablement evidence.
+- Use `docs/deployment/production-observation-report.md` for post-activation observation windows before beta expansion.
 - Use `docs/deployment/beta-support-export.md` for offline support review from API data snapshots.
 - Use `docs/deployment/beta-data-retention.md` for retention-window planning before broader beta expansion.
 - Use `docs/deployment/mobile-distribution.md` for EAS builds, store submission, and mobile rollback handling.

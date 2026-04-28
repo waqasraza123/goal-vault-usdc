@@ -16,6 +16,7 @@
 - Rollback ready: rollback URL, image, snapshot, and traffic reversal path are accepted.
 - Operator evidence captured: release manifest, preflight, runtime plan, traffic plan, smoke result, snapshots, and beta readiness artifacts are stored.
 - Activation recorded: post-cutover activation record is accepted or the recovery outcome is recorded.
+- Observation clean: stable production observation report is stored for the current invitation wave.
 - Beta scope approved: participant limit, value limit, support owner, incident owner, observation window, pause criteria, and re-enable criteria are recorded.
 
 ## Required Commands
@@ -25,16 +26,19 @@
 - `pnpm smoke:production-v1`
 - `pnpm beta:readiness`
 - `pnpm production:activation:record`
+- `pnpm production:observation:report`
 
 ## Launch Procedure
 1. Confirm all go/no-go gates.
 2. Confirm `/ready.productionActivation.safeForLimitedBetaTraffic=true`.
 3. Move traffic through the approved traffic execution path.
 4. Run the production activation record and store it with release evidence.
-5. Invite only the approved initial beta cohort.
-6. Monitor for the approved observation window before expanding invites.
-7. Review support queue after each participant wave.
-8. Record launch outcome and incidents in release notes.
+5. Run a stable production observation report and store it with release evidence.
+6. Invite only the approved initial beta cohort.
+7. Monitor for the approved observation window before expanding invites.
+8. Run another observation report before each invitation expansion.
+9. Review support queue after each participant wave.
+10. Record launch outcome and incidents in release notes.
 
 ## Monitoring Priorities
 - `/health` alive.

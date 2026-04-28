@@ -172,6 +172,44 @@
   - must be `record`
 - `PRODUCTION_ACTIVATION_DIR`
 
+## Production Observation Report Variables
+- `PRODUCTION_OBSERVATION_TARGET`
+  - `staging` or `production`
+- `PRODUCTION_OBSERVATION_LABEL`
+  - stable observation label
+- `PRODUCTION_OBSERVATION_STATUS`
+  - `stable`, `degraded`, or `incident`
+- `PRODUCTION_OBSERVATION_PERSISTENCE_DRIVER`
+  - `sqlite` or `postgresql`
+- `PRODUCTION_OBSERVATION_API_BASE_URL`
+  - public API base URL checked through `/health` and `/ready`
+- `PRODUCTION_OBSERVATION_ACTIVATION_RECORD`
+  - accepted activation record artifact name, URL, or local path
+- `PRODUCTION_OBSERVATION_MINUTES`
+  - observation window represented by the report
+- `PRODUCTION_OBSERVATION_TIMEOUT_MS`
+  - public API health/readiness request timeout
+- `PRODUCTION_OBSERVATION_INDEXER_STATUS`
+  - `healthy`, `lagging`, `disabled`, or `unknown`
+- `PRODUCTION_OBSERVATION_SUPPORT_STATUS`
+  - `quiet`, `active`, `blocked`, or `unknown`
+- `PRODUCTION_OBSERVATION_ANALYTICS_STATUS`
+  - `healthy`, `degraded`, `disabled`, or `unknown`
+- `PRODUCTION_OBSERVATION_ERROR_BUDGET_STATUS`
+  - `within-budget`, `watch`, `breached`, or `unknown`
+- `PRODUCTION_OBSERVATION_SUPPORT_REQUEST_COUNT`
+- `PRODUCTION_OBSERVATION_FAILED_TRANSACTION_COUNT`
+- `PRODUCTION_OBSERVATION_INCIDENT_COUNT`
+- `PRODUCTION_OBSERVATION_SUPPORT_REFERENCE`
+- `PRODUCTION_OBSERVATION_INCIDENT_OWNER`
+- `PRODUCTION_OBSERVATION_INCIDENT_REFERENCE`
+  - required when observation status is `incident`
+- `PRODUCTION_OBSERVATION_OPERATOR`
+- `PRODUCTION_OBSERVATION_NOTES`
+- `PRODUCTION_OBSERVATION_CONFIRM`
+  - must be `observe`
+- `PRODUCTION_OBSERVATION_DIR`
+
 ## Production Smoke Variables
 - `PRODUCTION_V1_SMOKE_TARGET`
   - `staging` or `production`
